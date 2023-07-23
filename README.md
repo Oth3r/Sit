@@ -7,8 +7,8 @@ You can also customize hand restrictions to stop accidentally sitting down!
 
 ![overview](https://github.com/Oth3r/Sit/blob/master/media/overview.gif?raw=true)
 ## Check out my other Projects!
-[![DirectionHUD badge](https://github.com/Oth3r/DirectionHUD/blob/master/media/DirectionHUD%20badge.png?raw=true)](https://modrinth.com/mod/directionhud)
-[![DirectionHUD Spigot badge](https://github.com/Oth3r/DirectionHUD/blob/master/media/DirectionHUD%20Spigot%20badge.png?raw=true)](https://modrinth.com/plugin/directionhud-plugin)
+[![DirectionHUD badge](https://github.com/Oth3r/DirectionHUD/blob/master/media/mod-badge.png?raw=true)](https://modrinth.com/mod/directionhud)
+[![DirectionHUD Spigot badge](https://github.com/Oth3r/DirectionHUD/blob/master/media/plugin-badge.png?raw=true)](https://modrinth.com/plugin/directionhud-plugin)
 
 # Features
 ### Hand Restrictions
