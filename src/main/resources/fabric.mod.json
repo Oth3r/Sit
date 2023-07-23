@@ -9,9 +9,9 @@
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/mod/sit!",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/Oth3r/Sit"
 	},
-	"license": "CC0-1.0",
+	"license": "LGPL-3.0-only",
 	"icon": "assets/sit/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -25,9 +25,6 @@
 			"one.oth3r.sit.ModMenu"
 		]
 	},
-	"mixins": [
-		"sit.mixins.json"
-	],
 	"depends": {
 		"fabricloader": ">=0.14.21",
 		"minecraft": "~1.20.1",
