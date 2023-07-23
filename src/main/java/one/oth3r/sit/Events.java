@@ -17,22 +17,25 @@ import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Events {
     private static int tick;
     public static HashMap<ServerPlayerEntity, Entity> entities = new HashMap<>();
     public static HashMap<ServerPlayerEntity, Integer> checkPlayers = new HashMap<>();
     public static boolean checkLogic(ServerPlayerEntity player) {
+        ArrayList<UseAction> food = new ArrayList<>();
+        food.add(UseAction.EAT);
+        food.add(UseAction.DRINK);
+        ArrayList<UseAction> notUsable = new ArrayList<>(food);
+        notUsable.add(UseAction.NONE);
         Item mainItem = player.getMainHandStack().getItem();
         Item offItem = player.getOffHandStack().getItem();
         if (player.isSneaking()) return false;
@@ -41,8 +44,8 @@ public class Events {
             if (checkList(config.mainBlacklist,mainItem)) return false;
             if (!checkList(config.mainWhitelist,mainItem)) {
                 if (config.mainBlock && (mainItem instanceof BlockItem)) return false;
-                if (config.mainFood && mainItem.isFood()) return false;
-                if (config.mainUsable && player.getMainHandStack().isUsedOnRelease()) return false;
+                if (config.mainFood && food.contains(player.getMainHandStack().getUseAction())) return false;
+                if (config.mainUsable && !notUsable.contains(player.getMainHandStack().getUseAction())) return false;
             }
         }
         if (config.offReq.equals(config.OffReq.empty) && !player.getOffHandStack().isEmpty()) return false;
@@ -50,8 +53,8 @@ public class Events {
             if (checkList(config.offBlacklist,offItem)) return false;
             if (!checkList(config.offWhitelist,offItem)) {
                 if (config.offBlock && (offItem instanceof BlockItem)) return false;
-                if (config.offFood && offItem.isFood()) return false;
-                if (config.offUsable && player.getOffHandStack().isUsedOnRelease()) return false;
+                if (config.offFood && food.contains(player.getOffHandStack().getUseAction())) return false;
+                if (config.offUsable && !notUsable.contains(player.getOffHandStack().getUseAction())) return false;
             }
         }
         return true;
@@ -100,9 +103,9 @@ public class Events {
                     String[] states = ((String) map.get("state")).split(",\\s*");
                     boolean matching = true;
                     for (String state:states) {
-                        if (state.charAt(0) == '!')
+                        if (state.charAt(0) == '!') {
                             if (blockState.toString().contains(state.substring(1))) matching = false;
-                        else if (!blockState.toString().contains(state)) matching = false;
+                        } else if (!blockState.toString().contains(state)) matching = false;
                     }
                     return matching;
                 }
@@ -147,28 +150,6 @@ public class Events {
         else entity.setPitch(-90);
     }
     public static void register() {
-        UseBlockCallback.EVENT.register((pl, world, hand, hitResult) -> {
-            ServerPlayerEntity player = Sit.server.getPlayerManager().getPlayer(pl.getUuid());
-            if (player == null) return ActionResult.PASS;
-            if (hand == net.minecraft.util.Hand.MAIN_HAND && hitResult.getType() == HitResult.Type.BLOCK) {
-                BlockPos pos = hitResult.getBlockPos();
-                //todo idk find bugs and polish
-                if (!checkLogic(player)) return ActionResult.PASS;
-                if (checkBlocks(pos,world)) {
-                    if (entities.containsKey(player)) {
-                        if (!config.sitWhileSeated) return ActionResult.PASS;
-                        entities.get(player).setRemoved(Entity.RemovalReason.DISCARDED);
-                        entities.remove(player);
-                    }
-                    DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
-                    setEntity(pos,world,entity);
-                    player.getServerWorld().spawnEntity(entity);
-                    player.startRiding(entity);
-                    entities.put(player,entity);
-                }
-            }
-            return ActionResult.PASS;
-        });
         ServerTickEvents.END_SERVER_TICK.register(minecraftServer -> minecraftServer.execute(Events::cleanUp));
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.player;
@@ -188,6 +169,28 @@ public class Events {
         ServerLifecycleEvents.SERVER_STARTED.register(s -> {
             Sit.server = s;
             Sit.commandManager = s.getCommandManager();
+            UseBlockCallback.EVENT.register((pl, world, hand, hitResult) -> {
+                ServerPlayerEntity player = Sit.server.getPlayerManager().getPlayer(pl.getUuid());
+                if (player == null) return ActionResult.PASS;
+                if (hand == net.minecraft.util.Hand.MAIN_HAND && hitResult.getType() == HitResult.Type.BLOCK) {
+                    BlockPos pos = hitResult.getBlockPos();
+                    if (!checkLogic(player)) return ActionResult.PASS;
+                    if (checkBlocks(pos,world)) {
+                        if (entities.containsKey(player)) {
+                            if (!config.sitWhileSeated) return ActionResult.PASS;
+                            entities.get(player).setRemoved(Entity.RemovalReason.DISCARDED);
+                            entities.remove(player);
+                        }
+                        DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
+                        setEntity(pos,world,entity);
+                        player.getServerWorld().spawnEntity(entity);
+                        player.startRiding(entity);
+                        entities.put(player,entity);
+                        return ActionResult.CONSUME;
+                    }
+                }
+                return ActionResult.PASS;
+            });
         });
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> SitCommand.register(dispatcher));
     }
