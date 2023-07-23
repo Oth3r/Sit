@@ -1,5 +1,5 @@
 # Sit!
-[![github](https://img.shields.io/github/v/release/oth3r/Sit?color=blueviolet&logo=github)](https://github.com/Oth3r/Sit/releases)  [![discord](https://dcbadge.vercel.app/api/server/Mec6yNQ9B7?style=flat)](https://discord.gg/Mec6yNQ9B7) [![modrinth](https://img.shields.io/modrinth/dt/sit!?label=Modrinth&logo=modrinth)](https://modrinth.com/mod/sit!) [![curseforge](https://cf.way2muchnoise.eu/843483.svg)](https://www.curseforge.com/minecraft/mc-mods/Sit!)
+[![github](https://img.shields.io/github/v/release/oth3r/Sit?color=blueviolet&logo=github)](https://github.com/Oth3r/Sit/releases)  [![discord](https://dcbadge.vercel.app/api/server/Mec6yNQ9B7?style=flat)](https://discord.gg/Mec6yNQ9B7) [![modrinth](https://img.shields.io/modrinth/dt/sit!?label=Modrinth&logo=modrinth)](https://modrinth.com/mod/sit!) [![curseforge](https://cf.way2muchnoise.eu/892424.svg)](https://www.curseforge.com/minecraft/mc-mods/Sit1)
 
 **Sit!** is a minecraft mod that adds sitting in vanilla minecraft. 
 Sit on **stairs**, **slabs**, **carpets** by default, and sit on everything else using the config! 
