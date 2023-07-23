@@ -20,7 +20,7 @@ public class ModMenu implements ModMenuApi {
     }
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> YetAnotherConfigLib.createBuilder()
+        return parent -> YetAnotherConfigLib.createBuilder().save(config::save)
                 .title(Text.of("Sit!"))
                 .category(ConfigCategory.createBuilder()
                         .name(lang("category.general"))
