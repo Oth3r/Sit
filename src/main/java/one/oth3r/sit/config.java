@@ -184,7 +184,7 @@ public class config {
         public static boolean carpetsOn = true;
         public static boolean fullBlocksOn = false;
         public static boolean customOn = false;
-        public static List<String> customBlocks = List.of("minecraft:campfire|.46|.5|lit=false","minecraft:soul_campfire|.46|.5|lit=false");
+        public static List<String> customBlocks = List.of("minecraft:campfire|.46|1|lit=false","minecraft:soul_campfire|.46|1|lit=false");
         public static MainReq mainReq = MainReq.empty;
         public static boolean mainBlock = false;
         public static boolean mainFood = false;
@@ -195,7 +195,7 @@ public class config {
         public static boolean offBlock = true;
         public static boolean offFood = false;
         public static boolean offUsable = true;
-        public static List<String> offWhitelist = List.of("minecraft:torch","minecraft:soul_torch");
+        public static List<String> offWhitelist = List.of("minecraft:torch","minecraft:soul_torch","minecraft:redstone_torch");
         public static List<String> offBlacklist = new ArrayList<>();
     }
 }
