@@ -61,7 +61,6 @@ public class Events {
     }
     public static boolean checkList(List<String> list, Item item) {
         String itemID = Registries.ITEM.getId(item).toString();
-        System.out.println(itemID);
         return list.contains(itemID);
     }
     public static HashMap<String,HashMap<String,Object>> getCustomBlocks() {
@@ -85,7 +84,6 @@ public class Events {
         Block block = blockState.getBlock();
         BlockState blockStateAbove = world.getBlockState(pos.add(0,1,0));
         Block blockAbove = blockStateAbove.getBlock();
-        System.out.println(blockState);
         //not the biggest fan but ah well
         if (blockStateAbove.isFullCube(world,pos.add(0,1,0)) && blockStateAbove.blocksMovement()) return false;
         else if (blockAbove instanceof StairsBlock || blockAbove instanceof SlabBlock || blockAbove instanceof CarpetBlock) return false;
@@ -95,7 +93,6 @@ public class Events {
         if (block instanceof CarpetBlock && config.carpetsOn) return true;
         if (blockState.isFullCube(world,pos.add(0,1,0)) && config.fullBlocksOn) return true;
         if (config.customOn && config.customBlocks.size() != 0) {
-            System.out.println("checking custom");
             for (HashMap<String,Object> map:getCustomBlocks().values()) {
                 String blockID = Registries.BLOCK.getId(block).toString();
                 if (map.get("block").equals(blockID)) {
@@ -135,7 +132,6 @@ public class Events {
             entity.setBoundingBox(Box.of(Vec3d.of(pos),1.5,2,1.5));
         }
         if (config.customOn && config.customBlocks.size() != 0) {
-            System.out.println("checking custom sit height");
             for (HashMap<String,Object> map:getCustomBlocks().values()) {
                 String blockID = Registries.BLOCK.getId(block).toString();
                 if (map.get("block").equals(blockID)) {
@@ -205,16 +201,12 @@ public class Events {
                 Entity entity = entry.getValue();
                 if (player.getVehicle() == null || !player.getVehicle().equals(entity)) {
                     entity.setRemoved(Entity.RemovalReason.DISCARDED);
-                    System.out.println("removed..");
                     entityLoop.remove();
                 } else {
                     BlockPos pos = new BlockPos(entity.getBlockX(),(int) Math.floor(player.getY()),entity.getBlockZ());
                     if (entity.getPitch() == 90) pos = new BlockPos(entity.getBlockX(),(int) Math.ceil(player.getY()),entity.getBlockZ());
                     BlockState blockState = player.getWorld().getBlockState(pos);
                     if (blockState.isAir()) {
-                        System.out.println(pos);
-                        System.out.println(entity.getY());
-                        System.out.println("dismount");
                         player.teleport(player.getX(),player.getBlockY()+1,player.getZ());
                         entity.setRemoved(Entity.RemovalReason.DISCARDED);
                         entityLoop.remove();
@@ -228,15 +220,12 @@ public class Events {
                 int i = entry.getValue();
                 checkPlayers.put(player,i-1);
                 if (i<0) {
-                    System.out.println("fail");
                     playerCheckLoop.remove();
                     continue;
                 }
-                System.out.println("trying to add back");
                 if (player.getVehicle() != null) {
                     Entity entity = player.getVehicle();
                     if (entity.getName().getString().equals(Sit.ENTITY_NAME)) {
-                        System.out.println("adding back");
                         setEntity(player.getBlockPos().add(0,1,0),player.getServerWorld(),entity);
                         entities.put(player,entity);
                         playerCheckLoop.remove();
@@ -248,15 +237,12 @@ public class Events {
                 int i = checkPlayers.get(player);
                 checkPlayers.put(player,i-1);
                 if (i<0) {
-                    System.out.println("fail");
                     checkPlayers.remove(player);
                     continue;
                 }
-                System.out.println("trying to add back");
                 if (player.getVehicle() != null) {
                     Entity entity = player.getVehicle();
                     if (entity.getName().getString().equals(Sit.ENTITY_NAME)) {
-                        System.out.println("adding back");
                         setEntity(player.getBlockPos().add(0,1,0),player.getServerWorld(),entity);
                         entities.put(player,entity);
                         checkPlayers.remove(player);
