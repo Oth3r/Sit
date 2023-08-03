@@ -39,8 +39,8 @@ public class Events {
         Item mainItem = player.getMainHandStack().getItem();
         Item offItem = player.getOffHandStack().getItem();
         if (player.isSneaking()) return false;
-        if (config.mainReq.equals(config.MainReq.empty) && !player.getMainHandStack().isEmpty()) return false;
-        if (config.mainReq.equals(config.MainReq.restrictive)) {
+        if (config.mainReq.equals(config.HandRequirements.empty) && !player.getMainHandStack().isEmpty()) return false;
+        if (config.mainReq.equals(config.HandRequirements.restrictive)) {
             if (checkList(config.mainBlacklist,mainItem)) return false;
             if (!checkList(config.mainWhitelist,mainItem)) {
                 if (config.mainBlock && (mainItem instanceof BlockItem)) return false;
@@ -48,8 +48,8 @@ public class Events {
                 if (config.mainUsable && !notUsable.contains(player.getMainHandStack().getUseAction())) return false;
             }
         }
-        if (config.offReq.equals(config.OffReq.empty) && !player.getOffHandStack().isEmpty()) return false;
-        if (config.offReq.equals(config.OffReq.restrictive)) {
+        if (config.offReq.equals(config.HandRequirements.empty) && !player.getOffHandStack().isEmpty()) return false;
+        if (config.offReq.equals(config.HandRequirements.restrictive)) {
             if (checkList(config.offBlacklist,offItem)) return false;
             if (!checkList(config.offWhitelist,offItem)) {
                 if (config.offBlock && (offItem instanceof BlockItem)) return false;
@@ -73,7 +73,7 @@ public class Events {
             data.put("height",split[1]);
             data.put("hitbox",split[2]);
             if (split.length==4) data.put("state",split[3]);
-            map.put(i+"",data);
+            map.put(String.valueOf(i),data);
             i++;
         }
         return map;

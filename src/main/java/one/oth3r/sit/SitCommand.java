@@ -17,7 +17,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class SitCommand {
@@ -31,8 +30,6 @@ public class SitCommand {
                         .executes((context2) -> command(context2.getSource(), context2.getInput()))));
     }
     public static CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
-        ServerPlayerEntity player = Objects.requireNonNull(context.getSource().getPlayer());
-        String[] args = context.getInput().split(" ");
         builder.suggest("reload");
         builder.suggest("purgeChairEntities");
         return builder.buildFuture();

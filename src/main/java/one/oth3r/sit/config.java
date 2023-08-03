@@ -24,23 +24,18 @@ public class config {
     public static boolean fullBlocksOn = defaults.fullBlocksOn;
     public static boolean customOn = defaults.customOn;
     public static List<String> customBlocks = defaults.customBlocks;
-    enum MainReq {
+    enum HandRequirements {
         empty,
         restrictive,
         none
     }
-    public static MainReq mainReq = defaults.mainReq;
+    public static HandRequirements mainReq = defaults.mainReq;
     public static boolean mainBlock = defaults.mainBlock;
     public static boolean mainFood = defaults.mainFood;
     public static boolean mainUsable = defaults.mainUsable;
     public static List<String> mainWhitelist = defaults.mainWhitelist;
     public static List<String> mainBlacklist = defaults.mainBlacklist;
-    enum OffReq {
-        empty,
-        restrictive,
-        none
-    }
-    public static OffReq offReq = defaults.offReq;
+    public static HandRequirements offReq = defaults.offReq;
     public static boolean offBlock = defaults.offBlock;
     public static boolean offFood = defaults.offFood;
     public static boolean offUsable = defaults.offUsable;
@@ -82,7 +77,7 @@ public class config {
         try (FileInputStream fileStream = new FileInputStream(configFile())) {
             Properties properties = new Properties();
             properties.load(fileStream);
-            loadVersion(properties,(String) properties.computeIfAbsent("version", a -> defaults.version+""));
+            loadVersion(properties,(String) properties.computeIfAbsent("version", a -> defaults.version));
             save();
         } catch (Exception f) {
             //read fail
@@ -92,33 +87,33 @@ public class config {
     }
     public static void loadVersion(Properties properties, String version) {
         Type mapType = new TypeToken<ArrayList<String>>() {}.getType();
-        lang = (String) properties.computeIfAbsent("lang", a -> defaults.lang+"");
+        lang = (String) properties.computeIfAbsent("lang", a -> defaults.lang);
         //CONFIG
-        keepActive = Boolean.parseBoolean((String) properties.computeIfAbsent("keep-active", a -> defaults.keepActive+""));
-        sitWhileSeated = Boolean.parseBoolean((String) properties.computeIfAbsent("sit-while-seated", a -> defaults.sitWhileSeated+""));
-        stairsOn = Boolean.parseBoolean((String) properties.computeIfAbsent("stairs", a -> defaults.stairsOn+""));
-        slabsOn = Boolean.parseBoolean((String) properties.computeIfAbsent("slabs", a -> defaults.slabsOn+""));
-        carpetsOn = Boolean.parseBoolean((String) properties.computeIfAbsent("carpets", a -> defaults.carpetsOn+""));
-        fullBlocksOn = Boolean.parseBoolean((String) properties.computeIfAbsent("full-blocks", a -> defaults.fullBlocksOn+""));
-        customOn = Boolean.parseBoolean((String) properties.computeIfAbsent("custom", a -> defaults.customOn+""));
+        keepActive = Boolean.parseBoolean((String) properties.computeIfAbsent("keep-active", a -> String.valueOf(defaults.keepActive)));
+        sitWhileSeated = Boolean.parseBoolean((String) properties.computeIfAbsent("sit-while-seated", a -> String.valueOf(defaults.sitWhileSeated)));
+        stairsOn = Boolean.parseBoolean((String) properties.computeIfAbsent("stairs", a -> String.valueOf(defaults.stairsOn)));
+        slabsOn = Boolean.parseBoolean((String) properties.computeIfAbsent("slabs", a -> String.valueOf(defaults.slabsOn)));
+        carpetsOn = Boolean.parseBoolean((String) properties.computeIfAbsent("carpets", a -> String.valueOf(defaults.carpetsOn)));
+        fullBlocksOn = Boolean.parseBoolean((String) properties.computeIfAbsent("full-blocks", a -> String.valueOf(defaults.fullBlocksOn)));
+        customOn = Boolean.parseBoolean((String) properties.computeIfAbsent("custom", a -> String.valueOf(defaults.customOn)));
         customBlocks = new Gson().fromJson((String)
-                properties.computeIfAbsent("custom-blocks", a -> defaults.customBlocks+""),mapType);
-        mainReq = MainReq.valueOf((String) properties.computeIfAbsent("main-hand-requirement", a -> defaults.mainReq+""));
-        mainBlock = Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-block", a -> defaults.mainBlock+""));
-        mainFood = Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-food", a -> defaults.mainFood+""));
-        mainUsable = Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-usable", a -> defaults.mainUsable +""));
+                properties.computeIfAbsent("custom-blocks", a -> String.valueOf(defaults.customBlocks)),mapType);
+        mainReq = HandRequirements.valueOf((String) properties.computeIfAbsent("main-hand-requirement", a -> String.valueOf(defaults.mainReq)));
+        mainBlock = Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-block", a -> String.valueOf(defaults.mainBlock)));
+        mainFood = Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-food", a -> String.valueOf(defaults.mainFood)));
+        mainUsable = Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-usable", a -> String.valueOf(defaults.mainUsable)));
         mainWhitelist = new Gson().fromJson((String)
-                properties.computeIfAbsent("main-hand-whitelist", a -> defaults.mainWhitelist+""),mapType);
+                properties.computeIfAbsent("main-hand-whitelist", a -> String.valueOf(defaults.mainWhitelist)),mapType);
         mainBlacklist = new Gson().fromJson((String)
-                properties.computeIfAbsent("main-hand-blacklist", a -> defaults.mainBlacklist+""),mapType);
-        offReq = OffReq.valueOf((String) properties.computeIfAbsent("off-hand-requirement", a -> defaults.offReq+""));
-        offBlock = Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-block", a -> defaults.offBlock+""));
-        offFood = Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-food", a -> defaults.offFood+""));
-        offUsable = Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-usable", a -> defaults.offUsable +""));
+                properties.computeIfAbsent("main-hand-blacklist", a -> String.valueOf(defaults.mainBlacklist)),mapType);
+        offReq = HandRequirements.valueOf((String) properties.computeIfAbsent("off-hand-requirement", a -> String.valueOf(defaults.offReq)));
+        offBlock = Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-block", a -> String.valueOf(defaults.offBlock)));
+        offFood = Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-food", a -> String.valueOf(defaults.offFood)));
+        offUsable = Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-usable", a -> String.valueOf(defaults.offUsable)));
         offWhitelist = new Gson().fromJson((String)
-                properties.computeIfAbsent("off-hand-whitelist", a -> defaults.offWhitelist+""),mapType);
+                properties.computeIfAbsent("off-hand-whitelist", a -> String.valueOf(defaults.offWhitelist)),mapType);
         offBlacklist = new Gson().fromJson((String)
-                properties.computeIfAbsent("off-hand-blacklist", a -> defaults.offBlacklist+""),mapType);
+                properties.computeIfAbsent("off-hand-blacklist", a -> String.valueOf(defaults.offBlacklist)),mapType);
     }
     public static MutableText lang(String key, Object... args) {
         LangReader.loadLanguageFile();
@@ -185,13 +180,13 @@ public class config {
         public static boolean fullBlocksOn = false;
         public static boolean customOn = false;
         public static List<String> customBlocks = List.of("minecraft:campfire|.46|1|lit=false","minecraft:soul_campfire|.46|1|lit=false");
-        public static MainReq mainReq = MainReq.empty;
+        public static HandRequirements mainReq = HandRequirements.empty;
         public static boolean mainBlock = false;
         public static boolean mainFood = false;
         public static boolean mainUsable = false;
         public static List<String> mainWhitelist = new ArrayList<>();
         public static List<String> mainBlacklist = new ArrayList<>();
-        public static OffReq offReq = OffReq.restrictive;
+        public static HandRequirements offReq = HandRequirements.restrictive;
         public static boolean offBlock = true;
         public static boolean offFood = false;
         public static boolean offUsable = true;
