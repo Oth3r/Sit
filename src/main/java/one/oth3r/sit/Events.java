@@ -232,23 +232,6 @@ public class Events {
                     }
                 }
             }
-
-            for (ServerPlayerEntity player:checkPlayers.keySet()) {
-                int i = checkPlayers.get(player);
-                checkPlayers.put(player,i-1);
-                if (i<0) {
-                    checkPlayers.remove(player);
-                    continue;
-                }
-                if (player.getVehicle() != null) {
-                    Entity entity = player.getVehicle();
-                    if (entity.getName().getString().equals(Sit.ENTITY_NAME)) {
-                        setEntity(player.getBlockPos().add(0,1,0),player.getServerWorld(),entity);
-                        entities.put(player,entity);
-                        checkPlayers.remove(player);
-                    }
-                }
-            }
         }
     }
 }
