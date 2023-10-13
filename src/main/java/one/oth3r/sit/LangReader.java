@@ -61,7 +61,7 @@ public class LangReader {
                 return txt;
             }
         }
-        return MutableText.of(TextContent.EMPTY).append(translated);
+        return Text.empty().append(translated);
     }
     public static LangReader of(String translationKey, Object... placeholders) {
         return new LangReader(translationKey, placeholders);
