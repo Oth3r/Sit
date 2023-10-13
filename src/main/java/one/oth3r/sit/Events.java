@@ -78,20 +78,22 @@ public class Events {
         }
         return map;
     }
-    @SuppressWarnings("deprecation")
     public static boolean checkBlocks(BlockPos pos, World world) {
         BlockState blockState = world.getBlockState(pos);
         Block block = blockState.getBlock();
         BlockState blockStateAbove = world.getBlockState(pos.add(0,1,0));
         Block blockAbove = blockStateAbove.getBlock();
-        //not the biggest fan but ah well
-        if (blockStateAbove.isFullCube(world,pos.add(0,1,0)) && blockStateAbove.blocksMovement()) return false;
-        else if (blockAbove instanceof StairsBlock || blockAbove instanceof SlabBlock || blockAbove instanceof CarpetBlock) return false;
+        // todo strict checker option to check 2 blocks above??
+        // set amount of blocks that can be above a chair
+        if (!(blockAbove instanceof SignBlock || blockAbove instanceof TrapdoorBlock || blockAbove instanceof BannerBlock)) return false;
+        //if there's already an entity at the block location or above it
         for (Entity entity:entities.values()) if (entity.getBlockPos().equals(pos) || entity.getBlockPos().add(0,1,0).equals(pos)) return false;
+        // return for the 4 default types
         if (block instanceof StairsBlock && config.stairsOn) return blockState.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
         if (block instanceof SlabBlock && config.slabsOn) return blockState.get(SlabBlock.TYPE) == SlabType.BOTTOM;
         if (block instanceof CarpetBlock && config.carpetsOn) return true;
         if (blockState.isFullCube(world,pos.add(0,1,0)) && config.fullBlocksOn) return true;
+        // custom checker
         if (config.customOn && config.customBlocks.size() != 0) {
             for (HashMap<String,Object> map:getCustomBlocks().values()) {
                 String blockID = Registries.BLOCK.getId(block).toString();
