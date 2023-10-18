@@ -84,8 +84,9 @@ public class Events {
         BlockState blockStateAbove = world.getBlockState(pos.add(0,1,0));
         Block blockAbove = blockStateAbove.getBlock();
         // todo strict checker option to check 2 blocks above??
-        // set amount of blocks that can be above a chair
-        if (!(blockAbove instanceof SignBlock || blockAbove instanceof TrapdoorBlock || blockAbove instanceof BannerBlock)) return false;
+        // set amount of blocks that can be above a chair & air
+        if (!(blockAbove instanceof WallSignBlock || blockAbove instanceof TrapdoorBlock ||
+                blockAbove instanceof WallBannerBlock || blockAbove instanceof AirBlock)) return false;
         //if there's already an entity at the block location or above it
         for (Entity entity:entities.values()) if (entity.getBlockPos().equals(pos) || entity.getBlockPos().add(0,1,0).equals(pos)) return false;
         // return for the 4 default types
