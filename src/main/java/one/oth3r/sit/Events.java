@@ -116,24 +116,23 @@ public class Events {
     public static void setEntity(BlockPos pos, World world, Entity entity) {
         Block block = world.getBlockState(pos).getBlock();
         entity.setCustomName(Text.of(Sit.ENTITY_NAME));
-        double hitBoxY = 0.5;
         entity.updatePositionAndAngles(pos.getX() + 0.5, pos.getY()+.47, pos.getZ() + 0.5, 0, 0);
         entity.setInvulnerable(true);
         if (block instanceof StairsBlock) {
             entity.updatePositionAndAngles(pos.getX() + 0.5, pos.getY()+.27, pos.getZ() + 0.5, 0, 0);
-            hitBoxY = 2;
+            entity.setBoundingBox(Box.of(Vec3d.of(pos),1.5,2,1.5));
         }
         if (block instanceof SlabBlock) {
             entity.updatePositionAndAngles(pos.getX() + 0.5, pos.getY()+.27, pos.getZ() + 0.5, 0, 0);
-            hitBoxY = 1;
+            entity.setBoundingBox(Box.of(Vec3d.of(pos),1.5,1,1.5));
         }
         if (block instanceof CarpetBlock) {
             entity.updatePositionAndAngles(pos.getX() + 0.5, pos.getY()-.17, pos.getZ() + 0.5, 0, 0);
-            hitBoxY = 0.125;
+            entity.setBoundingBox(Box.of(Vec3d.of(pos),1.5,0.125,1.5));
         }
         if (world.getBlockState(pos).isFullCube(world,pos.add(0,1,0))) {
             entity.updatePositionAndAngles(pos.getX() + 0.5, pos.getY()+.78, pos.getZ() + 0.5, 0, 0);
-            hitBoxY = 2;
+            entity.setBoundingBox(Box.of(Vec3d.of(pos),1.5,2,1.5));
         }
         if (config.customOn && config.customBlocks.size() != 0) {
             for (HashMap<String,Object> map:getCustomBlocks().values()) {
@@ -141,15 +140,12 @@ public class Events {
                 if (map.get("block").equals(blockID)) {
                     double input = Math.max(Math.min(Double.parseDouble((String) map.get("height")),1),0);
                     entity.updatePositionAndAngles(pos.getX() + 0.5, pos.getY()+input-.22, pos.getZ() + 0.5, 0, 0);
-                    hitBoxY = Double.parseDouble((String) map.get("hitbox"));
+                    entity.setBoundingBox(Box.of(Vec3d.of(pos),1.5,Double.parseDouble((String) map.get("hitbox")),1.5));
                 }
             }
         }
-        //1.20.2 mounting pos change (shifts everything down by .25)
-        entity.updatePositionAndAngles(entity.getX(),entity.getY()+.25,entity.getZ(),0,0);
-        entity.setBoundingBox(Box.of(Vec3d.of(pos),1.5,hitBoxY,1.5));
         //change pitch based on if player is sitting below block height or not
-        if (entity.getY() <= pos.getY()+.35+.25) entity.setPitch(90);
+        if (entity.getY() <= pos.getY()+.35) entity.setPitch(90);
         else entity.setPitch(-90);
     }
     public static void register() {
