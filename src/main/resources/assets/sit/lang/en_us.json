@@ -33,6 +33,7 @@
   "config.sit.general.sittable_blocks.description_6": "Third entry: hitbox size (where the player spawns above the entity when dismounting)",
   "config.sit.general.sittable_blocks.description_7": "Fourth entry (optional): required blockstate to sit (Put a \"!\" to exclude blockstates)",
   "config.sit.general.sittable_blocks.description_8": "Separate different entries with \"|\"!",
+  "config.sit.hand": "Hand Settings",
   "config.sit.hand.requirements": "Requirements",
   "config.sit.hand.requirements.description": "Hand requirements for sitting.",
   "config.sit.hand.requirements.description_2": "Empty = hand has to be empty",
