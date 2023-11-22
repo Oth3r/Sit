@@ -12,7 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -23,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import one.oth3r.sit.Utl.HandType;
 
 import java.util.*;
 
@@ -36,31 +37,34 @@ public class Events {
         food.add(UseAction.DRINK);
         ArrayList<UseAction> notUsable = new ArrayList<>(food);
         notUsable.add(UseAction.NONE);
-        Item mainItem = player.getMainHandStack().getItem();
-        Item offItem = player.getOffHandStack().getItem();
+        HashMap<HandType, ItemStack> itemMap = new HashMap<>();
+        itemMap.put(HandType.main,player.getMainHandStack());
+        itemMap.put(HandType.off,player.getOffHandStack());
+        // if sneaking cant sit
         if (player.isSneaking()) return false;
-        if (config.mainReq.equals(config.HandRequirements.empty) && !player.getMainHandStack().isEmpty()) return false;
-        if (config.mainReq.equals(config.HandRequirements.restrictive)) {
-            if (checkList(config.mainBlacklist,mainItem)) return false;
-            if (!checkList(config.mainWhitelist,mainItem)) {
-                if (config.mainBlock && (mainItem instanceof BlockItem)) return false;
-                if (config.mainFood && food.contains(player.getMainHandStack().getUseAction())) return false;
-                if (config.mainUsable && !notUsable.contains(player.getMainHandStack().getUseAction())) return false;
+        // for both hands
+        for (HandType type:HandType.values()) {
+            ItemStack targetStack = itemMap.get(type);
+            // if req is empty and the item isn't empty, false
+            if (Utl.getReq(player,type).equals(config.HandRequirement.empty) && !targetStack.isEmpty()) return false;
+            // if req is restrictive
+            if (Utl.getReq(player,type).equals(config.HandRequirement.restrictive)) {
+                // if item is in blacklist, false
+                if (checkList(Utl.getList(player,type,"blacklist"),targetStack)) return false;
+                // if item is NOT in whitelist
+                if (!checkList(Utl.getList(player,type,"whitelist"),targetStack)) {
+                    // if block is restricted and items is block, false, ect
+                    if (Utl.getBool(player,type,"blocks") && (targetStack.getItem() instanceof BlockItem)) return false;
+                    if (Utl.getBool(player,type,"food") && food.contains(targetStack.getUseAction())) return false;
+                    if (Utl.getBool(player,type,"usable") && !notUsable.contains(targetStack.getUseAction())) return false;
+                }
             }
         }
-        if (config.offReq.equals(config.HandRequirements.empty) && !player.getOffHandStack().isEmpty()) return false;
-        if (config.offReq.equals(config.HandRequirements.restrictive)) {
-            if (checkList(config.offBlacklist,offItem)) return false;
-            if (!checkList(config.offWhitelist,offItem)) {
-                if (config.offBlock && (offItem instanceof BlockItem)) return false;
-                if (config.offFood && food.contains(player.getOffHandStack().getUseAction())) return false;
-                if (config.offUsable && !notUsable.contains(player.getOffHandStack().getUseAction())) return false;
-            }
-        }
+        // else true
         return true;
     }
-    public static boolean checkList(List<String> list, Item item) {
-        String itemID = Registries.ITEM.getId(item).toString();
+    public static boolean checkList(List<String> list, ItemStack itemStack) {
+        String itemID = Registries.ITEM.getId(itemStack.getItem()).toString();
         return list.contains(itemID);
     }
     public static HashMap<String,HashMap<String,Object>> getCustomBlocks() {
@@ -154,9 +158,12 @@ public class Events {
     }
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(minecraftServer -> minecraftServer.execute(Events::cleanUp));
+        // PLAYER JOIN
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.player;
             checkPlayers.put(player,2);
+            // put server settings in the player settings
+            Sit.playerSettings.put(player,Utl.getHandSettings());
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.player;
@@ -168,6 +175,7 @@ public class Events {
                 entities.remove(player);
             }
             checkPlayers.remove(player);
+            Sit.playerSettings.remove(player);
         });
         ServerLifecycleEvents.SERVER_STARTED.register(s -> {
             Sit.server = s;
