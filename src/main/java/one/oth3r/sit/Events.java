@@ -120,6 +120,7 @@ public class Events {
     public static void setEntity(BlockPos pos, World world, Entity entity) {
         Block block = world.getBlockState(pos).getBlock();
         entity.setCustomName(Text.of(Sit.ENTITY_NAME));
+        entity.setCustomNameVisible(false);
         double hitBoxY = 0.5;
         entity.updatePositionAndAngles(pos.getX() + 0.5, pos.getY()+.47, pos.getZ() + 0.5, 0, 0);
         entity.setInvulnerable(true);
@@ -192,6 +193,7 @@ public class Events {
                             entities.get(player).setRemoved(Entity.RemovalReason.DISCARDED);
                             entities.remove(player);
                         }
+                        //interactions entity to make the hitbox?
                         DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
                         setEntity(pos,world,entity);
                         player.getServerWorld().spawnEntity(entity);
