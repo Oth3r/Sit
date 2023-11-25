@@ -64,10 +64,12 @@ public class Events {
         return true;
     }
     public static boolean checkList(List<String> list, ItemStack itemStack) {
+        // check if a list has an item
         String itemID = Registries.ITEM.getId(itemStack.getItem()).toString();
         return list.contains(itemID);
     }
     public static HashMap<String,HashMap<String,Object>> getCustomBlocks() {
+        // get a hashmap of custom blocks
         HashMap<String,HashMap<String,Object>> map = new HashMap<>();
         int i = 1;
         for (String s:config.customBlocks) {
@@ -158,11 +160,12 @@ public class Events {
             }
         }
         //1.20.2 mounting pos change (shifts everything down by .25)
-        entity.updatePositionAndAngles(entity.getX(),entity.getY()+.25,entity.getZ(),0,0);
+        double oneTwentyTwo = .25;
+        entity.updatePositionAndAngles(entity.getX(),entity.getY()+oneTwentyTwo,entity.getZ(),0,0);
         entity.setBoundingBox(Box.of(Vec3d.of(pos),1.5,hitBoxY,1.5));
         //change pitch based on if player is sitting below block height or not
-        if (entity.getY() <= pos.getY()+.35+.25) entity.setPitch(90);
-        else entity.setPitch(-90);
+        if (entity.getY() <= pos.getY()+.35+oneTwentyTwo) entity.setPitch(90); // below
+        else entity.setPitch(-90); // above
     }
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(minecraftServer -> minecraftServer.execute(Events::cleanUp));
@@ -194,19 +197,20 @@ public class Events {
                 if (hand == net.minecraft.util.Hand.MAIN_HAND && hitResult.getType() == HitResult.Type.BLOCK) {
                     BlockPos pos = hitResult.getBlockPos();
                     if (!checkLogic(player)) return ActionResult.PASS;
-                    if (checkBlocks(pos,world)) {
+                    // todo interactions entity to make the hitbox?
+                    // make the entity first before checking to make sure the blocks around are fine
+                    DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
+                    setEntity(pos,world,entity);
+                    if (checkBlocks(pos,world,isAboveBlockheight(entity))) {
                         if (entities.containsKey(player)) {
                             if (!config.sitWhileSeated) return ActionResult.PASS;
                             entities.get(player).setRemoved(Entity.RemovalReason.DISCARDED);
                             entities.remove(player);
                         }
-                        //interactions entity to make the hitbox?
-                        DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
-                        setEntity(pos,world,entity);
                         player.getServerWorld().spawnEntity(entity);
                         player.startRiding(entity);
                         entities.put(player,entity);
-                        return ActionResult.CONSUME;
+                        return ActionResult.FAIL;
                     }
                 }
                 return ActionResult.PASS;
@@ -227,9 +231,12 @@ public class Events {
                     entity.setRemoved(Entity.RemovalReason.DISCARDED);
                     entityLoop.remove();
                 } else {
-                    BlockPos pos = new BlockPos(entity.getBlockX(),(int) Math.floor(player.getY()),entity.getBlockZ());
-                    if (entity.getPitch() == 90) pos = new BlockPos(entity.getBlockX(),(int) Math.ceil(player.getY()),entity.getBlockZ());
+                    // if below the blockheight, round up the player pos
+                    BlockPos pos = new BlockPos(entity.getBlockX(),(int)Math.ceil(player.getY()),entity.getBlockZ());
+                    // if above the block, round down the player pos
+                    if (isAboveBlockheight(entity)) pos = new BlockPos(entity.getBlockX(),(int)Math.floor(player.getY()),entity.getBlockZ());
                     BlockState blockState = player.getWorld().getBlockState(pos);
+                    // check if said block is still there
                     if (blockState.isAir()) {
                         player.teleport(player.getX(),player.getBlockY()+1,player.getZ());
                         entity.setRemoved(Entity.RemovalReason.DISCARDED);
