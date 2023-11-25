@@ -54,7 +54,7 @@ public class Events {
                 // if item is NOT in whitelist
                 if (!checkList(Utl.getList(player,type,"whitelist"),targetStack)) {
                     // if block is restricted and items is block, false, ect
-                    if (Utl.getBool(player,type,"blocks") && (targetStack.getItem() instanceof BlockItem)) return false;
+                    if (Utl.getBool(player,type,"block") && (targetStack.getItem() instanceof BlockItem)) return false;
                     if (Utl.getBool(player,type,"food") && food.contains(targetStack.getUseAction())) return false;
                     if (Utl.getBool(player,type,"usable") && !notUsable.contains(targetStack.getUseAction())) return false;
                 }
