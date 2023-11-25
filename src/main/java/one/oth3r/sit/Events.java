@@ -90,14 +90,13 @@ public class Events {
     public static boolean checkBlocks(BlockPos pos, World world, boolean isAbove) {
         BlockState blockState = world.getBlockState(pos);
         Block block = blockState.getBlock();
-        BlockState blockStateAbove = world.getBlockState(pos.add(0,1,0));
-        Block blockAbove = blockStateAbove.getBlock();
-        // todo strict checker option to check 2 blocks above??
-        // set amount of blocks that can be above a chair & air
-        if (!(blockAbove instanceof WallSignBlock || blockAbove instanceof TrapdoorBlock ||
-                blockAbove instanceof WallBannerBlock || blockAbove instanceof AirBlock)) return false;
-        //if there's already an entity at the block location or above it
+        // make sure the block above the chair is safe
+        if (!isSitSafe(world.getBlockState(pos.add(0,1,0)).getBlock())) return false;
+        // if the player is above the block, (taller) check the next block above
+        if (isAbove && !isSitSafe(world.getBlockState(pos.add(0,2,0)).getBlock())) return false;
+        //if there's already an entity at the block location or one above it
         for (Entity entity:entities.values()) if (entity.getBlockPos().equals(pos) || entity.getBlockPos().add(0,1,0).equals(pos)) return false;
+
         // return for the 4 default types
         if (block instanceof StairsBlock && config.stairsOn) return blockState.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
         if (block instanceof SlabBlock && config.slabsOn) return blockState.get(SlabBlock.TYPE) == SlabType.BOTTOM;
