@@ -36,7 +36,6 @@ public class SitCommand {
     }
     private static int command(ServerCommandSource source, String arg) {
         ServerPlayerEntity player = source.getPlayer();
-        if (player == null) return 1;
         //trim all the arguments before the command
         String keyword = "sit";
         int index = Integer.MAX_VALUE;
@@ -46,6 +45,14 @@ public class SitCommand {
         String[] args = arg.split(" ");
         if (args[0].equalsIgnoreCase("sit"))
             args = arg.replaceFirst("sit ", "").split(" ");
+        // if console
+        if (player == null) {
+            if (args[0].equalsIgnoreCase("reload")) {
+                config.load();
+                Sit.LOGGER.info(Sit.lang("key.sit.command.reloaded").getString());
+            }
+            return 1;
+        }
         if (args[0].equalsIgnoreCase("sit")) {
             BlockPos pos = player.getBlockPos();
             if (!(player.getY() -((int) player.getY()) > 0.00)) {
