@@ -82,7 +82,12 @@ public class Events {
         }
         return map;
     }
-    public static boolean checkBlocks(BlockPos pos, World world) {
+    public static boolean isSitSafe(Block block) {
+        // check if the block is sit safe (like a sign in the way)
+        return block instanceof WallSignBlock || block instanceof TrapdoorBlock ||
+                block instanceof WallBannerBlock || block instanceof AirBlock;
+    }
+    public static boolean checkBlocks(BlockPos pos, World world, boolean isAbove) {
         BlockState blockState = world.getBlockState(pos);
         Block block = blockState.getBlock();
         BlockState blockStateAbove = world.getBlockState(pos.add(0,1,0));
@@ -116,6 +121,9 @@ public class Events {
             }
         }
         return false;
+    }
+    public static boolean isAboveBlockheight(Entity entity) {
+        return entity.getPitch()<0;
     }
     public static void setEntity(BlockPos pos, World world, Entity entity) {
         Block block = world.getBlockState(pos).getBlock();
