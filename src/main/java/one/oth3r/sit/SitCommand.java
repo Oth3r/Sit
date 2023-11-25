@@ -59,12 +59,12 @@ public class SitCommand {
                 pos = pos.add(0,-1,0);
             }
             World world = player.getWorld();
-            if (Events.checkBlocks(pos,world)) {
-                if (Events.entities.containsKey(player)) {
-                    return 1;
-                }
-                DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
-                Events.setEntity(pos,world,entity);
+            // if already sitting, ignore
+            if (Events.entities.containsKey(player)) return 1;
+            // make entity first to check the blocks
+            DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
+            Events.setEntity(pos,world,entity);
+            if (Events.checkBlocks(pos,world,Events.isAboveBlockheight(entity))) {
                 player.getServerWorld().spawnEntity(entity);
                 player.startRiding(entity);
                 Events.entities.put(player,entity);
