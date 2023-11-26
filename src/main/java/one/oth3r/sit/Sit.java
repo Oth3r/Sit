@@ -40,7 +40,6 @@ public class Sit implements ModInitializer {
 					Type hashMapToken = new TypeToken<HashMap<String, Object>>() {}.getType();
 					Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 					playerSettings.put(player,gson.fromJson(packet.getMessage(),hashMapToken));
-					System.out.println(playerSettings);
 				}));
 	}
 	public static MutableText lang(String key, Object... args) {
