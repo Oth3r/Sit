@@ -5,7 +5,8 @@
 
 **Sit!** is a minecraft mod that adds sitting in vanilla minecraft. 
 Sit on **stairs**, **slabs**, **carpets** by default, and sit on everything else using the config! 
-You can also customize hand restrictions to stop accidentally sitting down!
+You can also customize hand restrictions to stop accidentally sitting down! 
+The mod also has full Geyser support! Enjoy sitting with everyone, weather they are on Bedrock or Java!
 ## Help localize Sit! on [Crowdin](https://crowdin.com/project/oth3r-sit)!
 ![overview](https://github.com/Oth3r/Sit/blob/master/media/overview.gif?raw=true)
 ## Check out my other Projects!
