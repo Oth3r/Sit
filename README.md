@@ -1,9 +1,12 @@
 # Sit!
-[![github](https://img.shields.io/github/v/release/oth3r/Sit?color=blueviolet&logo=github)](https://github.com/Oth3r/Sit/releases)  [![discord](https://dcbadge.vercel.app/api/server/Mec6yNQ9B7?style=flat)](https://discord.gg/Mec6yNQ9B7) [![modrinth](https://img.shields.io/modrinth/dt/sit!?label=Modrinth&logo=modrinth)](https://modrinth.com/mod/sit!) [![curseforge](https://cf.way2muchnoise.eu/892424.svg)](https://www.curseforge.com/minecraft/mc-mods/Sit1) [![Crowdin](https://badges.crowdin.net/oth3r-sit/localized.svg)](https://crowdin.com/project/oth3r-sit)
+[![github](https://img.shields.io/github/issues/oth3r/Sit?logo=github?label=Issues)](https://github.com/Oth3r/Sit/releases) [![Crowdin](https://badges.crowdin.net/oth3r-sit/localized.svg)](https://crowdin.com/project/oth3r-sit)  [![discord](https://dcbadge.vercel.app/api/server/Mec6yNQ9B7?style=flat)](https://discord.gg/Mec6yNQ9B7) 
+
+[![modrinth](https://img.shields.io/modrinth/dt/sit!?label=Modrinth&logo=modrinth)](https://modrinth.com/mod/sit!) [![curseforge](https://cf.way2muchnoise.eu/892424.svg)](https://www.curseforge.com/minecraft/mc-mods/Sit1) 
 
 **Sit!** is a minecraft mod that adds sitting in vanilla minecraft. 
 Sit on **stairs**, **slabs**, **carpets** by default, and sit on everything else using the config! 
-You can also customize hand restrictions to stop accidentally sitting down!
+You can also customize hand restrictions to stop accidentally sitting down! 
+The mod also has full Geyser support! Enjoy sitting with everyone, weather they are on Bedrock or Java!
 ## Help localize Sit! on [Crowdin](https://crowdin.com/project/oth3r-sit)!
 ![overview](https://github.com/Oth3r/Sit/blob/master/media/overview.gif?raw=true)
 ## Check out my other Projects!
@@ -26,5 +29,5 @@ Configure to your hearts desire with the in-game config with **[ModMenu](https:/
 ![custom blocks config](https://github.com/Oth3r/Sit/blob/master/media/custom-blocks-config.png?raw=true)
 
 ## Future Goals
- * Forge Port
- * Client & Server sync to have custom hand restrictions per player
+ * Forge Port (probably NeoForge 1.21)
+ * Custom dismounting logic

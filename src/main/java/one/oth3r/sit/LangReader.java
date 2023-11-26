@@ -1,11 +1,19 @@
 package one.oth3r.sit;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextContent;
 
 import java.io.InputStream;
-import java.util.*;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -75,21 +83,9 @@ public class LangReader {
                 config.lang = config.defaults.lang;
             }
             if (inputStream == null) throw new IllegalArgumentException("CANT LOAD THE LANGUAGE FILE. DIRECTIONHUD WILL BREAK.");
-            Scanner scanner = new Scanner(inputStream);
-            String currentLine;
-            while (scanner.hasNextLine()) {
-                currentLine = scanner.nextLine().trim();
-                if (currentLine.startsWith("{") || currentLine.startsWith("}")) {
-                    continue;
-                }
-                String[] keyValue = currentLine.split(":", 2);
-                String key = keyValue[0].trim();
-                key = key.substring(1,key.length()-1).replace("\\","");
-                String value = keyValue[1].trim();
-                if (value.endsWith(",")) value = value.substring(0, value.length() - 1);
-                value = value.substring(1,value.length()-1).replace("\\","");
-                languageMap.put(key, value);
-            }
+            Type type = new TypeToken<Map<String, String>>(){}.getType();
+            Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+            languageMap.putAll(new Gson().fromJson(reader, type));
         } catch (Exception e) {
             e.printStackTrace();
         }
