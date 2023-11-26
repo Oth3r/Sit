@@ -18,9 +18,6 @@
 		"main": [
 			"one.oth3r.sit.Sit"
 		],
-		"server": [
-			"one.oth3r.sit.SitServer"
-		],
 		"client": [
 			"one.oth3r.sit.SitClient"
 		],

@@ -9,6 +9,7 @@ public class SitClient implements ClientModInitializer {
     public static boolean inGame = false;
     @Override
     public void onInitializeClient() {
+        Sit.isClient = true;
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             inGame = true;
             // send a data packet whenever joining a server

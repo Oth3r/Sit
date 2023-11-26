@@ -24,7 +24,7 @@ public class Sit implements ModInitializer {
 	public static final String ENTITY_NAME = "-sit!-entity-";
 	public static MinecraftServer server;
 	public static CommandManager commandManager;
-	public static boolean isClient = true;
+	public static boolean isClient = false;
 
 	@Override
 	public void onInitialize() {
