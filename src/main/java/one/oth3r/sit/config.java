@@ -4,12 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.text.MutableText;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -65,6 +65,7 @@ public class config {
             // if the old version system (v1.0) remove "v:
             if (ver.contains("v")) ver = ver.substring(1);
             loadVersion(properties,Double.parseDouble(ver));
+            LangReader.loadLanguageFile();
             save();
         } catch (Exception f) {
             //read fail
@@ -126,28 +127,28 @@ public class config {
             e.printStackTrace();
         }
     }
-    public static MutableText lang(String key, Object... args) {
-        LangReader.loadLanguageFile();
-        return LangReader.of("config.sit."+key, args).getTxT();
+    public static String lang(String key, Object... args) {
+        return LangReader.of("config.sit."+key, args).getTxT().getString();
     }
     public static void save() {
-        try (var file = new FileOutputStream(configFile(), false)) {
+        try (var file = Files.newBufferedWriter(configFile().toPath(), StandardCharsets.UTF_8)) {
             Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-            file.write("# Sit! Config\n".getBytes());
-            file.write(("version="+defaults.version).getBytes());
-            file.write(("\n# all available languages: en_us, ru_ru").getBytes());
-            file.write(("\nlang=" + lang).getBytes());
-            file.write(("\n\n# "+lang("general.keep_active.description").getString()).getBytes());
-            file.write(("\nkeep-active=" + keepActive).getBytes());
-            file.write(("\n# "+lang("general.sit_while_seated.description").getString()).getBytes());
-            file.write(("\nsit-while-seated=" + sitWhileSeated).getBytes());
-            file.write(("\n# "+lang("general.sittable.description").getString()).getBytes());
-            file.write(("\nstairs=" + stairsOn).getBytes());
-            file.write(("\nslabs=" + slabsOn).getBytes());
-            file.write(("\ncarpets=" + carpetsOn).getBytes());
-            file.write(("\nfull-blocks=" + fullBlocksOn).getBytes());
-            file.write(("\ncustom=" + customOn).getBytes());
-            file.write(("\n# "+lang("general.sittable_blocks.description")
+            file.write("# Sit! Config\n");
+            file.write(("\nversion="+defaults.version));
+            file.write(("\n# all available languages: en_us, ru_ru"));
+            file.write(("\nlang=" + lang));
+            file.write(("\n\n# "+lang("general.keep_active.description")));
+            file.write(("\nkeep-active=" + keepActive));
+            file.write(("\n# "+lang("general.sit_while_seated.description")));
+            file.write(("\nsit-while-seated=" + sitWhileSeated));
+            file.write(("\n# "+lang("general.sittable.description")));
+            file.write(("\nstairs=" + stairsOn));
+            file.write(("\nslabs=" + slabsOn));
+            file.write(("\ncarpets=" + carpetsOn));
+            file.write(("\nfull-blocks=" + fullBlocksOn));
+            file.write(("\ncustom=" + customOn));
+            file.write(("\n# "+Sit.lang("config.sit."+
+                            "general.sittable_blocks.description")
                     .append("\n# ").append(lang("general.sittable_blocks.description_2"))
                     .append(lang("general.sittable_blocks.description_3",
                             lang("general.sittable_blocks.description_3_2"),
@@ -158,25 +159,26 @@ public class config {
                     .append("\n# ").append(lang("general.sittable_blocks.description_5"))
                     .append("\n# ").append(lang("general.sittable_blocks.description_6"))
                     .append("\n# ").append(lang("general.sittable_blocks.description_7"))
-                    .append("\n# ").append(lang("general.sittable_blocks.description_8")).getString()).getBytes());
-            file.write(("\ncustom-blocks="+gson.toJson(customBlocks)).getBytes());
-            file.write(("\n\n# "+lang("hand")).getBytes());
-            file.write(("\n# "+lang("hand.requirements.description")
+                    .append("\n# ").append(lang("general.sittable_blocks.description_8"))));
+            file.write(("\ncustom-blocks="+gson.toJson(customBlocks)));
+            file.write(("\n\n# "+lang("hand")));
+            file.write(("\n# "+Sit.lang("config.sit."+
+                            "hand.requirements.description")
                     .append("\n# ").append(lang("hand.requirements.description_2"))
                     .append("\n# ").append(lang("hand.requirements.description_3"))
-                    .append("\n# ").append(lang("hand.requirements.description_4")).getString()).getBytes());
-            file.write(("\nhand.main.requirement=" + mainReq).getBytes());
-            file.write(("\nhand.main.block=" + mainBlock).getBytes());
-            file.write(("\nhand.main.food=" + mainFood).getBytes());
-            file.write(("\nhand.main.usable=" + mainUsable).getBytes());
-            file.write(("\nhand.main.whitelist="+gson.toJson(mainWhitelist)).getBytes());
-            file.write(("\nhand.main.blacklist="+gson.toJson(mainBlacklist)).getBytes());
-            file.write(("\nhand.off.requirement=" + offReq).getBytes());
-            file.write(("\nhand.off.block=" + offBlock).getBytes());
-            file.write(("\nhand.off.food=" + offFood).getBytes());
-            file.write(("\nhand.off.usable=" + offUsable).getBytes());
-            file.write(("\nhand.off.whitelist="+gson.toJson(offWhitelist)).getBytes());
-            file.write(("\nhand.off.blacklist="+gson.toJson(offBlacklist)).getBytes());
+                    .append("\n# ").append(lang("hand.requirements.description_4"))));
+            file.write(("\nhand.main.requirement=" + mainReq));
+            file.write(("\nhand.main.block=" + mainBlock));
+            file.write(("\nhand.main.food=" + mainFood));
+            file.write(("\nhand.main.usable=" + mainUsable));
+            file.write(("\nhand.main.whitelist="+gson.toJson(mainWhitelist)));
+            file.write(("\nhand.main.blacklist="+gson.toJson(mainBlacklist)));
+            file.write(("\nhand.off.requirement=" + offReq));
+            file.write(("\nhand.off.block=" + offBlock));
+            file.write(("\nhand.off.food=" + offFood));
+            file.write(("\nhand.off.usable=" + offUsable));
+            file.write(("\nhand.off.whitelist="+gson.toJson(offWhitelist)));
+            file.write(("\nhand.off.blacklist="+gson.toJson(offBlacklist)));
             // send packets to update the settings on the server
             if (SitClient.inGame) SitClient.sendPackets();
         } catch (Exception e) {
