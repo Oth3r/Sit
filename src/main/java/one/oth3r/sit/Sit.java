@@ -3,6 +3,8 @@ package one.oth3r.sit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import io.netty.buffer.ByteBuf;
+import io.netty.util.ReferenceCountUtil;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -15,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Sit implements ModInitializer {
@@ -35,12 +39,15 @@ public class Sit implements ModInitializer {
 		Events.register();
 		//PACKETS
 		ServerPlayNetworking.registerGlobalReceiver(PacketBuilder.getIdentifier(),
-				(server, player, handler, buf, responseSender) -> server.execute(() -> {
-					PacketBuilder packet = new PacketBuilder(buf);
-					Type hashMapToken = new TypeToken<HashMap<String, Object>>() {}.getType();
-					Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-					playerSettings.put(player,gson.fromJson(packet.getMessage(),hashMapToken));
-				}));
+				(server, player, handler, buf, responseSender) -> {
+			buf.retain();
+			server.execute(() -> {
+						PacketBuilder packet = new PacketBuilder(buf);
+						Type hashMapToken = new TypeToken<HashMap<String, Object>>() {}.getType();
+						Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+						playerSettings.put(player,gson.fromJson(packet.getMessage(),hashMapToken));
+					});
+				});
 	}
 	public static MutableText lang(String key, Object... args) {
 		if (isClient) return Text.translatable(key, args);

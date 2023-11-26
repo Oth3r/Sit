@@ -14,7 +14,7 @@ public class PacketBuilder {
     private PacketByteBuf packetByteBuf = PacketByteBufs.create();
     public PacketBuilder(PacketByteBuf buf) {
         // Read any data sent in the packet
-        message = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(buf.array())).toString().trim();
+        message = buf.toString(StandardCharsets.UTF_8);
         packetByteBuf = buf;
     }
     public PacketBuilder(String message) {
