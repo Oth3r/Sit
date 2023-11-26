@@ -8,6 +8,7 @@ import io.netty.util.ReferenceCountUtil;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -40,14 +41,13 @@ public class Sit implements ModInitializer {
 		//PACKETS
 		ServerPlayNetworking.registerGlobalReceiver(PacketBuilder.getIdentifier(),
 				(server, player, handler, buf, responseSender) -> {
-			buf.retain();
+			ByteBuf byteBuf = buf.copy();
 			server.execute(() -> {
-						PacketBuilder packet = new PacketBuilder(buf);
+						PacketBuilder packet = new PacketBuilder(byteBuf);
 						Type hashMapToken = new TypeToken<HashMap<String, Object>>() {}.getType();
 						Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 						playerSettings.put(player,gson.fromJson(packet.getMessage(),hashMapToken));
 					});
-			buf.release();
 				});
 	}
 	public static MutableText lang(String key, Object... args) {
