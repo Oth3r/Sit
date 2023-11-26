@@ -135,7 +135,7 @@ public class config {
             Gson gson = new GsonBuilder().disableHtmlEscaping().create();
             file.write("# Sit! Config\n".getBytes());
             file.write(("version="+defaults.version).getBytes());
-            file.write(("\n# all available languages: en_us").getBytes());
+            file.write(("\n# all available languages: en_us, ru_ru").getBytes());
             file.write(("\nlang=" + lang).getBytes());
             file.write(("\n\n# "+lang("general.keep_active.description").getString()).getBytes());
             file.write(("\nkeep-active=" + keepActive).getBytes());
