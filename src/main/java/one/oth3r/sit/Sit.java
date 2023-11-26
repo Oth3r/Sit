@@ -47,6 +47,7 @@ public class Sit implements ModInitializer {
 						Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 						playerSettings.put(player,gson.fromJson(packet.getMessage(),hashMapToken));
 					});
+			buf.release();
 				});
 	}
 	public static MutableText lang(String key, Object... args) {
