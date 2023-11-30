@@ -1,6 +1,5 @@
 package one.oth3r.sit;
 
-import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.PacketByteBuf;
@@ -13,10 +12,10 @@ public class PacketBuilder {
     public static final String SETTINGS = "settings_v1.0";
     private final String message;
     private PacketByteBuf packetByteBuf = PacketByteBufs.create();
-    public PacketBuilder(ByteBuf buf) {
+    public PacketBuilder(PacketByteBuf buf) {
         // Read any data sent in the packet
-        packetByteBuf.writeBytes(buf);
-        message = packetByteBuf.toString(StandardCharsets.UTF_8);
+        message = buf.toString(StandardCharsets.UTF_8);
+        packetByteBuf = buf;
     }
     public PacketBuilder(String message) {
         this.message = message;
