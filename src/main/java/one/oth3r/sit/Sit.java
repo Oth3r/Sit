@@ -41,9 +41,8 @@ public class Sit implements ModInitializer {
 		//PACKETS
 		ServerPlayNetworking.registerGlobalReceiver(PacketBuilder.getIdentifier(),
 				(server, player, handler, buf, responseSender) -> {
-			ByteBuf byteBuf = buf.copy();
+			PacketBuilder packet = new PacketBuilder(buf);
 			server.execute(() -> {
-						PacketBuilder packet = new PacketBuilder(byteBuf);
 						Type hashMapToken = new TypeToken<HashMap<String, Object>>() {}.getType();
 						Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 						playerSettings.put(player,gson.fromJson(packet.getMessage(),hashMapToken));
