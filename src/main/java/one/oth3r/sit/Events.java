@@ -12,7 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -23,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import one.oth3r.sit.Utl.HandType;
 
 import java.util.*;
 
@@ -36,34 +37,39 @@ public class Events {
         food.add(UseAction.DRINK);
         ArrayList<UseAction> notUsable = new ArrayList<>(food);
         notUsable.add(UseAction.NONE);
-        Item mainItem = player.getMainHandStack().getItem();
-        Item offItem = player.getOffHandStack().getItem();
+        HashMap<HandType, ItemStack> itemMap = new HashMap<>();
+        itemMap.put(HandType.main,player.getMainHandStack());
+        itemMap.put(HandType.off,player.getOffHandStack());
+        // if sneaking cant sit
         if (player.isSneaking()) return false;
-        if (config.mainReq.equals(config.HandRequirements.empty) && !player.getMainHandStack().isEmpty()) return false;
-        if (config.mainReq.equals(config.HandRequirements.restrictive)) {
-            if (checkList(config.mainBlacklist,mainItem)) return false;
-            if (!checkList(config.mainWhitelist,mainItem)) {
-                if (config.mainBlock && (mainItem instanceof BlockItem)) return false;
-                if (config.mainFood && food.contains(player.getMainHandStack().getUseAction())) return false;
-                if (config.mainUsable && !notUsable.contains(player.getMainHandStack().getUseAction())) return false;
+        // for both hands
+        for (HandType type:HandType.values()) {
+            ItemStack targetStack = itemMap.get(type);
+            // if req is empty and the item isn't empty, false
+            if (Utl.getReq(player,type).equals(config.HandRequirement.empty) && !targetStack.isEmpty()) return false;
+            // if req is restrictive
+            if (Utl.getReq(player,type).equals(config.HandRequirement.restrictive)) {
+                // if item is in blacklist, false
+                if (checkList(Utl.getList(player,type,"blacklist"),targetStack)) return false;
+                // if item is NOT in whitelist
+                if (!checkList(Utl.getList(player,type,"whitelist"),targetStack)) {
+                    // if block is restricted and items is block, false, ect
+                    if (Utl.getBool(player,type,"block") && (targetStack.getItem() instanceof BlockItem)) return false;
+                    if (Utl.getBool(player,type,"food") && food.contains(targetStack.getUseAction())) return false;
+                    if (Utl.getBool(player,type,"usable") && !notUsable.contains(targetStack.getUseAction())) return false;
+                }
             }
         }
-        if (config.offReq.equals(config.HandRequirements.empty) && !player.getOffHandStack().isEmpty()) return false;
-        if (config.offReq.equals(config.HandRequirements.restrictive)) {
-            if (checkList(config.offBlacklist,offItem)) return false;
-            if (!checkList(config.offWhitelist,offItem)) {
-                if (config.offBlock && (offItem instanceof BlockItem)) return false;
-                if (config.offFood && food.contains(player.getOffHandStack().getUseAction())) return false;
-                if (config.offUsable && !notUsable.contains(player.getOffHandStack().getUseAction())) return false;
-            }
-        }
+        // else true
         return true;
     }
-    public static boolean checkList(List<String> list, Item item) {
-        String itemID = Registries.ITEM.getId(item).toString();
+    public static boolean checkList(List<String> list, ItemStack itemStack) {
+        // check if a list has an item
+        String itemID = Registries.ITEM.getId(itemStack.getItem()).toString();
         return list.contains(itemID);
     }
     public static HashMap<String,HashMap<String,Object>> getCustomBlocks() {
+        // get a hashmap of custom blocks
         HashMap<String,HashMap<String,Object>> map = new HashMap<>();
         int i = 1;
         for (String s:config.customBlocks) {
@@ -78,17 +84,21 @@ public class Events {
         }
         return map;
     }
-    public static boolean checkBlocks(BlockPos pos, World world) {
+    public static boolean isSitSafe(Block block) {
+        // check if the block is sit safe (like a sign in the way)
+        return block instanceof WallSignBlock || block instanceof TrapdoorBlock ||
+                block instanceof WallBannerBlock || block instanceof AirBlock;
+    }
+    public static boolean checkBlocks(BlockPos pos, World world, boolean isAbove) {
         BlockState blockState = world.getBlockState(pos);
         Block block = blockState.getBlock();
-        BlockState blockStateAbove = world.getBlockState(pos.add(0,1,0));
-        Block blockAbove = blockStateAbove.getBlock();
-        // todo strict checker option to check 2 blocks above??
-        // set amount of blocks that can be above a chair & air
-        if (!(blockAbove instanceof WallSignBlock || blockAbove instanceof TrapdoorBlock ||
-                blockAbove instanceof WallBannerBlock || blockAbove instanceof AirBlock)) return false;
-        //if there's already an entity at the block location or above it
+        // make sure the block above the chair is safe
+        if (!isSitSafe(world.getBlockState(pos.add(0,1,0)).getBlock())) return false;
+        // if the player is above the block, (taller) check the next block above
+        if (isAbove && !isSitSafe(world.getBlockState(pos.add(0,2,0)).getBlock())) return false;
+        //if there's already an entity at the block location or one above it
         for (Entity entity:entities.values()) if (entity.getBlockPos().equals(pos) || entity.getBlockPos().add(0,1,0).equals(pos)) return false;
+
         // return for the 4 default types
         if (block instanceof StairsBlock && config.stairsOn) return blockState.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
         if (block instanceof SlabBlock && config.slabsOn) return blockState.get(SlabBlock.TYPE) == SlabType.BOTTOM;
@@ -113,9 +123,13 @@ public class Events {
         }
         return false;
     }
+    public static boolean isAboveBlockheight(Entity entity) {
+        return entity.getPitch()<0;
+    }
     public static void setEntity(BlockPos pos, World world, Entity entity) {
         Block block = world.getBlockState(pos).getBlock();
         entity.setCustomName(Text.of(Sit.ENTITY_NAME));
+        entity.setCustomNameVisible(false);
         double hitBoxY = 0.5;
         entity.updatePositionAndAngles(pos.getX() + 0.5, pos.getY()+.47, pos.getZ() + 0.5, 0, 0);
         entity.setInvulnerable(true);
@@ -145,18 +159,20 @@ public class Events {
                 }
             }
         }
-        //1.20.2 mounting pos change (shifts everything down by .25)
-        entity.updatePositionAndAngles(entity.getX(),entity.getY()+.25,entity.getZ(),0,0);
+        entity.updatePositionAndAngles(entity.getX(),entity.getY(),entity.getZ(),0,0);
         entity.setBoundingBox(Box.of(Vec3d.of(pos),1.5,hitBoxY,1.5));
         //change pitch based on if player is sitting below block height or not
-        if (entity.getY() <= pos.getY()+.35+.25) entity.setPitch(90);
-        else entity.setPitch(-90);
+        if (entity.getY() <= pos.getY()+.35) entity.setPitch(90); // below
+        else entity.setPitch(-90); // above
     }
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(minecraftServer -> minecraftServer.execute(Events::cleanUp));
+        // PLAYER JOIN
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.player;
             checkPlayers.put(player,2);
+            // put server settings in the player settings
+            Sit.playerSettings.put(player,Utl.getHandSettings());
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.player;
@@ -168,6 +184,7 @@ public class Events {
                 entities.remove(player);
             }
             checkPlayers.remove(player);
+            Sit.playerSettings.remove(player);
         });
         ServerLifecycleEvents.SERVER_STARTED.register(s -> {
             Sit.server = s;
@@ -178,18 +195,20 @@ public class Events {
                 if (hand == net.minecraft.util.Hand.MAIN_HAND && hitResult.getType() == HitResult.Type.BLOCK) {
                     BlockPos pos = hitResult.getBlockPos();
                     if (!checkLogic(player)) return ActionResult.PASS;
-                    if (checkBlocks(pos,world)) {
+                    // todo interactions entity to make the hitbox?
+                    // make the entity first before checking to make sure the blocks around are fine
+                    DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
+                    setEntity(pos,world,entity);
+                    if (checkBlocks(pos,world,isAboveBlockheight(entity))) {
                         if (entities.containsKey(player)) {
                             if (!config.sitWhileSeated) return ActionResult.PASS;
                             entities.get(player).setRemoved(Entity.RemovalReason.DISCARDED);
                             entities.remove(player);
                         }
-                        DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
-                        setEntity(pos,world,entity);
                         player.getServerWorld().spawnEntity(entity);
                         player.startRiding(entity);
                         entities.put(player,entity);
-                        return ActionResult.CONSUME;
+                        return ActionResult.FAIL;
                     }
                 }
                 return ActionResult.PASS;
@@ -210,9 +229,12 @@ public class Events {
                     entity.setRemoved(Entity.RemovalReason.DISCARDED);
                     entityLoop.remove();
                 } else {
-                    BlockPos pos = new BlockPos(entity.getBlockX(),(int) Math.floor(player.getY()),entity.getBlockZ());
-                    if (entity.getPitch() == 90) pos = new BlockPos(entity.getBlockX(),(int) Math.ceil(player.getY()),entity.getBlockZ());
+                    // if below the blockheight, round up the player pos
+                    BlockPos pos = new BlockPos(entity.getBlockX(),(int)Math.ceil(player.getY()),entity.getBlockZ());
+                    // if above the block, round down the player pos
+                    if (isAboveBlockheight(entity)) pos = new BlockPos(entity.getBlockX(),(int)Math.floor(player.getY()),entity.getBlockZ());
                     BlockState blockState = player.getWorld().getBlockState(pos);
+                    // check if said block is still there
                     if (blockState.isAir()) {
                         player.teleport(player.getX(),player.getBlockY()+1,player.getZ());
                         entity.setRemoved(Entity.RemovalReason.DISCARDED);

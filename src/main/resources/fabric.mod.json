@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"id": "sit",
+	"id": "oth3r-sit",
 	"version": "${version}",
 	"name": "Sit!",
 	"description": "Adds sitting to minecraft! Endless customizability for hand restrictions and sittable blocks.",
@@ -18,14 +18,14 @@
 		"main": [
 			"one.oth3r.sit.Sit"
 		],
-		"server": [
-			"one.oth3r.sit.SitServer"
+		"client": [
+			"one.oth3r.sit.SitClient"
 		]
 	},
 	"depends": {
 		"fabricloader": ">=0.14.21",
 		"minecraft": [
-			"1.20.3-beta.1"
+			">=1.20.3-beta.1"
 		],
 		"java": ">=17",
 		"fabric-api": "*"
