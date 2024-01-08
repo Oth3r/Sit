@@ -159,12 +159,10 @@ public class Events {
                 }
             }
         }
-        //1.20.2 mounting pos change (shifts everything down by .25)
-        double oneTwentyTwo = .25;
-        entity.updatePositionAndAngles(entity.getX(),entity.getY()+oneTwentyTwo,entity.getZ(),0,0);
+        entity.updatePositionAndAngles(entity.getX(),entity.getY(),entity.getZ(),0,0);
         entity.setBoundingBox(Box.of(Vec3d.of(pos),1.5,hitBoxY,1.5));
         //change pitch based on if player is sitting below block height or not
-        if (entity.getY() <= pos.getY()+.35+oneTwentyTwo) entity.setPitch(90); // below
+        if (entity.getY() <= pos.getY()+.35) entity.setPitch(90); // below
         else entity.setPitch(-90); // above
     }
     public static void register() {
