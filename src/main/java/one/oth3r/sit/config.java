@@ -149,12 +149,8 @@ public class config {
             file.write("\ncustom=" + customOn);
             file.write("\n# "+Sit.lang("config.sit."+
                             "general.sittable_blocks.description")
-                    .append("\n# ").append(lang("general.sittable_blocks.description_2"))
-                    .append(lang("general.sittable_blocks.description_3",
-                            lang("general.sittable_blocks.description_3_2"),
-                            lang("general.sittable_blocks.description_3_3"),
-                            lang("general.sittable_blocks.description_3_4"),
-                            lang("general.sittable_blocks.description_3_5")))
+                    .append("\n# ").append(lang("general.sittable_blocks.description_2",
+                            "\"minecraft:campfire|0.255|1|lit=false\""))
                     .append("\n# ").append(lang("general.sittable_blocks.description_4"))
                     .append("\n# ").append(lang("general.sittable_blocks.description_5"))
                     .append("\n# ").append(lang("general.sittable_blocks.description_6"))
