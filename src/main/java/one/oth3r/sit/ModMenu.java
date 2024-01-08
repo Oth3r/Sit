@@ -71,12 +71,16 @@ public class ModMenu implements ModMenuApi {
                                 .name(lang("general.sittable_blocks"))
                                 .description(OptionDescription.of(
                                         lang("general.sittable_blocks.description")
-                                                .append("\n\n").append(lang("general.sittable_blocks.description_2"))
-                                                .append(lang("general.sittable_blocks.description_3",
-                                                        lang("general.sittable_blocks.description_3_2").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.AQUA))),
-                                                        lang("general.sittable_blocks.description_3_3").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.RED))),
-                                                        lang("general.sittable_blocks.description_3_4").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.GREEN))),
-                                                        lang("general.sittable_blocks.description_3_5").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.GOLD)))).styled(style -> style.withItalic(true).withColor(TextColor.fromFormatting(Formatting.GRAY))))
+                                                .append("\n\n").append(lang("general.sittable_blocks.description_2",
+                                                        Text.literal("\"")
+                                                                .append(Text.literal("minecraft:campfire").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.AQUA))))
+                                                                .append("|")
+                                                                .append(Text.literal("0.255").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.RED))))
+                                                                .append("|")
+                                                                .append(Text.literal("1").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.GREEN))))
+                                                                .append("|")
+                                                                .append(Text.literal("lit=false").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.GOLD))))
+                                                                .append("\"").styled(style -> style.withItalic(true).withColor(TextColor.fromFormatting(Formatting.GRAY)))))
                                                 .append("\n\n").append(lang("general.sittable_blocks.description_4").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.AQUA))))
                                                 .append("\n").append(lang("general.sittable_blocks.description_5").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.RED))))
                                                 .append("\n").append(lang("general.sittable_blocks.description_6").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.GREEN))))

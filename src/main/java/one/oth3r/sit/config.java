@@ -135,7 +135,7 @@ public class config {
             Gson gson = new GsonBuilder().disableHtmlEscaping().create();
             file.write("# Sit! Config\n");
             file.write("\nversion="+defaults.version);
-            file.write("\n# all available languages: en_us, ru_ru");
+            file.write("\n# all available languages: en_us, ru_ru, es_es");
             file.write("\nlang=" + lang);
             file.write("\n\n# "+lang("general.keep_active.description"));
             file.write("\nkeep-active=" + keepActive);
@@ -149,12 +149,8 @@ public class config {
             file.write("\ncustom=" + customOn);
             file.write("\n# "+Sit.lang("config.sit."+
                             "general.sittable_blocks.description")
-                    .append("\n# ").append(lang("general.sittable_blocks.description_2"))
-                    .append(lang("general.sittable_blocks.description_3",
-                            lang("general.sittable_blocks.description_3_2"),
-                            lang("general.sittable_blocks.description_3_3"),
-                            lang("general.sittable_blocks.description_3_4"),
-                            lang("general.sittable_blocks.description_3_5")))
+                    .append("\n# ").append(lang("general.sittable_blocks.description_2",
+                            "\"minecraft:campfire|0.255|1|lit=false\""))
                     .append("\n# ").append(lang("general.sittable_blocks.description_4"))
                     .append("\n# ").append(lang("general.sittable_blocks.description_5"))
                     .append("\n# ").append(lang("general.sittable_blocks.description_6"))
