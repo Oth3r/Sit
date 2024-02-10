@@ -20,6 +20,6 @@ public class SitClient implements ClientModInitializer {
     }
     public static void sendPackets() {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-        new PacketBuilder(gson.toJson(Utl.getHandSettings())).send();
+        new PacketBuilder(gson.toJson(Utl.PlayerSettings.getHandSettings())).send();
     }
 }
