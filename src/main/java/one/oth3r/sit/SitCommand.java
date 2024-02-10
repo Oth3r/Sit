@@ -49,7 +49,7 @@ public class SitCommand {
         if (player == null) {
             if (args[0].equalsIgnoreCase("reload")) {
                 config.load();
-                Sit.LOGGER.info(Sit.lang("key.sit.command.reloaded").getString());
+                Sit.LOGGER.info(Sit.lang("key.sit.msg.reloaded").getString());
             }
             return 1;
         }
@@ -81,9 +81,9 @@ public class SitCommand {
                 ParseResults<ServerCommandSource> parse =
                         Sit.commandManager.getDispatcher().parse(cmd, player.getCommandSource());
                 Sit.commandManager.getDispatcher().execute(parse);
-                player.sendMessage(Sit.lang("key.sit.command.purged"));
+                player.sendMessage(Sit.lang("key.sit.msg.purged"));
             } catch (CommandSyntaxException e) {
-                player.sendMessage(Sit.lang("key.sit.command.purged"));
+                player.sendMessage(Sit.lang("key.sit.msg.purged"));
                 e.printStackTrace();
             }
         }
