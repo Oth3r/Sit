@@ -128,7 +128,7 @@ public class config {
         }
     }
     public static String lang(String key, Object... args) {
-        return LangReader.of("config.sit."+key, args).getTxT().getString();
+        return Utl.lang("config."+key, args).getString();
     }
     public static void save() {
         try (var file = Files.newBufferedWriter(configFile().toPath(), StandardCharsets.UTF_8)) {
@@ -147,7 +147,7 @@ public class config {
             file.write("\ncarpets=" + carpetsOn);
             file.write("\nfull-blocks=" + fullBlocksOn);
             file.write("\ncustom=" + customOn);
-            file.write("\n# "+Sit.lang("config.sit."+
+            file.write("\n# "+ Utl.lang("config."+
                             "general.sittable_blocks.description")
                     .append("\n# ").append(lang("example",Utl.Assets.CUSTOM_BLOCKS))
                     .append("\n# ").append(lang("general.sittable_blocks.description.2"))
@@ -157,7 +157,7 @@ public class config {
                     .append("\n# ").append(lang("general.sittable_blocks.description.6")).getString());
             file.write("\ncustom-blocks="+gson.toJson(customBlocks));
             file.write("\n\n# "+lang("hand"));
-            file.write("\n# "+Sit.lang("config.sit."+
+            file.write("\n# "+ Utl.lang("config."+
                             "hand.requirement.description")
                     .append("\n# ").append(lang("hand.requirement.description.2",HandRequirement.empty))
                     .append("\n# ").append(lang("hand.requirement.description.3",HandRequirement.restrictive))

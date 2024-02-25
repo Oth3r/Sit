@@ -12,11 +12,8 @@ import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 
 public class ModMenu implements ModMenuApi {
-    private static MutableText lang(String key) {
-        return Text.translatable("config.sit."+key);
-    }
     private static MutableText lang(String key, Object... args) {
-        return Text.translatable("config.sit."+key,args);
+        return Utl.lang("config."+key,args);
     }
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
@@ -24,7 +21,6 @@ public class ModMenu implements ModMenuApi {
                 .title(Text.of("Sit!"))
                 .category(ConfigCategory.createBuilder()
                         .name(lang("category.general"))
-                        .tooltip(lang("category.general.tooltip"))
                         .option(Option.<Boolean>createBuilder()
                                 .name(lang("general.keep_active"))
                                 .description(OptionDescription.of(lang("general.keep_active.description")))
@@ -93,7 +89,6 @@ public class ModMenu implements ModMenuApi {
                         .build())
                 .category(ConfigCategory.createBuilder()
                         .name(lang("category.main_hand"))
-                        .tooltip(lang("category.main_hand.tooltip"))
                         .option(Option.<config.HandRequirement>createBuilder()
                                 .name(lang("hand.requirement"))
                                 .description(OptionDescription.of(lang("hand.requirement.description")
@@ -145,7 +140,6 @@ public class ModMenu implements ModMenuApi {
                         .build())
                 .category(ConfigCategory.createBuilder()
                         .name(lang("category.off_hand"))
-                        .tooltip(lang("category.off_hand.tooltip"))
                         .option(Option.<config.HandRequirement>createBuilder()
                                 .name(lang("hand.requirement"))
                                 .description(OptionDescription.of(lang("hand.requirement.description")

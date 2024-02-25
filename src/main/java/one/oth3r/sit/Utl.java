@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -11,6 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Utl {
+    public static MutableText lang(String key, Object... args) {
+        if (Sit.isClient) return Text.translatable(key, args);
+        else return LangReader.of(key, args).getTxT();
+    }
     public enum HandType {
         main,
         off
