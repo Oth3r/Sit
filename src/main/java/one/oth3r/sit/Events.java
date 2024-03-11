@@ -24,8 +24,6 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import one.oth3r.sit.Utl.HandType;
-import one.oth3r.sit.Utl.PlayerSettings;
-import one.oth3r.sit.Utl.PlayerSettings.Setting;
 
 import java.util.*;
 
@@ -48,17 +46,17 @@ public class Events {
         for (HandType type:HandType.values()) {
             ItemStack targetStack = itemMap.get(type);
             // if req is empty and the item isn't empty, false
-            if (PlayerSettings.getRequirement(player,type).equals(config.HandRequirement.empty) && !targetStack.isEmpty()) return false;
+            if (Utl.getReq(player,type).equals(config.HandRequirement.empty) && !targetStack.isEmpty()) return false;
             // if req is restrictive
-            if (PlayerSettings.getRequirement(player,type).equals(config.HandRequirement.restrictive)) {
+            if (Utl.getReq(player,type).equals(config.HandRequirement.restrictive)) {
                 // if item is in blacklist, false
-                if (checkList(PlayerSettings.getList(player,type,Setting.blacklist),targetStack)) return false;
+                if (checkList(Utl.getList(player,type,"blacklist"),targetStack)) return false;
                 // if item is NOT in whitelist
-                if (!checkList(PlayerSettings.getList(player,type,Setting.whitelist),targetStack)) {
+                if (!checkList(Utl.getList(player,type,"whitelist"),targetStack)) {
                     // if block is restricted and items is block, false, ect
-                    if (PlayerSettings.getToggle(player,type,Setting.block) && (targetStack.getItem() instanceof BlockItem)) return false;
-                    if (PlayerSettings.getToggle(player,type,Setting.food) && food.contains(targetStack.getUseAction())) return false;
-                    if (PlayerSettings.getToggle(player,type,Setting.usable) && !notUsable.contains(targetStack.getUseAction())) return false;
+                    if (Utl.getBool(player,type,"block") && (targetStack.getItem() instanceof BlockItem)) return false;
+                    if (Utl.getBool(player,type,"food") && food.contains(targetStack.getUseAction())) return false;
+                    if (Utl.getBool(player,type,"usable") && !notUsable.contains(targetStack.getUseAction())) return false;
                 }
             }
         }
@@ -107,7 +105,7 @@ public class Events {
         if (block instanceof CarpetBlock && config.carpetsOn) return true;
         if (blockState.isFullCube(world,pos.add(0,1,0)) && config.fullBlocksOn) return true;
         // custom checker
-        if (config.customOn && !config.customBlocks.isEmpty()) {
+        if (config.customOn && config.customBlocks.size() != 0) {
             for (HashMap<String,Object> map:getCustomBlocks().values()) {
                 String blockID = Registries.BLOCK.getId(block).toString();
                 if (map.get("block").equals(blockID)) {
@@ -151,7 +149,7 @@ public class Events {
             entity.updatePositionAndAngles(pos.getX() + 0.5, pos.getY()+.78, pos.getZ() + 0.5, 0, 0);
             hitBoxY = 2;
         }
-        if (config.customOn && !config.customBlocks.isEmpty()) {
+        if (config.customOn && config.customBlocks.size() != 0) {
             for (HashMap<String,Object> map:getCustomBlocks().values()) {
                 String blockID = Registries.BLOCK.getId(block).toString();
                 if (map.get("block").equals(blockID)) {
@@ -176,7 +174,7 @@ public class Events {
             ServerPlayerEntity player = handler.player;
             checkPlayers.put(player,2);
             // put server settings in the player settings
-            Sit.playerSettings.put(player, PlayerSettings.getHandSettings());
+            Sit.playerSettings.put(player,Utl.getHandSettings());
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.player;

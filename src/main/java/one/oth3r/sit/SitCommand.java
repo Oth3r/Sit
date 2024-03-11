@@ -49,7 +49,7 @@ public class SitCommand {
         if (player == null) {
             if (args[0].equalsIgnoreCase("reload")) {
                 config.load();
-                Sit.LOGGER.info(Utl.lang("msg.reloaded").getString());
+                Sit.LOGGER.info(Sit.lang("key.sit.command.reloaded").getString());
             }
             return 1;
         }
@@ -73,7 +73,7 @@ public class SitCommand {
         }
         if (args[0].equalsIgnoreCase("reload")) {
             config.load();
-            player.sendMessage(Utl.lang("msg.reloaded").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.GREEN))));
+            player.sendMessage(Sit.lang("key.sit.command.reloaded").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.GREEN))));
         }
         if (args[0].equalsIgnoreCase("purgeChairEntities")) {
             String cmd = "kill @e[type=minecraft:text_display,name=\""+Sit.ENTITY_NAME+"\"]";
@@ -81,9 +81,9 @@ public class SitCommand {
                 ParseResults<ServerCommandSource> parse =
                         Sit.commandManager.getDispatcher().parse(cmd, player.getCommandSource());
                 Sit.commandManager.getDispatcher().execute(parse);
-                player.sendMessage(Utl.lang("msg.purged"));
+                player.sendMessage(Sit.lang("key.sit.command.purged"));
             } catch (CommandSyntaxException e) {
-                player.sendMessage(Utl.lang("msg.purged"));
+                player.sendMessage(Sit.lang("key.sit.command.purged"));
                 e.printStackTrace();
             }
         }
