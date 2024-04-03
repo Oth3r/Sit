@@ -167,6 +167,24 @@ public class Events {
         if (entity.getY() <= pos.getY()+.35+oneTwentyTwo) entity.setPitch(90); // below
         else entity.setPitch(-90); // above
     }
+    public static boolean sit(ServerPlayerEntity player, BlockPos pos) {
+        // todo interactions entity to make the sitting hitbox?
+        World world = player.getWorld();
+        DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
+        setEntity(pos,world,entity);
+        if (checkBlocks(pos,world,isAboveBlockheight(entity))) {
+            if (entities.containsKey(player)) {
+                if (!config.sitWhileSeated) return false;
+                entities.get(player).setRemoved(Entity.RemovalReason.DISCARDED);
+                entities.remove(player);
+            }
+            player.getServerWorld().spawnEntity(entity);
+            player.startRiding(entity);
+            entities.put(player,entity);
+            return true;
+        }
+        return false;
+    }
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(minecraftServer -> minecraftServer.execute(Events::cleanUp));
         // PLAYER JOIN
@@ -196,22 +214,12 @@ public class Events {
                 if (player == null) return ActionResult.PASS;
                 if (hand == net.minecraft.util.Hand.MAIN_HAND && hitResult.getType() == HitResult.Type.BLOCK) {
                     BlockPos pos = hitResult.getBlockPos();
+                    // check the players hands
                     if (!checkLogic(player)) return ActionResult.PASS;
-                    // todo interactions entity to make the hitbox?
-                    // make the entity first before checking to make sure the blocks around are fine
-                    DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
-                    setEntity(pos,world,entity);
-                    if (checkBlocks(pos,world,isAboveBlockheight(entity))) {
-                        if (entities.containsKey(player)) {
-                            if (!config.sitWhileSeated) return ActionResult.PASS;
-                            entities.get(player).setRemoved(Entity.RemovalReason.DISCARDED);
-                            entities.remove(player);
-                        }
-                        player.getServerWorld().spawnEntity(entity);
-                        player.startRiding(entity);
-                        entities.put(player,entity);
-                        return ActionResult.FAIL;
-                    }
+                    // make the player sit
+                    boolean status = sit(player,pos);
+                    // if sat, cancel / FAIL the use block event
+                    if (status) return ActionResult.FAIL;
                 }
                 return ActionResult.PASS;
             });
