@@ -2,8 +2,13 @@ package one.oth3r.sit.file;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import net.fabricmc.loader.api.FabricLoader;
+import one.oth3r.sit.LangReader;
+import one.oth3r.sit.Sit;
+import one.oth3r.sit.SitClient;
+import one.oth3r.sit.Utl.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,7 +29,7 @@ public class Config {
     public static boolean fullBlocksOn = defaults.fullBlocksOn;
     public static boolean customOn = defaults.customOn;
     public static List<String> customBlocks = defaults.customBlocks;
-    enum HandRequirement {
+    public enum HandRequirement {
         empty,
         restrictive,
         none;
@@ -62,16 +67,34 @@ public class Config {
             Properties properties = new Properties();
             properties.load(fileStream);
             String ver = (String) properties.computeIfAbsent("version", a -> String.valueOf(defaults.version));
-            // if the old version system (v1.0) remove "v:
+
+            // if the old version system (v1.0) remove "v"
             if (ver.contains("v")) ver = ver.substring(1);
+
             loadVersion(properties,Double.parseDouble(ver));
             LangReader.loadLanguageFile();
+
             save();
-        } catch (Exception f) {
+        } catch (Exception e) {
             //read fail
-            f.printStackTrace();
+            e.printStackTrace();
             save();
         }
+    }
+    public static ArrayList<String> validateCustomBlocks(ArrayList<String> fix) {
+        ArrayList<String> out = new ArrayList<>();
+        for (String entry : fix) {
+            String[] split = entry.split("\\|");
+            // skip if not the right size
+            if (split.length < 3 || split.length > 4) continue;
+            // keep going if that block exists
+//            if (Registries.BLOCK.stream().anyMatch(match -> Registries.BLOCK.getId(match).toString().equals(split[0]))) {}
+            // if the other entries aren't correct, skip
+            if (!Num.isFloat(split[1]) || !Num.isInt(split[2])) continue;
+            // add if everything is a okay
+            out.add(entry);
+        }
+        return out;
     }
     public static void loadVersion(Properties properties, double version) {
         try {
@@ -86,17 +109,23 @@ public class Config {
             carpetsOn = Boolean.parseBoolean((String) properties.computeIfAbsent("carpets", a -> String.valueOf(defaults.carpetsOn)));
             fullBlocksOn = Boolean.parseBoolean((String) properties.computeIfAbsent("full-blocks", a -> String.valueOf(defaults.fullBlocksOn)));
             customOn = Boolean.parseBoolean((String) properties.computeIfAbsent("custom", a -> String.valueOf(defaults.customOn)));
-            customBlocks = new Gson().fromJson((String)
-                    properties.computeIfAbsent("custom-blocks", a -> gson.toJson(defaults.customBlocks)), listType);
-            mainReq = HandRequirement.valueOf((String) properties.computeIfAbsent("hand.main.requirement", a -> String.valueOf(defaults.mainReq)));
+            try {
+                customBlocks = validateCustomBlocks(new Gson().fromJson((String)
+                        properties.computeIfAbsent("custom-blocks", a -> gson.toJson(defaults.customBlocks)), listType));
+            } catch (JsonSyntaxException ignore) {}
+            mainReq = HandRequirement.get((String) properties.computeIfAbsent("hand.main.requirement", a -> String.valueOf(defaults.mainReq)));
             mainBlock = Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.block", a -> String.valueOf(defaults.mainBlock)));
             mainFood = Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.food", a -> String.valueOf(defaults.mainFood)));
             mainUsable = Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.usable", a -> String.valueOf(defaults.mainUsable)));
-            mainWhitelist = new Gson().fromJson((String)
-                    properties.computeIfAbsent("hand.main.whitelist", a -> gson.toJson(defaults.mainWhitelist)), listType);
-            mainBlacklist = new Gson().fromJson((String)
-                    properties.computeIfAbsent("hand.main.blacklist", a -> gson.toJson(defaults.mainBlacklist)), listType);
-            offReq = HandRequirement.valueOf((String) properties.computeIfAbsent("hand.off.requirement", a -> String.valueOf(defaults.offReq)));
+            try {
+                mainWhitelist = new Gson().fromJson((String)
+                        properties.computeIfAbsent("hand.main.whitelist", a -> gson.toJson(defaults.mainWhitelist)), listType);
+            } catch (JsonSyntaxException ignore) {}
+            try {
+                mainBlacklist = new Gson().fromJson((String)
+                        properties.computeIfAbsent("hand.main.blacklist", a -> gson.toJson(defaults.mainBlacklist)), listType);
+            } catch (JsonSyntaxException ignore) {}
+            offReq = HandRequirement.get((String) properties.computeIfAbsent("hand.off.requirement", a -> String.valueOf(defaults.offReq)));
             offBlock = Boolean.parseBoolean((String) properties.computeIfAbsent("hand.off.block", a -> String.valueOf(defaults.offBlock)));
             offFood = Boolean.parseBoolean((String) properties.computeIfAbsent("hand.off.food", a -> String.valueOf(defaults.offFood)));
             offUsable = Boolean.parseBoolean((String) properties.computeIfAbsent("hand.off.usable", a -> String.valueOf(defaults.offUsable)));
@@ -105,22 +134,30 @@ public class Config {
             offBlacklist = new Gson().fromJson((String)
                     properties.computeIfAbsent("hand.off.blacklist", a -> gson.toJson(defaults.offBlacklist)), listType);
             if (version == 1.0) {
-                mainReq = HandRequirement.valueOf((String) properties.computeIfAbsent("main-hand-requirement", a -> String.valueOf(defaults.mainReq)));
+                mainReq = HandRequirement.get((String) properties.computeIfAbsent("main-hand-requirement", a -> String.valueOf(defaults.mainReq)));
                 mainBlock = Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-block", a -> String.valueOf(defaults.mainBlock)));
                 mainFood = Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-food", a -> String.valueOf(defaults.mainFood)));
                 mainUsable = Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-usable", a -> String.valueOf(defaults.mainUsable)));
-                mainWhitelist = new Gson().fromJson((String)
-                        properties.computeIfAbsent("main-hand-whitelist", a -> gson.toJson(defaults.mainWhitelist)), listType);
-                mainBlacklist = new Gson().fromJson((String)
-                        properties.computeIfAbsent("main-hand-blacklist", a -> gson.toJson(defaults.mainBlacklist)), listType);
-                offReq = HandRequirement.valueOf((String) properties.computeIfAbsent("off-hand-requirement", a -> String.valueOf(defaults.offReq)));
+                try {
+                    mainWhitelist = new Gson().fromJson((String)
+                            properties.computeIfAbsent("main-hand-whitelist", a -> gson.toJson(defaults.mainWhitelist)), listType);
+                } catch (JsonSyntaxException ignore) {}
+                try {
+                    mainBlacklist = new Gson().fromJson((String)
+                            properties.computeIfAbsent("main-hand-blacklist", a -> gson.toJson(defaults.mainBlacklist)), listType);
+                } catch (JsonSyntaxException ignore) {}
+                offReq = HandRequirement.get((String) properties.computeIfAbsent("off-hand-requirement", a -> String.valueOf(defaults.offReq)));
                 offBlock = Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-block", a -> String.valueOf(defaults.offBlock)));
                 offFood = Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-food", a -> String.valueOf(defaults.offFood)));
                 offUsable = Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-usable", a -> String.valueOf(defaults.offUsable)));
-                offWhitelist = new Gson().fromJson((String)
-                        properties.computeIfAbsent("off-hand-whitelist", a -> gson.toJson(defaults.offWhitelist)), listType);
-                offBlacklist = new Gson().fromJson((String)
-                        properties.computeIfAbsent("off-hand-blacklist", a -> gson.toJson(defaults.offBlacklist)), listType);
+                try {
+                    offWhitelist = new Gson().fromJson((String)
+                            properties.computeIfAbsent("off-hand-whitelist", a -> gson.toJson(defaults.offWhitelist)), listType);
+                } catch (JsonSyntaxException ignore) {}
+                try {
+                    offBlacklist = new Gson().fromJson((String)
+                            properties.computeIfAbsent("off-hand-blacklist", a -> gson.toJson(defaults.offBlacklist)), listType);
+                } catch (JsonSyntaxException ignore) {}
             }
         } catch (Exception e) {
             Sit.LOGGER.info("ERROR LOADING CONFIG - PLEASE REPORT WITH THE ERROR LOG");
@@ -191,7 +228,7 @@ public class Config {
         public static boolean carpetsOn = true;
         public static boolean fullBlocksOn = false;
         public static boolean customOn = false;
-        public static List<String> customBlocks = List.of("minecraft:campfire|.46|1|lit=false","minecraft:soul_campfire|.46|1|lit=false");
+        public static List<String> customBlocks = List.of("minecraft:campfire|.46|1|lit=false","minecraft:soul_campfire|.46|1|lit=false,waterlogged=false");
         public static HandRequirement mainReq = HandRequirement.empty;
         public static boolean mainBlock = false;
         public static boolean mainFood = false;
