@@ -3,23 +3,19 @@ package one.oth3r.sit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import io.netty.buffer.ByteBuf;
-import io.netty.util.ReferenceCountUtil;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import one.oth3r.sit.file.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class Sit implements ModInitializer {
@@ -36,7 +32,7 @@ public class Sit implements ModInitializer {
 		//todo future:
 		// make it so it updates the sitting height and pos based on the block so if it changed while offline it still works (or if stair changes shape)
 		// inner stair offset & custom support for that ig
-		config.load();
+		Config.load();
 		Events.register();
 		//PACKETS
 		ServerPlayNetworking.registerGlobalReceiver(PacketBuilder.getIdentifier(),
