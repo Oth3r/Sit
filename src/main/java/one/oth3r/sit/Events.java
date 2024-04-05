@@ -23,7 +23,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import one.oth3r.sit.Utl.HandType;
+import one.oth3r.sit.Utl.HandSettings.HandType;
+import one.oth3r.sit.file.Config;
 
 import java.util.*;
 
@@ -38,25 +39,25 @@ public class Events {
         ArrayList<UseAction> notUsable = new ArrayList<>(food);
         notUsable.add(UseAction.NONE);
         HashMap<HandType, ItemStack> itemMap = new HashMap<>();
-        itemMap.put(HandType.main,player.getMainHandStack());
-        itemMap.put(HandType.off,player.getOffHandStack());
+        itemMap.put(Utl.HandSettings.HandType.main,player.getMainHandStack());
+        itemMap.put(Utl.HandSettings.HandType.off,player.getOffHandStack());
         // if sneaking cant sit
         if (player.isSneaking()) return false;
         // for both hands
-        for (HandType type:HandType.values()) {
+        for (HandType type: Utl.HandSettings.HandType.values()) {
             ItemStack targetStack = itemMap.get(type);
             // if req is empty and the item isn't empty, false
-            if (Utl.getReq(player,type).equals(config.HandRequirement.empty) && !targetStack.isEmpty()) return false;
+            if (Utl.HandSettings.getReq(player,type).equals(Config.HandRequirement.empty) && !targetStack.isEmpty()) return false;
             // if req is restrictive
-            if (Utl.getReq(player,type).equals(config.HandRequirement.restrictive)) {
+            if (Utl.HandSettings.getReq(player,type).equals(Config.HandRequirement.restrictive)) {
                 // if item is in blacklist, false
-                if (checkList(Utl.getList(player,type,"blacklist"),targetStack)) return false;
+                if (checkList(Utl.HandSettings.getList(player,type,"blacklist"),targetStack)) return false;
                 // if item is NOT in whitelist
-                if (!checkList(Utl.getList(player,type,"whitelist"),targetStack)) {
+                if (!checkList(Utl.HandSettings.getList(player,type,"whitelist"),targetStack)) {
                     // if block is restricted and items is block, false, ect
-                    if (Utl.getBool(player,type,"block") && (targetStack.getItem() instanceof BlockItem)) return false;
-                    if (Utl.getBool(player,type,"food") && food.contains(targetStack.getUseAction())) return false;
-                    if (Utl.getBool(player,type,"usable") && !notUsable.contains(targetStack.getUseAction())) return false;
+                    if (Utl.HandSettings.getBool(player,type,"block") && (targetStack.getItem() instanceof BlockItem)) return false;
+                    if (Utl.HandSettings.getBool(player,type,"food") && food.contains(targetStack.getUseAction())) return false;
+                    if (Utl.HandSettings.getBool(player,type,"usable") && !notUsable.contains(targetStack.getUseAction())) return false;
                 }
             }
         }
@@ -192,7 +193,7 @@ public class Events {
             ServerPlayerEntity player = handler.player;
             checkPlayers.put(player,2);
             // put server settings in the player settings
-            Sit.playerSettings.put(player,Utl.getHandSettings());
+            Sit.playerSettings.put(player, Utl.HandSettings.getHandSettings());
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.player;
