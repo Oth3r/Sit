@@ -1,4 +1,4 @@
-package one.oth3r.sit;
+package one.oth3r.sit.file;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class config {
+public class Config {
     public static String lang = defaults.lang;
     public static boolean keepActive = defaults.keepActive;
     public static boolean sitWhileSeated = defaults.sitWhileSeated;

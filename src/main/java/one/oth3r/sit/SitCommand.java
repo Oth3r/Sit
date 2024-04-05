@@ -13,6 +13,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
+import one.oth3r.sit.file.Config;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -45,7 +46,7 @@ public class SitCommand {
         // if console
         if (player == null) {
             if (args[0].equalsIgnoreCase("reload")) {
-                config.load();
+                Config.load();
                 Sit.LOGGER.info(Sit.lang("key.sit.command.reloaded").getString());
             }
             return 1;
@@ -62,7 +63,7 @@ public class SitCommand {
             Events.sit(player,pos);
         }
         if (args[0].equalsIgnoreCase("reload")) {
-            config.load();
+            Config.load();
             player.sendMessage(Sit.lang("key.sit.command.reloaded").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.GREEN))));
         }
         if (args[0].equalsIgnoreCase("purgeChairEntities")) {

@@ -72,7 +72,7 @@ public class Events {
         // get a hashmap of custom blocks
         HashMap<String,HashMap<String,Object>> map = new HashMap<>();
         int i = 1;
-        for (String s:config.customBlocks) {
+        for (String s: Config.customBlocks) {
             String[] split = s.split("\\|");
             HashMap<String,Object> data = new HashMap<>();
             data.put("block",split[0]);
@@ -100,12 +100,12 @@ public class Events {
         for (Entity entity:entities.values()) if (entity.getBlockPos().equals(pos) || entity.getBlockPos().add(0,1,0).equals(pos)) return false;
 
         // return for the 4 default types
-        if (block instanceof StairsBlock && config.stairsOn) return blockState.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
-        if (block instanceof SlabBlock && config.slabsOn) return blockState.get(SlabBlock.TYPE) == SlabType.BOTTOM;
-        if (block instanceof CarpetBlock && config.carpetsOn) return true;
-        if (blockState.isFullCube(world,pos.add(0,1,0)) && config.fullBlocksOn) return true;
+        if (block instanceof StairsBlock && Config.stairsOn) return blockState.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
+        if (block instanceof SlabBlock && Config.slabsOn) return blockState.get(SlabBlock.TYPE) == SlabType.BOTTOM;
+        if (block instanceof CarpetBlock && Config.carpetsOn) return true;
+        if (blockState.isFullCube(world,pos.add(0,1,0)) && Config.fullBlocksOn) return true;
         // custom checker
-        if (config.customOn && config.customBlocks.size() != 0) {
+        if (Config.customOn && Config.customBlocks.size() != 0) {
             for (HashMap<String,Object> map:getCustomBlocks().values()) {
                 String blockID = Registries.BLOCK.getId(block).toString();
                 if (map.get("block").equals(blockID)) {
@@ -149,7 +149,7 @@ public class Events {
             entity.updatePositionAndAngles(pos.getX() + 0.5, pos.getY()+.78, pos.getZ() + 0.5, 0, 0);
             hitBoxY = 2;
         }
-        if (config.customOn && config.customBlocks.size() != 0) {
+        if (Config.customOn && !Config.customBlocks.isEmpty()) {
             for (HashMap<String,Object> map:getCustomBlocks().values()) {
                 String blockID = Registries.BLOCK.getId(block).toString();
                 if (map.get("block").equals(blockID)) {
@@ -174,7 +174,7 @@ public class Events {
         setEntity(pos,world,entity);
         if (checkBlocks(pos,world,isAboveBlockheight(entity))) {
             if (entities.containsKey(player)) {
-                if (!config.sitWhileSeated) return false;
+                if (!Config.sitWhileSeated) return false;
                 entities.get(player).setRemoved(Entity.RemovalReason.DISCARDED);
                 entities.remove(player);
             }
@@ -197,7 +197,7 @@ public class Events {
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.player;
             if (entities.containsKey(player)) {
-                if (!config.keepActive) {
+                if (!Config.keepActive) {
                     player.dismountVehicle();
                     entities.get(player).setRemoved(Entity.RemovalReason.DISCARDED);
                 }
