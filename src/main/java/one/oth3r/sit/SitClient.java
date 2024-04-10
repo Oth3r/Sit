@@ -22,6 +22,6 @@ public class SitClient implements ClientModInitializer {
     }
     public static CustomPayload sendPackets() {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-        return new Sit.SettingsPayload(gson.toJson(Utl.getHandSettings()));
+        return new Sit.SettingsPayload(gson.toJson(Utl.HandSettings.getHandSettings()));
     }
 }
