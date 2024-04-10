@@ -16,7 +16,7 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import one.oth3r.sit.file.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,7 @@ public class Sit implements ModInitializer {
 		//todo future:
 		// make it so it updates the sitting height and pos based on the block so if it changed while offline it still works (or if stair changes shape)
 		// inner stair offset & custom support for that ig
-		config.load();
+		Config.load();
 		Events.register();
 		//PACKETS
 		PayloadTypeRegistry.playC2S().register(SettingsPayload.ID, SettingsPayload.CODEC);

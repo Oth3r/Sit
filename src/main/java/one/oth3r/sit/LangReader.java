@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import one.oth3r.sit.file.Config;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -77,10 +78,10 @@ public class LangReader {
     public static void loadLanguageFile() {
         try {
             ClassLoader classLoader = Sit.class.getClassLoader();
-            InputStream inputStream = classLoader.getResourceAsStream("assets/sit/lang/"+ config.lang+".json");
+            InputStream inputStream = classLoader.getResourceAsStream("assets/sit/lang/"+ Config.lang+".json");
             if (inputStream == null) {
-                inputStream = classLoader.getResourceAsStream("assets/sit/lang/"+config.defaults.lang+".json");
-                config.lang = config.defaults.lang;
+                inputStream = classLoader.getResourceAsStream("assets/sit/lang/"+ Config.defaults.lang+".json");
+                Config.lang = Config.defaults.lang;
             }
             if (inputStream == null) throw new IllegalArgumentException("CANT LOAD THE LANGUAGE FILE. DIRECTIONHUD WILL BREAK.");
             Type type = new TypeToken<Map<String, String>>(){}.getType();
