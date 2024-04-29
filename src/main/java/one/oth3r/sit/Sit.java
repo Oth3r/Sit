@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
@@ -12,6 +13,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import one.oth3r.sit.file.Config;
+import one.oth3r.sit.packet.CustomPayloads;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,17 +37,15 @@ public class Sit implements ModInitializer {
 		Config.load();
 		Events.register();
 		//PACKETS
-		ServerPlayNetworking.registerGlobalReceiver(PacketBuilder.getIdentifier(),
-				(server, player, handler, buf, responseSender) -> {
-			// copy to not throw errors
-			PacketBuilder packet = new PacketBuilder(buf.copy());
-			server.execute(() -> {
-						Type hashMapToken = new TypeToken<HashMap<String, Object>>() {}.getType();
-						Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-						playerSettings.put(player,gson.fromJson(packet.getMessage(),hashMapToken));
-					});
-				});
+		PayloadTypeRegistry.playC2S().register(CustomPayloads.SettingsPayload.ID, CustomPayloads.SettingsPayload.CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(CustomPayloads.SettingsPayload.ID,((payload, context) -> server.execute(() -> {
+            Type hashMapToken = new TypeToken<HashMap<String, Object>>() {}.getType();
+            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+
+            playerSettings.put(context.player(),gson.fromJson(payload.value(),hashMapToken));
+        })));
 	}
+
 	public static MutableText lang(String key, Object... args) {
 		if (isClient) return Text.translatable(key, args);
 		else return LangReader.of(key, args).getTxT();
