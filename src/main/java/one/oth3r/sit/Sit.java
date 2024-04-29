@@ -5,18 +5,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import one.oth3r.sit.file.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,22 +35,16 @@ public class Sit implements ModInitializer {
 		Config.load();
 		Events.register();
 		//PACKETS
-		PayloadTypeRegistry.playC2S().register(SettingsPayload.ID, SettingsPayload.CODEC);
-		ServerPlayNetworking.registerGlobalReceiver(SettingsPayload.ID,((payload, context) -> {
+		ServerPlayNetworking.registerGlobalReceiver(PacketBuilder.getIdentifier(),
+				(server, player, handler, buf, responseSender) -> {
+			// copy to not throw errors
+			PacketBuilder packet = new PacketBuilder(buf.copy());
 			server.execute(() -> {
-				Type hashMapToken = new TypeToken<HashMap<String, Object>>() {}.getType();
-				Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-				playerSettings.put(context.player(),gson.fromJson(payload.value,hashMapToken));
-			});
-		}));
-	}
-	public record SettingsPayload(String value) implements CustomPayload {
-		public static final CustomPayload.Id<SettingsPayload> ID = new CustomPayload.Id<>(new Identifier(MOD_ID,"settings_v1.1"));
-		public static final PacketCodec<RegistryByteBuf, SettingsPayload> CODEC = PacketCodecs.STRING.xmap(SettingsPayload::new, SettingsPayload::value).cast();
-		@Override
-		public Id<SettingsPayload> getId() {
-			return ID;
-		}
+						Type hashMapToken = new TypeToken<HashMap<String, Object>>() {}.getType();
+						Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+						playerSettings.put(player,gson.fromJson(packet.getMessage(),hashMapToken));
+					});
+				});
 	}
 	public static MutableText lang(String key, Object... args) {
 		if (isClient) return Text.translatable(key, args);
