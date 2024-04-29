@@ -6,7 +6,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.packet.CustomPayload;
-import one.oth3r.sit.packet.CustomPayloads;
 
 public class SitClient implements ClientModInitializer {
     public static boolean inGame = false;
@@ -21,9 +20,8 @@ public class SitClient implements ClientModInitializer {
         // reset inGame
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> inGame = false);
     }
-
     public static CustomPayload sendPackets() {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-        return new CustomPayloads.SettingsPayload(gson.toJson(Utl.HandSettings.getHandSettings()));
+        return new Sit.SettingsPayload(gson.toJson(Utl.getHandSettings()));
     }
 }
