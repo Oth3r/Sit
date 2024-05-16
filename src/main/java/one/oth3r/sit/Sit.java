@@ -41,7 +41,7 @@ public class Sit implements ModInitializer {
 		ServerPlayNetworking.registerGlobalReceiver(CustomPayloads.SettingsPayload.ID,((payload, context) -> server.execute(() -> {
             Type hashMapToken = new TypeToken<HashMap<String, Object>>() {}.getType();
             Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-
+			LOGGER.info(String.format("Received custom sitting settings from %s.",context.player().getName().getString()));
             playerSettings.put(context.player(),gson.fromJson(payload.value(),hashMapToken));
         })));
 	}
