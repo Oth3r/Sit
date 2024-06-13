@@ -13,13 +13,19 @@ public class SitClient implements ClientModInitializer {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             inGame = true;
             // send a data packet whenever joining a server
-            client.execute(SitClient::sendPackets);
+            sendSettingsPackets();
         });
         // reset inGame
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> inGame = false);
     }
-    public static void sendPackets() {
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-        new PacketBuilder(gson.toJson(Utl.HandSettings.getHandSettings())).send();
+
+    /**
+     * sends the settings packets to the server is the client is in game
+     */
+    public static void sendSettingsPackets() {
+        if (inGame) {
+            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+            new PacketBuilder(gson.toJson(Utl.HandSettings.getHandSettings())).send();
+        }
     }
 }
