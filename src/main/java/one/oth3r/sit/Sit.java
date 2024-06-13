@@ -40,6 +40,7 @@ public class Sit implements ModInitializer {
 			// copy to not throw errors
 			PacketBuilder packet = new PacketBuilder(buf.copy());
 			server.execute(() -> {
+                        LOGGER.info(String.format("Received custom sitting settings from %s.",player.getName().getString()));
 						Type hashMapToken = new TypeToken<HashMap<String, Object>>() {}.getType();
 						Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 						playerSettings.put(player,gson.fromJson(packet.getMessage(),hashMapToken));

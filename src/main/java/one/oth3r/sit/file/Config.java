@@ -213,7 +213,7 @@ public class Config {
             file.write("\nhand.off.whitelist="+gson.toJson(offWhitelist));
             file.write("\nhand.off.blacklist="+gson.toJson(offBlacklist));
             // send packets to update the settings on the server
-            if (SitClient.inGame) SitClient.sendPackets();
+            SitClient.sendSettingsPackets();
         } catch (Exception e) {
             e.printStackTrace();
         }
