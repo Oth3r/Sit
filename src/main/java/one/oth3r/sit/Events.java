@@ -23,8 +23,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import one.oth3r.sit.Utl.HandSettings.HandType;
-import one.oth3r.sit.file.Config;
+import one.oth3r.sit.Utl.HandType;
+import one.oth3r.sit.Utl.PlayerSettings;
+import one.oth3r.sit.Utl.PlayerSettings.Setting;
 
 import java.util.*;
 
@@ -39,25 +40,25 @@ public class Events {
         ArrayList<UseAction> notUsable = new ArrayList<>(food);
         notUsable.add(UseAction.NONE);
         HashMap<HandType, ItemStack> itemMap = new HashMap<>();
-        itemMap.put(Utl.HandSettings.HandType.main,player.getMainHandStack());
-        itemMap.put(Utl.HandSettings.HandType.off,player.getOffHandStack());
+        itemMap.put(HandType.main,player.getMainHandStack());
+        itemMap.put(HandType.off,player.getOffHandStack());
         // if sneaking cant sit
         if (player.isSneaking()) return false;
         // for both hands
-        for (HandType type: Utl.HandSettings.HandType.values()) {
+        for (HandType type:HandType.values()) {
             ItemStack targetStack = itemMap.get(type);
             // if req is empty and the item isn't empty, false
-            if (Utl.HandSettings.getReq(player,type).equals(Config.HandRequirement.empty) && !targetStack.isEmpty()) return false;
+            if (PlayerSettings.getRequirement(player,type).equals(config.HandRequirement.empty) && !targetStack.isEmpty()) return false;
             // if req is restrictive
-            if (Utl.HandSettings.getReq(player,type).equals(Config.HandRequirement.restrictive)) {
+            if (PlayerSettings.getRequirement(player,type).equals(config.HandRequirement.restrictive)) {
                 // if item is in blacklist, false
-                if (checkList(Utl.HandSettings.getList(player,type,"blacklist"),targetStack)) return false;
+                if (checkList(PlayerSettings.getList(player,type,Setting.blacklist),targetStack)) return false;
                 // if item is NOT in whitelist
-                if (!checkList(Utl.HandSettings.getList(player,type,"whitelist"),targetStack)) {
+                if (!checkList(PlayerSettings.getList(player,type,Setting.whitelist),targetStack)) {
                     // if block is restricted and items is block, false, ect
-                    if (Utl.HandSettings.getBool(player,type,"block") && (targetStack.getItem() instanceof BlockItem)) return false;
-                    if (Utl.HandSettings.getBool(player,type,"food") && food.contains(targetStack.getUseAction())) return false;
-                    if (Utl.HandSettings.getBool(player,type,"usable") && !notUsable.contains(targetStack.getUseAction())) return false;
+                    if (PlayerSettings.getToggle(player,type,Setting.block) && (targetStack.getItem() instanceof BlockItem)) return false;
+                    if (PlayerSettings.getToggle(player,type,Setting.food) && food.contains(targetStack.getUseAction())) return false;
+                    if (PlayerSettings.getToggle(player,type,Setting.usable) && !notUsable.contains(targetStack.getUseAction())) return false;
                 }
             }
         }
@@ -73,7 +74,7 @@ public class Events {
         // get a hashmap of custom blocks
         HashMap<String,HashMap<String,Object>> map = new HashMap<>();
         int i = 1;
-        for (String s: Config.customBlocks) {
+        for (String s:config.customBlocks) {
             String[] split = s.split("\\|");
             HashMap<String,Object> data = new HashMap<>();
             data.put("block",split[0]);
@@ -101,12 +102,12 @@ public class Events {
         for (Entity entity:entities.values()) if (entity.getBlockPos().equals(pos) || entity.getBlockPos().add(0,1,0).equals(pos)) return false;
 
         // return for the 4 default types
-        if (block instanceof StairsBlock && Config.stairsOn) return blockState.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
-        if (block instanceof SlabBlock && Config.slabsOn) return blockState.get(SlabBlock.TYPE) == SlabType.BOTTOM;
-        if (block instanceof CarpetBlock && Config.carpetsOn) return true;
-        if (blockState.isFullCube(world,pos.add(0,1,0)) && Config.fullBlocksOn) return true;
+        if (block instanceof StairsBlock && config.stairsOn) return blockState.get(StairsBlock.HALF) == BlockHalf.BOTTOM;
+        if (block instanceof SlabBlock && config.slabsOn) return blockState.get(SlabBlock.TYPE) == SlabType.BOTTOM;
+        if (block instanceof CarpetBlock && config.carpetsOn) return true;
+        if (blockState.isFullCube(world,pos.add(0,1,0)) && config.fullBlocksOn) return true;
         // custom checker
-        if (Config.customOn && Config.customBlocks.size() != 0) {
+        if (config.customOn && !config.customBlocks.isEmpty()) {
             for (HashMap<String,Object> map:getCustomBlocks().values()) {
                 String blockID = Registries.BLOCK.getId(block).toString();
                 if (map.get("block").equals(blockID)) {
@@ -150,7 +151,7 @@ public class Events {
             entity.updatePositionAndAngles(pos.getX() + 0.5, pos.getY()+.78, pos.getZ() + 0.5, 0, 0);
             hitBoxY = 2;
         }
-        if (Config.customOn && !Config.customBlocks.isEmpty()) {
+        if (config.customOn && !config.customBlocks.isEmpty()) {
             for (HashMap<String,Object> map:getCustomBlocks().values()) {
                 String blockID = Registries.BLOCK.getId(block).toString();
                 if (map.get("block").equals(blockID)) {
@@ -168,24 +169,6 @@ public class Events {
         if (entity.getY() <= pos.getY()+.35+oneTwentyTwo) entity.setPitch(90); // below
         else entity.setPitch(-90); // above
     }
-    public static boolean sit(ServerPlayerEntity player, BlockPos pos) {
-        // todo interactions entity to make the sitting hitbox?
-        World world = player.getWorld();
-        DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
-        setEntity(pos,world,entity);
-        if (checkBlocks(pos,world,isAboveBlockheight(entity))) {
-            if (entities.containsKey(player)) {
-                if (!Config.sitWhileSeated) return false;
-                entities.get(player).setRemoved(Entity.RemovalReason.DISCARDED);
-                entities.remove(player);
-            }
-            player.getServerWorld().spawnEntity(entity);
-            player.startRiding(entity);
-            entities.put(player,entity);
-            return true;
-        }
-        return false;
-    }
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(minecraftServer -> minecraftServer.execute(Events::cleanUp));
         // PLAYER JOIN
@@ -193,12 +176,12 @@ public class Events {
             ServerPlayerEntity player = handler.player;
             checkPlayers.put(player,2);
             // put server settings in the player settings
-            Sit.playerSettings.put(player, Utl.HandSettings.getHandSettings());
+            Sit.playerSettings.put(player, PlayerSettings.getHandSettings());
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.player;
             if (entities.containsKey(player)) {
-                if (!Config.keepActive) {
+                if (!config.keepActive) {
                     player.dismountVehicle();
                     entities.get(player).setRemoved(Entity.RemovalReason.DISCARDED);
                 }
@@ -215,12 +198,22 @@ public class Events {
                 if (player == null) return ActionResult.PASS;
                 if (hand == net.minecraft.util.Hand.MAIN_HAND && hitResult.getType() == HitResult.Type.BLOCK) {
                     BlockPos pos = hitResult.getBlockPos();
-                    // check the players hands
                     if (!checkLogic(player)) return ActionResult.PASS;
-                    // make the player sit
-                    boolean status = sit(player,pos);
-                    // if sat, cancel / FAIL the use block event
-                    if (status) return ActionResult.FAIL;
+                    // todo interactions entity to make the hitbox?
+                    // make the entity first before checking to make sure the blocks around are fine
+                    DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
+                    setEntity(pos,world,entity);
+                    if (checkBlocks(pos,world,isAboveBlockheight(entity))) {
+                        if (entities.containsKey(player)) {
+                            if (!config.sitWhileSeated) return ActionResult.PASS;
+                            entities.get(player).setRemoved(Entity.RemovalReason.DISCARDED);
+                            entities.remove(player);
+                        }
+                        player.getServerWorld().spawnEntity(entity);
+                        player.startRiding(entity);
+                        entities.put(player,entity);
+                        return ActionResult.FAIL;
+                    }
                 }
                 return ActionResult.PASS;
             });
@@ -247,7 +240,7 @@ public class Events {
                     BlockState blockState = player.getWorld().getBlockState(pos);
                     // check if said block is still there
                     if (blockState.isAir()) {
-                        player.teleport(player.getX(),player.getBlockY()+1,player.getZ(),false);
+                        player.teleport(player.getX(),player.getBlockY()+1,player.getZ());
                         entity.setRemoved(Entity.RemovalReason.DISCARDED);
                         entityLoop.remove();
                     }

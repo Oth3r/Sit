@@ -165,7 +165,7 @@ public class Config {
         }
     }
     public static String lang(String key, Object... args) {
-        return LangReader.of("config.sit."+key, args).getTxT().getString();
+        return Utl.lang("config."+key, args).getString();
     }
     public static void save() {
         try (var file = Files.newBufferedWriter(configFile().toPath(), StandardCharsets.UTF_8)) {
@@ -184,34 +184,45 @@ public class Config {
             file.write("\ncarpets=" + carpetsOn);
             file.write("\nfull-blocks=" + fullBlocksOn);
             file.write("\ncustom=" + customOn);
-            file.write("\n# "+Sit.lang("config.sit."+
+            file.write("\n# "+ Utl.lang("config."+
                             "general.sittable_blocks.description")
-                    .append("\n# ").append(lang("general.sittable_blocks.description_2",
-                            "\"minecraft:campfire|0.255|1|lit=false\""))
-                    .append("\n# ").append(lang("general.sittable_blocks.description_4"))
-                    .append("\n# ").append(lang("general.sittable_blocks.description_5"))
-                    .append("\n# ").append(lang("general.sittable_blocks.description_6"))
-                    .append("\n# ").append(lang("general.sittable_blocks.description_7"))
-                    .append("\n# ").append(lang("general.sittable_blocks.description_8")).getString());
+                    .append("\n# ").append(lang("example",Utl.Assets.CUSTOM_BLOCKS))
+                    .append("\n# ").append(lang("general.sittable_blocks.description.2"))
+                    .append("\n# ").append(lang("general.sittable_blocks.description.3"))
+                    .append("\n# ").append(lang("general.sittable_blocks.description.4"))
+                    .append("\n# ").append(lang("general.sittable_blocks.description.5"))
+                    .append("\n# ").append(lang("general.sittable_blocks.description.6")).getString());
             file.write("\ncustom-blocks="+gson.toJson(customBlocks));
             file.write("\n\n# "+lang("hand"));
-            file.write("\n# "+Sit.lang("config.sit."+
-                            "hand.requirements.description")
-                    .append("\n# ").append(lang("hand.requirements.description_2"))
-                    .append("\n# ").append(lang("hand.requirements.description_3"))
-                    .append("\n# ").append(lang("hand.requirements.description_4")).getString());
+            file.write("\n# "+ Utl.lang("config."+
+                            "hand.requirement.description")
+                    .append("\n# ").append(lang("hand.requirement.description.2",HandRequirement.empty))
+                    .append("\n# ").append(lang("hand.requirement.description.3",HandRequirement.restrictive))
+                    .append("\n# ").append(lang("hand.requirement.description.4",HandRequirement.none)).getString());
+            file.write("\n# "+lang("hand.requirement.options",Utl.Assets.REQUIREMENT_OPTIONS));
             file.write("\nhand.main.requirement=" + mainReq);
+            file.write("\n#");
+            file.write("\nhand.off.requirement=" + offReq);
+
+            file.write("\n\n# "+lang("hand.restriction"));
+            file.write("\n# "+lang("hand.restriction.description"));
             file.write("\nhand.main.block=" + mainBlock);
             file.write("\nhand.main.food=" + mainFood);
             file.write("\nhand.main.usable=" + mainUsable);
-            file.write("\nhand.main.whitelist="+gson.toJson(mainWhitelist));
-            file.write("\nhand.main.blacklist="+gson.toJson(mainBlacklist));
-            file.write("\nhand.off.requirement=" + offReq);
+            file.write("\n#");
             file.write("\nhand.off.block=" + offBlock);
             file.write("\nhand.off.food=" + offFood);
             file.write("\nhand.off.usable=" + offUsable);
+
+            file.write("\n\n# "+lang("hand.restriction.list"));
+            file.write("\n# "+lang("hand.restriction.list.description"));
+            file.write("\n# "+lang("example",Utl.Assets.LIST));
+            file.write("\nhand.main.whitelist="+gson.toJson(mainWhitelist));
+            file.write("\nhand.main.blacklist="+gson.toJson(mainBlacklist));
+            file.write("\n#");
             file.write("\nhand.off.whitelist="+gson.toJson(offWhitelist));
             file.write("\nhand.off.blacklist="+gson.toJson(offBlacklist));
+
             // send packets to update the settings on the server
             SitClient.sendSettingsPackets();
         } catch (Exception e) {

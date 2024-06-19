@@ -7,13 +7,15 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
-import one.oth3r.sit.file.Config;
+import net.minecraft.world.World;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -46,25 +48,32 @@ public class SitCommand {
         // if console
         if (player == null) {
             if (args[0].equalsIgnoreCase("reload")) {
-                Config.load();
-                Sit.LOGGER.info(Sit.lang("key.sit.command.reloaded").getString());
+                config.load();
+                Sit.LOGGER.info(Utl.lang("msg.reloaded").getString());
             }
             return 1;
         }
         if (args[0].equalsIgnoreCase("sit")) {
             BlockPos pos = player.getBlockPos();
-            // get the block under the player if player on top of a solid
-            if (!(player.getY() - ((int) player.getY()) > 0.00)) {
+            if (!(player.getY() -((int) player.getY()) > 0.00)) {
                 pos = pos.add(0,-1,0);
             }
+            World world = player.getWorld();
             // if already sitting, ignore
             if (Events.entities.containsKey(player)) return 1;
-            // sit
-            Events.sit(player,pos);
+            // make entity first to check the blocks
+            DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
+            Events.setEntity(pos,world,entity);
+            if (Events.checkBlocks(pos,world,Events.isAboveBlockheight(entity))) {
+                player.getServerWorld().spawnEntity(entity);
+                player.startRiding(entity);
+                Events.entities.put(player,entity);
+                return 1;
+            }
         }
         if (args[0].equalsIgnoreCase("reload")) {
-            Config.load();
-            player.sendMessage(Sit.lang("key.sit.command.reloaded").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.GREEN))));
+            config.load();
+            player.sendMessage(Utl.lang("msg.reloaded").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.GREEN))));
         }
         if (args[0].equalsIgnoreCase("purgeChairEntities")) {
             String cmd = "kill @e[type=minecraft:text_display,name=\""+Sit.ENTITY_NAME+"\"]";
@@ -72,9 +81,9 @@ public class SitCommand {
                 ParseResults<ServerCommandSource> parse =
                         Sit.commandManager.getDispatcher().parse(cmd, player.getCommandSource());
                 Sit.commandManager.getDispatcher().execute(parse);
-                player.sendMessage(Sit.lang("key.sit.command.purged"));
+                player.sendMessage(Utl.lang("msg.purged"));
             } catch (CommandSyntaxException e) {
-                player.sendMessage(Sit.lang("key.sit.command.purged"));
+                player.sendMessage(Utl.lang("msg.purged"));
                 e.printStackTrace();
             }
         }
