@@ -211,6 +211,7 @@ public class Events {
             Sit.server = s;
             Sit.commandManager = s.getCommandManager();
             UseBlockCallback.EVENT.register((pl, world, hand, hitResult) -> {
+                if (!Config.handSitting) return ActionResult.PASS;
                 ServerPlayerEntity player = Sit.server.getPlayerManager().getPlayer(pl.getUuid());
                 if (player == null) return ActionResult.PASS;
                 if (hand == net.minecraft.util.Hand.MAIN_HAND && hitResult.getType() == HitResult.Type.BLOCK) {
