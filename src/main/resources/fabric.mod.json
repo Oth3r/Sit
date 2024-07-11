@@ -22,7 +22,7 @@
 			"one.oth3r.sit.SitClient"
 		],
 		"modmenu": [
-			"one.oth3r.sit.ModMenu"
+			"one.oth3r.sit.screen.ModMenu"
 		]
 	},
 	"depends": {
@@ -34,5 +34,8 @@
 	"suggests": {
 		"yet-another-config-lib": "*",
 		"modmenu": "*"
-	}
+	},
+	"mixins": [
+		"sit!.mixins.json"
+	]
 }

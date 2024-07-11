@@ -1,10 +1,10 @@
-package one.oth3r.sit;
+package one.oth3r.sit.file;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import one.oth3r.sit.file.Config;
+import one.oth3r.sit.Sit;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -75,20 +75,30 @@ public class LangReader {
     public static LangReader of(String translationKey, Object... placeholders) {
         return new LangReader(translationKey, placeholders);
     }
+
     public static void loadLanguageFile() {
+        ClassLoader classLoader = Sit.class.getClassLoader();
         try {
-            ClassLoader classLoader = Sit.class.getClassLoader();
-            InputStream inputStream = classLoader.getResourceAsStream("assets/sit/lang/"+ Config.lang+".json");
+            InputStream inputStream = classLoader.getResourceAsStream("assets/sit/lang/"+ Data.getServerConfig().getLang() +".json");
+
+            // if the input stream is null, the language file wasn't found
             if (inputStream == null) {
-                inputStream = classLoader.getResourceAsStream("assets/sit/lang/"+ Config.defaults.lang+".json");
-                Config.lang = Config.defaults.lang;
+                // try loading the default language file
+                inputStream = classLoader.getResourceAsStream("assets/sit/lang/"+ new ServerConfig().getLang() +".json");
+                //todo error message and reset back to EN_US
             }
-            if (inputStream == null) throw new IllegalArgumentException("CANT LOAD THE LANGUAGE FILE. DIRECTIONHUD WILL BREAK.");
+
+            // if the input stream is still null, throw an exception
+            if (inputStream == null) throw new IllegalArgumentException("UNABLE TO LOAD THE LANGUAGE FILE.");
+
             Type type = new TypeToken<Map<String, String>>(){}.getType();
             Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
             languageMap.putAll(new Gson().fromJson(reader, type));
+
+            // close the input stream
+            inputStream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Sit.LOGGER.error(e.getMessage());
         }
     }
     public static String getLanguageValue(String key) {

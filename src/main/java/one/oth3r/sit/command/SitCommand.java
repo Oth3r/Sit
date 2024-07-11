@@ -1,21 +1,20 @@
-package one.oth3r.sit;
+package one.oth3r.sit.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import one.oth3r.sit.utl.Logic;
+import one.oth3r.sit.Sit;
+import one.oth3r.sit.utl.Utl;
+import one.oth3r.sit.file.Data;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -29,11 +28,13 @@ public class SitCommand {
                         .suggests(SitCommand::getSuggestions)
                         .executes((context2) -> command(context2.getSource(), context2.getInput()))));
     }
+
     public static CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
         builder.suggest("reload");
         builder.suggest("purgeChairEntities");
         return builder.buildFuture();
     }
+
     private static int command(ServerCommandSource source, String arg) {
         ServerPlayerEntity player = source.getPlayer();
         //trim all the arguments before the command
@@ -45,48 +46,37 @@ public class SitCommand {
         String[] args = arg.split(" ");
         if (args[0].equalsIgnoreCase("sit"))
             args = arg.replaceFirst("sit ", "").split(" ");
+
         // if console
         if (player == null) {
             if (args[0].equalsIgnoreCase("reload")) {
-                config.load();
+                Logic.reload();
                 Sit.LOGGER.info(Utl.lang("msg.reloaded").getString());
             }
             return 1;
         }
+
         if (args[0].equalsIgnoreCase("sit")) {
+            // todo make the command target the block that the player is looking at, if not looking at a block default to below
             BlockPos pos = player.getBlockPos();
+
             if (!(player.getY() -((int) player.getY()) > 0.00)) {
                 pos = pos.add(0,-1,0);
             }
-            World world = player.getWorld();
+
             // if already sitting, ignore
-            if (Events.entities.containsKey(player)) return 1;
-            // make entity first to check the blocks
-            DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,player.getServerWorld());
-            Events.setEntity(pos,world,entity);
-            if (Events.checkBlocks(pos,world,Events.isAboveBlockheight(entity))) {
-                player.getServerWorld().spawnEntity(entity);
-                player.startRiding(entity);
-                Events.entities.put(player,entity);
-                return 1;
-            }
+            if (Data.getSitEntity(player) != null) return 1;
+
+            // try to make the player sit
+            Logic.sit(player,pos,null);
         }
+
         if (args[0].equalsIgnoreCase("reload")) {
-            config.load();
+            Logic.reload();
             player.sendMessage(Utl.lang("msg.reloaded").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.GREEN))));
         }
-        if (args[0].equalsIgnoreCase("purgeChairEntities")) {
-            String cmd = "kill @e[type=minecraft:text_display,name=\""+Sit.ENTITY_NAME+"\"]";
-            try {
-                ParseResults<ServerCommandSource> parse =
-                        Sit.commandManager.getDispatcher().parse(cmd, player.getCommandSource());
-                Sit.commandManager.getDispatcher().execute(parse);
-                player.sendMessage(Utl.lang("msg.purged"));
-            } catch (CommandSyntaxException e) {
-                player.sendMessage(Utl.lang("msg.purged"));
-                e.printStackTrace();
-            }
-        }
+
+        if (args[0].equalsIgnoreCase("purgeChairEntities")) Utl.Entity.purge(player,true);
         return 1;
     }
 }
