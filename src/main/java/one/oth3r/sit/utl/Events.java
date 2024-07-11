@@ -65,5 +65,6 @@ public class Events {
     public static void registerCommon() {
         playerConnections();
         server();
+        misc();
     }
 }
