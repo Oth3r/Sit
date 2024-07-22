@@ -42,6 +42,7 @@ public class Config {
             }
         }
     }
+    public static boolean handSitting = defaults.handSitting;
     public static HandRequirement mainReq = defaults.mainReq;
     public static boolean mainBlock = defaults.mainBlock;
     public static boolean mainFood = defaults.mainFood;
@@ -113,6 +114,8 @@ public class Config {
                 customBlocks = validateCustomBlocks(new Gson().fromJson((String)
                         properties.computeIfAbsent("custom-blocks", a -> gson.toJson(defaults.customBlocks)), listType));
             } catch (JsonSyntaxException ignore) {}
+
+            handSitting = Boolean.parseBoolean((String) properties.computeIfAbsent("hand.sitting", a -> String.valueOf(defaults.handSitting)));
             mainReq = HandRequirement.get((String) properties.computeIfAbsent("hand.main.requirement", a -> String.valueOf(defaults.mainReq)));
             mainBlock = Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.block", a -> String.valueOf(defaults.mainBlock)));
             mainFood = Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.food", a -> String.valueOf(defaults.mainFood)));
@@ -164,9 +167,11 @@ public class Config {
             e.printStackTrace();
         }
     }
+
     public static String lang(String key, Object... args) {
         return LangReader.of("config.sit."+key, args).getTxT().getString();
     }
+
     public static void save() {
         try (var file = Files.newBufferedWriter(configFile().toPath(), StandardCharsets.UTF_8)) {
             Gson gson = new GsonBuilder().disableHtmlEscaping().create();
@@ -195,6 +200,7 @@ public class Config {
                     .append("\n# ").append(lang("general.sittable_blocks.description_8")).getString());
             file.write("\ncustom-blocks="+gson.toJson(customBlocks));
             file.write("\n\n# "+lang("hand"));
+            file.write("\nhand.sitting=" + handSitting);
             file.write("\n# "+Sit.lang("config.sit."+
                             "hand.requirements.description")
                     .append("\n# ").append(lang("hand.requirements.description_2"))
@@ -229,6 +235,7 @@ public class Config {
         public static boolean fullBlocksOn = false;
         public static boolean customOn = false;
         public static List<String> customBlocks = List.of("minecraft:campfire|.46|1|lit=false","minecraft:soul_campfire|.46|1|lit=false,waterlogged=false");
+        public static boolean handSitting = true;
         public static HandRequirement mainReq = HandRequirement.empty;
         public static boolean mainBlock = false;
         public static boolean mainFood = false;
