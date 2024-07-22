@@ -248,7 +248,7 @@ public class Events {
                     BlockState blockState = player.getWorld().getBlockState(pos);
                     // check if said block is still there
                     if (blockState.isAir()) {
-                        player.teleport(player.getX(),player.getBlockY()+1,player.getZ(),false);
+                        player.teleport(player.getX(),player.getBlockY()+1,player.getZ());
                         entity.setRemoved(Entity.RemovalReason.DISCARDED);
                         entityLoop.remove();
                     }
