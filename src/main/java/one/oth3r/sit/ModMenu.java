@@ -13,17 +13,24 @@ import net.minecraft.util.Formatting;
 import one.oth3r.sit.file.Config;
 
 public class ModMenu implements ModMenuApi {
+
     private static MutableText lang(String key) {
         return Text.translatable("config.sit."+key);
     }
+
     private static MutableText lang(String key, Object... args) {
         return Text.translatable("config.sit."+key,args);
     }
+
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         // return null if YACL isn't installed to not throw an error
         if (!yaclCheck()) return screen -> null;
-        return parent -> YetAnotherConfigLib.createBuilder().save(Config::save)
+        return parent -> YetAnotherConfigLib.createBuilder().save(() -> {
+            // save and load to get rid of bad data
+            Config.save();
+            Config.load();
+        })
                 .title(Text.of("Sit!"))
                 .category(ConfigCategory.createBuilder()
                         .name(lang("category.general"))
