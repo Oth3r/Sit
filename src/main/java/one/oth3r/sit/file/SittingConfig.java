@@ -2,7 +2,7 @@ package one.oth3r.sit.file;
 
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.util.Hand;
-import one.oth3r.sit.Sit;
+import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Utl;
 
 import java.io.BufferedReader;
@@ -48,8 +48,20 @@ public class SittingConfig {
         return version;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public boolean canSitWithHand() {
         return handSitting;
+    }
+
+    public void setHandSitting(Boolean handSitting) {
+        this.handSitting = handSitting;
     }
 
     public HandSetting getHand(Hand handType) {
@@ -65,7 +77,7 @@ public class SittingConfig {
     }
 
     public static File getFile() {
-        return new File(Sit.CONFIG_DIR+"sitting-config.json");
+        return new File(Data.CONFIG_DIR+"sitting-config.json");
     }
 
     /**
@@ -79,7 +91,7 @@ public class SittingConfig {
         try (BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
             Updater.SittingConfigFile.run(reader);
         } catch (Exception e) {
-            Sit.LOGGER.error(String.format("ERROR LOADING '%s`: %s", file.getName(),e.getMessage()));
+            Data.LOGGER.error(String.format("ERROR LOADING '%s`: %s", file.getName(),e.getMessage()));
         }
         // save after loading
         save();
@@ -90,12 +102,12 @@ public class SittingConfig {
      */
     public static void save() {
         if (!getFile().exists()) {
-            Sit.LOGGER.info(String.format("Creating new `%s`", getFile().getName()));
+            Data.LOGGER.info(String.format("Creating new `%s`", getFile().getName()));
         }
         try (BufferedWriter writer = Files.newBufferedWriter(getFile().toPath(), StandardCharsets.UTF_8)) {
             writer.write(Utl.getGson().toJson(FileData.getSittingConfig()));
         } catch (Exception e) {
-            Sit.LOGGER.error(String.format("ERROR SAVING '%s`: %s", getFile().getName(), e.getMessage()));
+            Data.LOGGER.error(String.format("ERROR SAVING '%s`: %s", getFile().getName(), e.getMessage()));
         }
     }
 }

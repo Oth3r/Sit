@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import one.oth3r.sit.Sit;
+import one.oth3r.sit.utl.Data;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -98,7 +99,7 @@ public class LangReader {
             // close the input stream
             inputStream.close();
         } catch (Exception e) {
-            Sit.LOGGER.error(e.getMessage());
+            Data.LOGGER.error(e.getMessage());
         }
     }
     public static String getLanguageValue(String key) {

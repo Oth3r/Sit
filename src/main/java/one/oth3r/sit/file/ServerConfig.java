@@ -1,7 +1,7 @@
 package one.oth3r.sit.file;
 
 import com.google.gson.annotations.SerializedName;
-import one.oth3r.sit.Sit;
+import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Utl;
 
 import java.io.BufferedReader;
@@ -127,7 +127,7 @@ public class ServerConfig {
 
 
     public static File getFile() {
-        return new File(Sit.CONFIG_DIR+"server-config.json");
+        return new File(Data.CONFIG_DIR+"server-config.json");
     }
 
     /**
@@ -139,14 +139,14 @@ public class ServerConfig {
         if (!file.exists()) {
             // try to make the config directory
             try {
-                Files.createDirectories(Paths.get(Sit.CONFIG_DIR));
+                Files.createDirectories(Paths.get(Data.CONFIG_DIR));
             } catch (Exception e) {
-                Sit.LOGGER.error("Failed to create config directory. Canceling all config loading...");
+                Data.LOGGER.error("Failed to create config directory. Canceling all config loading...");
                 return;
             }
             // if loading from legacy, try checking the old config directory for the file
             if (tryLegacy && Updater.ServerConfigFile.Legacy.getLegacyFile().exists()) {
-                Sit.LOGGER.info("Updating Sit!.properties to sit!/config.json");
+                Data.LOGGER.info("Updating Sit!.properties to sit!/config.json");
                 Updater.ServerConfigFile.Legacy.run();
             }
             save();
@@ -155,7 +155,7 @@ public class ServerConfig {
         try (BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
             Updater.ServerConfigFile.run(reader);
         } catch (Exception e) {
-            Sit.LOGGER.error(String.format("ERROR LOADING '%s`: %s", file.getName(),e.getMessage()));
+            Data.LOGGER.error(String.format("ERROR LOADING '%s`: %s", file.getName(),e.getMessage()));
         }
         // save after loading
         save();
@@ -166,12 +166,12 @@ public class ServerConfig {
      */
     public static void save() {
         if (!getFile().exists()) {
-            Sit.LOGGER.info(String.format("Creating new `%s`", getFile().getName()));
+            Data.LOGGER.info(String.format("Creating new `%s`", getFile().getName()));
         }
         try (BufferedWriter writer = Files.newBufferedWriter(getFile().toPath(), StandardCharsets.UTF_8)) {
             writer.write(Utl.getGson().toJson(FileData.getServerConfig()));
         } catch (Exception e) {
-            Sit.LOGGER.info(String.format("ERROR SAVING '%s`: %s", getFile().getName(), e.getMessage()));
+            Data.LOGGER.info(String.format("ERROR SAVING '%s`: %s", getFile().getName(), e.getMessage()));
         }
     }
 }

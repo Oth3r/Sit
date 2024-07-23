@@ -11,8 +11,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
+import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Logic;
-import one.oth3r.sit.Sit;
 import one.oth3r.sit.utl.Utl;
 import one.oth3r.sit.file.FileData;
 
@@ -51,7 +51,7 @@ public class SitCommand {
         if (player == null) {
             if (args[0].equalsIgnoreCase("reload")) {
                 Logic.reload();
-                Sit.LOGGER.info(Utl.lang("msg.reloaded").getString());
+                Data.LOGGER.info(Utl.lang("msg.reloaded").getString());
             }
             return 1;
         }

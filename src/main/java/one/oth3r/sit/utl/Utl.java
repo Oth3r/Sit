@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.google.gson.stream.MalformedJsonException;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.SlabType;
@@ -23,8 +24,8 @@ import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import one.oth3r.sit.Sit;
 import one.oth3r.sit.file.*;
+import one.oth3r.sit.packet.SitPayloads;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -227,7 +228,7 @@ public class Utl {
         public static DisplayEntity.TextDisplayEntity create(World world, BlockPos blockPos, double sitHeight) {
             DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,world);
 
-            entity.setCustomName(Text.of(Sit.ENTITY_NAME));
+            entity.setCustomName(Text.of(Data.ENTITY_NAME));
             entity.setCustomNameVisible(false);
             entity.setInvulnerable(true);
             entity.setInvisible(true);
@@ -275,7 +276,7 @@ public class Utl {
             // get a list of sit entities
             List<? extends DisplayEntity.TextDisplayEntity> list = player.getServerWorld()
                     .getEntitiesByType(TypeFilter.instanceOf(DisplayEntity.TextDisplayEntity.class),
-                            entity -> entity.getName().getString().equals(Sit.ENTITY_NAME));
+                            entity -> entity.getName().getString().equals(Data.ENTITY_NAME));
 
             // remove each one
             for (DisplayEntity.TextDisplayEntity entity : list) {
@@ -290,19 +291,13 @@ public class Utl {
         }
     }
 
-
-
+    /**
+     * gets a MutableText using the language key, if on server, using the custom lang reader
+     */
     public static MutableText lang(String key, Object... args) {
-        if (Sit.client) return Text.translatable(key, args);
+        if (Data.isClient()) return Text.translatable(key, args);
         else return LangReader.of(key, args).getTxT();
     }
-
-//    public static class ConfigExamples {
-//        public static final String CUSTOM_BLOCKS = "\"minecraft:campfire|0.255|1|lit=false\"";
-//        public static final String REQUIREMENT_OPTIONS = String.format("%s, %s, %s",
-//                configFile.HandRequirement.empty,configFile.HandRequirement.restrictive,configFile.HandRequirement.none);
-//        public static final String LIST = "\"minecraft:torch\"";
-//    }
 
     public static class Enum {
 
@@ -324,6 +319,16 @@ public class Utl {
             }
             // if there's no match return the first entry
             return defaultEnum;
+        }
+    }
+
+    // todo call when editing a config on the client
+    /**
+     * sends the settings packets to the server, if client & in game
+     */
+    public static void sendSettingsPackets() {
+        if (Data.isClient() && Data.isInGame()) {
+            ClientPlayNetworking.send(new SitPayloads.SettingsPayload(Utl.getGson().toJson(FileData.getSittingConfig())));
         }
     }
 

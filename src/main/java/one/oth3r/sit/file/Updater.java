@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.util.Hand;
-import one.oth3r.sit.Sit;
+import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Utl;
 
 import java.io.BufferedReader;
@@ -108,7 +108,7 @@ public class Updater {
              */
             public static File getLegacyFile() {
                 // strip the new directory
-                return new File(Sit.CONFIG_DIR.substring(0,Sit.CONFIG_DIR.length()-5)+"Sit!.properties");
+                return new File(Data.CONFIG_DIR.substring(0, Data.CONFIG_DIR.length()-5)+"Sit!.properties");
             }
 
             /**
@@ -131,15 +131,15 @@ public class Updater {
                     loadVersion(properties,Double.parseDouble(ver));
 
                 } catch (Exception e) {
-                    Sit.LOGGER.error("Error loading legacy config file: {}", e.getMessage());
+                    Data.LOGGER.error("Error loading legacy config file: {}", e.getMessage());
                 }
 
                 // delete the old file
                 try {
                     Files.delete(file.toPath());
-                    Sit.LOGGER.info("Deleted " + file.getName());
+                    Data.LOGGER.info("Deleted " + file.getName());
                 } catch (Exception e) {
-                    Sit.LOGGER.error("Failed to delete the old Sit! config.");
+                    Data.LOGGER.error("Failed to delete the old Sit! config.");
                 }
             }
 
@@ -278,7 +278,7 @@ public class Updater {
                     ServerConfig.save();
                     SittingConfig.save();
                 } catch (Exception e) {
-                    Sit.LOGGER.error("Error loading legacy config: {}", e.getMessage());
+                    Data.LOGGER.error("Error loading legacy config: {}", e.getMessage());
                 }
             }
         }

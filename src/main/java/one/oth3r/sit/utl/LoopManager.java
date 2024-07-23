@@ -3,7 +3,6 @@ package one.oth3r.sit.utl;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
-import one.oth3r.sit.Sit;
 import one.oth3r.sit.file.FileData;
 
 import java.util.HashMap;
@@ -41,7 +40,7 @@ public class LoopManager {
 
                 if (player.getVehicle() != null) {
                     Entity entity = player.getVehicle();
-                    if (entity instanceof DisplayEntity.TextDisplayEntity tde && entity.getName().getString().equals(Sit.ENTITY_NAME)) {
+                    if (entity instanceof DisplayEntity.TextDisplayEntity tde && entity.getName().getString().equals(Data.ENTITY_NAME)) {
                         // bind the entity to the player
                         FileData.addSitEntity(player, tde);
                         // check if the player is still allowed to sit
