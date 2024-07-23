@@ -17,7 +17,7 @@ import java.util.*;
 
 public class Updater {
 
-    public static class HandConfigFile {
+    public static class SittingConfigFile {
 
         /**
          * runs the updater from the file reader and sets the loaded settings when finished
@@ -27,34 +27,34 @@ public class Updater {
         public static void run(BufferedReader reader)
                 throws NullPointerException {
             // try to read the json
-            HandConfig handConfig;
+            SittingConfig sittingConfig;
             try {
-                handConfig = Utl.getGson().fromJson(reader, HandConfig.class);
+                sittingConfig = Utl.getGson().fromJson(reader, SittingConfig.class);
             } catch (Exception e) {
                 throw new NullPointerException();
             }
 
             // throw null if the fileData is null or version is null
-            if (handConfig == null) throw new NullPointerException();
+            if (sittingConfig == null) throw new NullPointerException();
 
             // get the file version
-            Double version = handConfig.getVersion();
+            Double version = sittingConfig.getVersion();
 
             // if there's no version, throw
             if (version == null) throw new NullPointerException();
 
             // update the config (using the non-null version)
-            handConfig = update(handConfig);
+            sittingConfig = update(sittingConfig);
 
             // set the config in the mod data
-            Data.setHandConfig(handConfig);
+            Data.setSittingConfig(sittingConfig);
         }
 
         /**
          * updates the file
          */
-        public static HandConfig update(HandConfig old) {
-            HandConfig serverConfig = new HandConfig(old);
+        public static SittingConfig update(SittingConfig old) {
+            SittingConfig serverConfig = new SittingConfig(old);
             return serverConfig;
         }
     }
@@ -202,19 +202,19 @@ public class Updater {
                             new ArrayList<>()
                     );
 
-                    HandConfig defaultHandConfig = new HandConfig();
+                    SittingConfig defaultSittingConfig = new SittingConfig();
 
-                    HandConfig handConfig = null;
+                    SittingConfig sittingConfig = null;
                     // * filters are flipped because the way they work are flipped
                     try {
-                        handConfig = new HandConfig(
-                                1.0, Boolean.parseBoolean((String) properties.computeIfAbsent("hand.sitting", a -> String.valueOf(defaultHandConfig.canSitWithHand()))),
+                        sittingConfig = new SittingConfig(
+                                1.0, true, Boolean.parseBoolean((String) properties.computeIfAbsent("hand.sitting", a -> String.valueOf(defaultSittingConfig.canSitWithHand()))),
                                 new HandSetting(
-                                    Utl.Enum.get(properties.computeIfAbsent("hand.main.requirement", a -> String.valueOf(defaultHandConfig.getHand(Hand.MAIN_HAND).getSittingRequirement())),HandSetting.SittingRequirement.class,HandSetting.SittingRequirement.FILTER),
+                                    Utl.Enum.get(properties.computeIfAbsent("hand.main.requirement", a -> String.valueOf(defaultSittingConfig.getHand(Hand.MAIN_HAND).getSittingRequirement())),HandSetting.SittingRequirement.class,HandSetting.SittingRequirement.FILTER),
                                         new HandSetting.Filter(
-                                                !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.block", a -> String.valueOf(!defaultHandConfig.getHand(Hand.MAIN_HAND).getFilter().isBlock()))),
-                                                !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.food", a -> String.valueOf(!defaultHandConfig.getHand(Hand.MAIN_HAND).getFilter().isFood()))),
-                                                !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.usable", a -> String.valueOf(!defaultHandConfig.getHand(Hand.MAIN_HAND).getFilter().isUsable()))),
+                                                !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.block", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isBlock()))),
+                                                !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.food", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isFood()))),
+                                                !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.usable", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isUsable()))),
                                                 getFilterList(
                                                         new Gson().fromJson((String) properties.computeIfAbsent("hand.main.whitelist", a -> "[]"), listType),
                                                         new Gson().fromJson((String) properties.computeIfAbsent("hand.main.blacklist", a -> "[]"), listType)
@@ -223,11 +223,11 @@ public class Updater {
                                         )
                                 ),
                                 new HandSetting(
-                                        Utl.Enum.get(properties.computeIfAbsent("hand.off.requirement", a -> String.valueOf(defaultHandConfig.getHand(Hand.OFF_HAND).getSittingRequirement())),HandSetting.SittingRequirement.class,HandSetting.SittingRequirement.FILTER),
+                                        Utl.Enum.get(properties.computeIfAbsent("hand.off.requirement", a -> String.valueOf(defaultSittingConfig.getHand(Hand.OFF_HAND).getSittingRequirement())),HandSetting.SittingRequirement.class,HandSetting.SittingRequirement.FILTER),
                                         new HandSetting.Filter(
-                                                !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.off.block", a -> String.valueOf(!defaultHandConfig.getHand(Hand.OFF_HAND).getFilter().isBlock()))),
-                                                !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.off.food", a -> String.valueOf(!defaultHandConfig.getHand(Hand.OFF_HAND).getFilter().isFood()))),
-                                                !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.off.usable", a -> String.valueOf(!defaultHandConfig.getHand(Hand.OFF_HAND).getFilter().isUsable()))),
+                                                !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.off.block", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isBlock()))),
+                                                !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.off.food", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isFood()))),
+                                                !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.off.usable", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isUsable()))),
                                                 getFilterList(
                                                         new Gson().fromJson((String) properties.computeIfAbsent("hand.off.whitelist", a -> "[]"), listType),
                                                         new Gson().fromJson((String) properties.computeIfAbsent("hand.off.blacklist", a -> "[]"), listType)
@@ -241,14 +241,14 @@ public class Updater {
                     // load an older version
                     if (version == 1.0) {
                         try {
-                            handConfig = new HandConfig(
-                                    1.0, defaultHandConfig.canSitWithHand(),
+                            sittingConfig = new SittingConfig(
+                                    1.0, true, defaultSittingConfig.canSitWithHand(),
                                     new HandSetting(
-                                            Utl.Enum.get(properties.computeIfAbsent("main-hand-requirement", a -> String.valueOf(defaultHandConfig.getHand(Hand.MAIN_HAND).getSittingRequirement())),HandSetting.SittingRequirement.class,HandSetting.SittingRequirement.FILTER),
+                                            Utl.Enum.get(properties.computeIfAbsent("main-hand-requirement", a -> String.valueOf(defaultSittingConfig.getHand(Hand.MAIN_HAND).getSittingRequirement())),HandSetting.SittingRequirement.class,HandSetting.SittingRequirement.FILTER),
                                             new HandSetting.Filter(
-                                                    !Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-block", a -> String.valueOf(!defaultHandConfig.getHand(Hand.MAIN_HAND).getFilter().isBlock()))),
-                                                    !Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-food", a -> String.valueOf(!defaultHandConfig.getHand(Hand.MAIN_HAND).getFilter().isFood()))),
-                                                    !Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-usable", a -> String.valueOf(!defaultHandConfig.getHand(Hand.MAIN_HAND).getFilter().isUsable()))),
+                                                    !Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-block", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isBlock()))),
+                                                    !Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-food", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isFood()))),
+                                                    !Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-usable", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isUsable()))),
                                                     getFilterList(
                                                             new Gson().fromJson((String) properties.computeIfAbsent("main-hand-whitelist", a -> "[]"), listType),
                                                             new Gson().fromJson((String) properties.computeIfAbsent("main-hand-blacklist", a -> "[]"), listType)
@@ -257,11 +257,11 @@ public class Updater {
                                             )
                                     ),
                                     new HandSetting(
-                                            Utl.Enum.get(properties.computeIfAbsent("off-hand-requirement", a -> String.valueOf(defaultHandConfig.getHand(Hand.OFF_HAND).getSittingRequirement())),HandSetting.SittingRequirement.class,HandSetting.SittingRequirement.FILTER),
+                                            Utl.Enum.get(properties.computeIfAbsent("off-hand-requirement", a -> String.valueOf(defaultSittingConfig.getHand(Hand.OFF_HAND).getSittingRequirement())),HandSetting.SittingRequirement.class,HandSetting.SittingRequirement.FILTER),
                                             new HandSetting.Filter(
-                                                    !Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-block", a -> String.valueOf(!defaultHandConfig.getHand(Hand.OFF_HAND).getFilter().isBlock()))),
-                                                    !Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-food", a -> String.valueOf(!defaultHandConfig.getHand(Hand.OFF_HAND).getFilter().isFood()))),
-                                                    !Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-usable", a -> String.valueOf(!defaultHandConfig.getHand(Hand.OFF_HAND).getFilter().isUsable()))),
+                                                    !Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-block", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isBlock()))),
+                                                    !Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-food", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isFood()))),
+                                                    !Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-usable", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isUsable()))),
                                                     getFilterList(
                                                             new Gson().fromJson((String) properties.computeIfAbsent("off-hand-whitelist", a -> "[]"), listType),
                                                             new Gson().fromJson((String) properties.computeIfAbsent("off-hand-blacklist", a -> "[]"), listType)
@@ -274,9 +274,9 @@ public class Updater {
                     }
 
                     Data.setServerConfig(serverConfig);
-                    Data.setHandConfig(handConfig);
+                    Data.setSittingConfig(sittingConfig);
                     ServerConfig.save();
-                    HandConfig.save();
+                    SittingConfig.save();
                 } catch (Exception e) {
                     Sit.LOGGER.error("Error loading legacy config: {}", e.getMessage());
                 }

@@ -20,28 +20,28 @@ public class Data {
     }
 
     /**
-     * The default hand config for all new players
+     * The default sitting config for all new players
      */
-    private static HandConfig handConfig = new HandConfig();
+    private static SittingConfig sittingConfig = new SittingConfig();
 
-    public static HandConfig getHandConfig() {
-        return new HandConfig(handConfig);
+    public static SittingConfig getSittingConfig() {
+        return new SittingConfig(sittingConfig);
     }
 
-    public static void setHandConfig(HandConfig newHandConfig) {
-        handConfig = new HandConfig(newHandConfig);
+    public static void setSittingConfig(SittingConfig newSittingConfig) {
+        sittingConfig = new SittingConfig(newSittingConfig);
     }
 
     /**
-     * the hand config stored per player on the server
+     * the sitting config stored per player on the server
      */
-    private static final HashMap<ServerPlayerEntity, HandConfig> playerSettings = new HashMap<>();
+    private static final HashMap<ServerPlayerEntity, SittingConfig> playerSettings = new HashMap<>();
 
     public static void clearPlayerSettings() {
         playerSettings.clear();
     }
 
-    public static void setPlayerSetting(ServerPlayerEntity player, HandConfig config) {
+    public static void setPlayerSetting(ServerPlayerEntity player, SittingConfig config) {
         playerSettings.put(player, config);
     }
 
@@ -49,8 +49,8 @@ public class Data {
         playerSettings.remove(player);
     }
 
-    public static HandConfig getPlayerSetting(ServerPlayerEntity player) {
-        return playerSettings.getOrDefault(player,handConfig);
+    public static SittingConfig getPlayerSetting(ServerPlayerEntity player) {
+        return playerSettings.getOrDefault(player, sittingConfig);
     }
 
     /**
@@ -97,6 +97,6 @@ public class Data {
      */
     public static void loadFiles(boolean tryLegacy) {
         ServerConfig.load(tryLegacy);
-        HandConfig.load();
+        SittingConfig.load();
     }
 }

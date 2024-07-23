@@ -8,7 +8,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import one.oth3r.sit.file.Data;
-import one.oth3r.sit.file.HandConfig;
+import one.oth3r.sit.file.SittingConfig;
 import one.oth3r.sit.file.HandSetting;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,9 +46,9 @@ public class Logic {
      * checks the hands of the player and the items in each hand and sees if the player can sit down
      */
     public static boolean checkHands(ServerPlayerEntity player) {
-        HandConfig handConfig = Data.getPlayerSetting(player);
+        SittingConfig sittingConfig = Data.getPlayerSetting(player);
         // if can't sit with hand, false
-        if (!handConfig.canSitWithHand()) return false;
+        if (!sittingConfig.canSitWithHand()) return false;
 
         boolean canSit = true;
 
@@ -57,7 +57,7 @@ public class Logic {
             // if they can't sit, no need to run extra code
             if (!canSit) break;
 
-            HandSetting handSetting = handConfig.getHand(hand);
+            HandSetting handSetting = sittingConfig.getHand(hand);
             switch (handSetting.getSittingRequirement()) {
                 case EMPTY -> canSit = player.getStackInHand(hand).isEmpty();
                 case FILTER -> canSit = Utl.checkItem(handSetting.getFilter(), player.getStackInHand(hand));

@@ -12,32 +12,36 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 
-public class HandConfig {
+public class SittingConfig {
 
     @SerializedName("version")
     private Double version = 1.0;
+    @SerializedName("enabled")
+    private Boolean enabled = true;
     @SerializedName("hand-sitting")
-    private boolean handSitting = true;
+    private Boolean handSitting = true;
     @SerializedName("main-hand")
     private HandSetting mainHand = new HandSetting(HandSetting.SittingRequirement.EMPTY, new HandSetting.Filter());
     @SerializedName("off-hand")
     private HandSetting offHand = new HandSetting(HandSetting.SittingRequirement.FILTER,
             new HandSetting.Filter(false,true,false,new ArrayList<>(),new ArrayList<>())); // todo fill out some fox examples sake
 
-    public HandConfig() {}
+    public SittingConfig() {}
 
-    public HandConfig(double version, boolean handSitting, HandSetting mainHand, HandSetting offHand) {
+    public SittingConfig(double version, boolean enabled, boolean handSitting, HandSetting mainHand, HandSetting offHand) {
         this.version = version;
+        this.enabled = enabled;
         this.handSitting = handSitting;
         this.mainHand = mainHand;
         this.offHand = offHand;
     }
 
-    public HandConfig(HandConfig handConfig) {
-        this.version = handConfig.version;
-        this.handSitting = handConfig.handSitting;
-        this.mainHand = handConfig.mainHand;
-        this.offHand = handConfig.offHand;
+    public SittingConfig(SittingConfig sittingConfig) {
+        this.version = sittingConfig.version;
+        this.enabled = sittingConfig.enabled;
+        this.handSitting = sittingConfig.handSitting;
+        this.mainHand = sittingConfig.mainHand;
+        this.offHand = sittingConfig.offHand;
     }
 
     public Double getVersion() {
@@ -61,7 +65,7 @@ public class HandConfig {
     }
 
     public static File getFile() {
-        return new File(Sit.CONFIG_DIR+"hand-config.json");
+        return new File(Sit.CONFIG_DIR+"sitting-config.json");
     }
 
     /**
@@ -73,7 +77,7 @@ public class HandConfig {
         if (!file.exists()) save();
         // try reading the file
         try (BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
-            Updater.HandConfigFile.run(reader);
+            Updater.SittingConfigFile.run(reader);
         } catch (Exception e) {
             Sit.LOGGER.error(String.format("ERROR LOADING '%s`: %s", file.getName(),e.getMessage()));
         }
@@ -89,7 +93,7 @@ public class HandConfig {
             Sit.LOGGER.info(String.format("Creating new `%s`", getFile().getName()));
         }
         try (BufferedWriter writer = Files.newBufferedWriter(getFile().toPath(), StandardCharsets.UTF_8)) {
-            writer.write(Utl.getGson().toJson(Data.getHandConfig()));
+            writer.write(Utl.getGson().toJson(Data.getSittingConfig()));
         } catch (Exception e) {
             Sit.LOGGER.error(String.format("ERROR SAVING '%s`: %s", getFile().getName(), e.getMessage()));
         }
