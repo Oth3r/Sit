@@ -5,7 +5,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.HashMap;
 
-public class Data {
+public class FileData {
     /**
      * Sit! config file
      */

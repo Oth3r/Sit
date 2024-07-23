@@ -169,7 +169,7 @@ public class ServerConfig {
             Sit.LOGGER.info(String.format("Creating new `%s`", getFile().getName()));
         }
         try (BufferedWriter writer = Files.newBufferedWriter(getFile().toPath(), StandardCharsets.UTF_8)) {
-            writer.write(Utl.getGson().toJson(Data.getServerConfig()));
+            writer.write(Utl.getGson().toJson(FileData.getServerConfig()));
         } catch (Exception e) {
             Sit.LOGGER.info(String.format("ERROR SAVING '%s`: %s", getFile().getName(), e.getMessage()));
         }

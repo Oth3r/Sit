@@ -93,7 +93,7 @@ public class SittingConfig {
             Sit.LOGGER.info(String.format("Creating new `%s`", getFile().getName()));
         }
         try (BufferedWriter writer = Files.newBufferedWriter(getFile().toPath(), StandardCharsets.UTF_8)) {
-            writer.write(Utl.getGson().toJson(Data.getSittingConfig()));
+            writer.write(Utl.getGson().toJson(FileData.getSittingConfig()));
         } catch (Exception e) {
             Sit.LOGGER.error(String.format("ERROR SAVING '%s`: %s", getFile().getName(), e.getMessage()));
         }

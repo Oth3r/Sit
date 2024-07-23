@@ -79,7 +79,7 @@ public class LangReader {
     public static void loadLanguageFile() {
         ClassLoader classLoader = Sit.class.getClassLoader();
         try {
-            InputStream inputStream = classLoader.getResourceAsStream("assets/sit/lang/"+ Data.getServerConfig().getLang() +".json");
+            InputStream inputStream = classLoader.getResourceAsStream("assets/sit/lang/"+ FileData.getServerConfig().getLang() +".json");
 
             // if the input stream is null, the language file wasn't found
             if (inputStream == null) {

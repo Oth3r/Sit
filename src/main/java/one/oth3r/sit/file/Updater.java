@@ -47,7 +47,7 @@ public class Updater {
             sittingConfig = update(sittingConfig);
 
             // set the config in the mod data
-            Data.setSittingConfig(sittingConfig);
+            FileData.setSittingConfig(sittingConfig);
         }
 
         /**
@@ -90,7 +90,7 @@ public class Updater {
             serverConfig = update(serverConfig);
 
             // set the config in the mod data
-            Data.setServerConfig(serverConfig);
+            FileData.setServerConfig(serverConfig);
         }
 
         /**
@@ -273,8 +273,8 @@ public class Updater {
                         } catch (JsonSyntaxException ignored) {}
                     }
 
-                    Data.setServerConfig(serverConfig);
-                    Data.setSittingConfig(sittingConfig);
+                    FileData.setServerConfig(serverConfig);
+                    FileData.setSittingConfig(sittingConfig);
                     ServerConfig.save();
                     SittingConfig.save();
                 } catch (Exception e) {

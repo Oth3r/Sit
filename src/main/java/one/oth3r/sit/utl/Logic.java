@@ -7,7 +7,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import one.oth3r.sit.file.Data;
+import one.oth3r.sit.file.FileData;
 import one.oth3r.sit.file.SittingConfig;
 import one.oth3r.sit.file.HandSetting;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +18,7 @@ public class Logic {
         if (player.isSneaking()) return false;
 
         // if sitting on a stair and sit while seated off, false
-        if (Data.getSitEntity(player) != null && !Data.getServerConfig().isSitWhileSeated()) return false;
+        if (FileData.getSitEntity(player) != null && !FileData.getServerConfig().isSitWhileSeated()) return false;
 
         // if hit result isnt null (check the hands of the player) & the player hand checker returns false (can't sit with the items in the hand), quit
         if (hitResult != null) {
@@ -46,7 +46,7 @@ public class Logic {
      * checks the hands of the player and the items in each hand and sees if the player can sit down
      */
     public static boolean checkHands(ServerPlayerEntity player) {
-        SittingConfig sittingConfig = Data.getPlayerSetting(player);
+        SittingConfig sittingConfig = FileData.getPlayerSetting(player);
         // if can't sit with hand, false
         if (!sittingConfig.canSitWithHand()) return false;
 
@@ -71,7 +71,7 @@ public class Logic {
      * removes the entity from the game, using the player
      */
     public static void removeEntity(ServerPlayerEntity player) {
-        DisplayEntity.TextDisplayEntity entity = Data.getSitEntity(player);
+        DisplayEntity.TextDisplayEntity entity = FileData.getSitEntity(player);
         // make sure the player has a sit entity bounded to them
         if (entity == null) return;
 
@@ -83,7 +83,7 @@ public class Logic {
      * checks if the player should still be sitting, e.g. the block was destroyed ect.
      */
     public static void checkSittingValidity(ServerPlayerEntity player) {
-        DisplayEntity.TextDisplayEntity entity = Data.getSitEntity(player);
+        DisplayEntity.TextDisplayEntity entity = FileData.getSitEntity(player);
         // make sure the player has a sit entity bounded to them
         if (entity == null) return;
 
@@ -114,7 +114,7 @@ public class Logic {
      * reloads the config files
      */
     public static void reload() {
-        Data.loadFiles(false);
+        FileData.loadFiles(false);
     }
 
 }

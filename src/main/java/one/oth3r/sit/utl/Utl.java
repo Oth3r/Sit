@@ -150,7 +150,7 @@ public class Utl {
      * @return null if not a valid block
      */
     public static Double getSittingHeight(BlockState blockState, ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hit) {
-        ServerConfig config = Data.getServerConfig();
+        ServerConfig config = FileData.getServerConfig();
         Block block = blockState.getBlock();
 
         // only if custom is enabled
@@ -254,7 +254,7 @@ public class Utl {
             // remove the entity
             entity.setRemoved(net.minecraft.entity.Entity.RemovalReason.DISCARDED);
             // remove the entity from the data set if exists
-            Data.removeSitEntity(entity);
+            FileData.removeSitEntity(entity);
         }
 
         /**
@@ -264,7 +264,7 @@ public class Utl {
             player.getServerWorld().spawnEntity(entity);
             player.startRiding(entity);
             // add the entity to the list
-            Data.addSitEntity(player, entity);
+            FileData.addSitEntity(player, entity);
         }
 
         /**
