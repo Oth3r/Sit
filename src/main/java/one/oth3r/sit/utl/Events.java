@@ -39,6 +39,7 @@ public class Events {
             while (toggle_key.isPressed()) {
                 toggle_key.setPressed(false);
                 if (Data.isInGame()) {
+                    // todo move to logic.java
                     if (Data.isSupportedServer()) {
                         // get the sitting config
                         SittingConfig config = FileData.getSittingConfig();
@@ -61,6 +62,7 @@ public class Events {
                         player.sendMessage(Utl.lang("msg.sit_toggle",
                                 Utl.lang(messageKey).formatted(messageColor)), true);
                     } else {
+                        // unsupported server message if not in a Sit! server
                         player.sendMessage(Utl.lang("msg.sit_toggle.unsupported")
                                 .formatted(Formatting.RED), true);
                     }
