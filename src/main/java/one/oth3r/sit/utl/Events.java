@@ -63,7 +63,7 @@ public class Events {
                                 Utl.lang(messageKey).formatted(messageColor)), true);
                     } else {
                         // unsupported server message if not in a Sit! server
-                        player.sendMessage(Utl.lang("msg.sit_toggle.unsupported")
+                        player.sendMessage(Utl.lang("msg.unsupported")
                                 .formatted(Formatting.RED), true);
                     }
                 }

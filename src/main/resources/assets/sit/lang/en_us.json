@@ -48,7 +48,7 @@
   "msg.sit_toggle": "%s Sitting!",
   "msg.sit_toggle.on": "Enabled",
   "msg.sit_toggle.off": "Disabled",
-  "msg.sit_toggle.unsupported": "Sitting is not available on this server.",
+  "msg.unsupported": "Sit! is not available on this server.",
   "msg.reloaded": "Reloaded the config!",
   "msg.purged": "Purged all active chair entities!",
 
