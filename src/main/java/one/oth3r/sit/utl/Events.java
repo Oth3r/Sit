@@ -36,8 +36,7 @@ public class Events {
         }
 
         private static void loopLogic(ClientPlayerEntity player) {
-            while (toggle_key.isPressed()) {
-                toggle_key.setPressed(false);
+            while (toggle_key.wasPressed()) {
                 if (Data.isInGame()) {
                     // todo move to logic.java
                     if (Data.isSupportedServer()) {
