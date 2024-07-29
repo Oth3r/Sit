@@ -86,11 +86,11 @@ public class LangReader {
             if (inputStream == null) {
                 // try loading the default language file
                 inputStream = classLoader.getResourceAsStream("assets/sit/lang/"+ new ServerConfig().getLang() +".json");
-                //todo error message and reset back to EN_US
+                Data.LOGGER.error("COULDN'T LOAD THE LANGUAGE FILE. RESETTING TO en_us.");
             }
 
             // if the input stream is still null, throw an exception
-            if (inputStream == null) throw new IllegalArgumentException("UNABLE TO LOAD THE LANGUAGE FILE.");
+            if (inputStream == null) throw new IllegalArgumentException("UNABLE TO LOAD THE ENGLISH LANGUAGE FILE.");
 
             Type type = new TypeToken<Map<String, String>>(){}.getType();
             Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
