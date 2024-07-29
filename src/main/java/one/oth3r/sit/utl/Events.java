@@ -18,6 +18,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import one.oth3r.sit.command.SitCommand;
 import one.oth3r.sit.file.FileData;
+import one.oth3r.sit.file.LangReader;
 import one.oth3r.sit.file.SittingConfig;
 import one.oth3r.sit.packet.SitPayloads;
 import org.lwjgl.glfw.GLFW;
@@ -148,6 +149,7 @@ public class Events {
     private static void serverLifecycle() {
         ServerLifecycleEvents.SERVER_STARTED.register(s -> {
             Data.setServer(s);
+            LangReader.loadLanguageFile();
 
             // right click on block event
             UseBlockCallback.EVENT.register((pl, world, hand, hitResult) -> {
