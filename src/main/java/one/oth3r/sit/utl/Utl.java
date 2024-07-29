@@ -11,18 +11,23 @@ import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.DisplayEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import one.oth3r.sit.file.*;
 import one.oth3r.sit.packet.SitPayloads;
@@ -368,5 +373,20 @@ public class Utl {
                 }
             };
         }
+    }
+
+    public static BlockPos getBlockPosPlayerIsLookingAt(ServerWorld world, PlayerEntity player, double range) {
+        // pos, adjusted to player eye level
+        Vec3d rayStart = player.getPos().add(0, player.getEyeHeight(player.getPose()), 0);
+        // extend ray by the range
+        Vec3d rayEnd = rayStart.add(player.getRotationVector().multiply(range));
+
+        BlockHitResult hitResult = world.raycast(new RaycastContext(rayStart, rayEnd, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, ShapeContext.absent()));
+
+        if (hitResult.getType() == HitResult.Type.BLOCK) {
+            return hitResult.getBlockPos();
+        }
+
+        return new BlockPos(player.getBlockPos());
     }
 }

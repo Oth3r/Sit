@@ -42,6 +42,10 @@ public class Logic {
         return true;
     }
 
+    public static boolean sitLooking(ServerPlayerEntity player) {
+        return sit(player, Utl.getBlockPosPlayerIsLookingAt(player.getServerWorld(),player,5),null);
+    }
+
     /**
      * checks the hands of the player and the items in each hand and sees if the player can sit down
      */
