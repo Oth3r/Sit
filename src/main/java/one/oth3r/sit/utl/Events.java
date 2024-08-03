@@ -153,6 +153,7 @@ public class Events {
 
             // right click on block event
             UseBlockCallback.EVENT.register((pl, world, hand, hitResult) -> {
+                if (Data.isClient() && !Data.isSingleplayer()) return ActionResult.PASS;
                 // get the server player
                 ServerPlayerEntity player = Data.getServer().getPlayerManager().getPlayer(pl.getUuid());
 
