@@ -56,8 +56,11 @@ public class CustomBlock {
 
         // now check if the state is one of the acceptable states
         for (String state : blockStates) {
-            // if there is a NOT (!) blockstate, and it is contained in the block, return false
-            if (state.startsWith("!") && blockState.toString().contains(state.substring(1))) return false;
+            // if there is a NOT (!) blockstate
+            if (state.startsWith("!")) {
+                // if it is contained in the block, return false
+                if (blockState.toString().contains(state.substring(1))) return false;
+            }
             // else check if the blockstate matches, if not return false
             else if (!blockState.toString().contains(state)) return false;
         }
