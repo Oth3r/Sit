@@ -27,10 +27,16 @@ public class Events {
 
     private static class Keybindings {
         private static KeyBinding toggle_key;
+        private static KeyBinding sit_key;
 
         private static void register() {
             toggle_key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                     "key.toggle",
+                    GLFW.GLFW_KEY_UNKNOWN,
+                    "category.sit"
+            ));
+            sit_key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                    "key.sit",
                     GLFW.GLFW_KEY_UNKNOWN,
                     "category.sit"
             ));
@@ -61,6 +67,19 @@ public class Events {
                         // send the player the actionbar message
                         player.sendMessage(Utl.lang("msg.sit_toggle",
                                 Utl.lang(messageKey).formatted(messageColor)), true);
+                    } else {
+                        // unsupported server message if not in a Sit! server
+                        player.sendMessage(Utl.lang("msg.unsupported")
+                                .formatted(Formatting.RED), true);
+                    }
+                }
+            }
+
+            while (sit_key.wasPressed()) {
+                // just send the sit command
+                if (Data.isInGame()) {
+                    if (Data.isSupportedServer()) {
+                        player.networkHandler.sendCommand("sit");
                     } else {
                         // unsupported server message if not in a Sit! server
                         player.sendMessage(Utl.lang("msg.unsupported")
