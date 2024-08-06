@@ -35,6 +35,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -351,9 +353,18 @@ public class Utl {
     /**
      * the LenientTypeAdapter, doesn't throw anything when reading a weird JSON entry, good for human entered JSONs
      */
+    @SuppressWarnings("unchecked")
     public static class LenientTypeAdapterFactory implements TypeAdapterFactory {
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
             final TypeAdapter<T> delegate = gson.getDelegateAdapter(this, type);
+
+            // Check if the type is a List, then run the custom list type adapter
+            if (List.class.isAssignableFrom(type.getRawType())) {
+                Type elementType = ((ParameterizedType) type.getType()).getActualTypeArguments()[0];
+                TypeAdapter<?> elementAdapter = gson.getAdapter(TypeToken.get(elementType));
+                // the custom adapter
+                return (TypeAdapter<T>) new RemoveNullListTypeAdapter<>(elementAdapter);
+            }
 
             return new TypeAdapter<>() {
                 // normal writer
@@ -372,6 +383,45 @@ public class Utl {
                     }
                 }
             };
+        }
+    }
+
+    /**
+     * type adapter that doesnt allow null / bad entries
+     */
+    private static class RemoveNullListTypeAdapter<E> extends TypeAdapter<List<E>> {
+        private final TypeAdapter<E> elementAdapter;
+
+        RemoveNullListTypeAdapter(TypeAdapter<E> elementAdapter) {
+            this.elementAdapter = elementAdapter;
+        }
+
+        @Override
+        public void write(JsonWriter out, List<E> value) throws IOException {
+            out.beginArray();
+            for (E element : value) {
+                elementAdapter.write(out, element);
+            }
+            out.endArray();
+        }
+
+        @Override
+        public List<E> read(JsonReader in) throws IOException {
+            List<E> list = new ArrayList<>();
+            in.beginArray();
+            while (in.hasNext()) {
+                try {
+                    E element = elementAdapter.read(in);
+                    // skip null entry
+                    if (element == null) continue;
+                    list.add(element);
+                } catch (Exception e) {
+                    // skip invalid entry
+                    in.skipValue();
+                }
+            }
+            in.endArray();
+            return list;
         }
     }
 
