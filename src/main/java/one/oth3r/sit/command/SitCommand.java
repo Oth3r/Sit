@@ -56,19 +56,23 @@ public class SitCommand {
             return 1;
         }
 
+        // player
+
         if (args[0].equalsIgnoreCase("sit")) {
-            // todo make the command target the block that the player is looking at, if not looking at a block default to below
-            BlockPos pos = player.getBlockPos();
+            // if the player can't sit where they're looking, try to sit below
+            if (!Logic.sitLooking(player)) {
+                BlockPos pos = player.getBlockPos();
 
-            if (!(player.getY() -((int) player.getY()) > 0.00)) {
-                pos = pos.add(0,-1,0);
+                if (!(player.getY() - ((int) player.getY()) > 0.00)) {
+                    pos = pos.add(0, -1, 0);
+                }
+
+                // if already sitting, ignore
+                if (FileData.getSitEntity(player) != null) return 1;
+
+                // try to make the player sit
+                Logic.sit(player, pos, null);
             }
-
-            // if already sitting, ignore
-            if (FileData.getSitEntity(player) != null) return 1;
-
-            // try to make the player sit
-            Logic.sit(player,pos,null);
         }
 
         if (args[0].equalsIgnoreCase("reload")) {
