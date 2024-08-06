@@ -37,13 +37,13 @@ public class SitCommand {
 
     private static int command(ServerCommandSource source, String arg) {
         ServerPlayerEntity player = source.getPlayer();
-        //trim all the arguments before the command
-        String keyword = "sit";
-        int index = Integer.MAX_VALUE;
-        if (arg.contains(keyword)) index = arg.indexOf(keyword);
-        //trims the words before the text
-        if (index != Integer.MAX_VALUE) arg = arg.substring(index).trim();
+        // trim all the arguments before the command (for commands like /execute)
+        int index = arg.indexOf("sit");
+        // trims the words before the text
+        if (index != -1) arg = arg.substring(index).trim();
+
         String[] args = arg.split(" ");
+        // if command string starts with sit, remove it
         if (args[0].equalsIgnoreCase("sit"))
             args = arg.replaceFirst("sit ", "").split(" ");
 
