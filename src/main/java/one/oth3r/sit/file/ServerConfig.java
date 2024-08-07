@@ -18,6 +18,8 @@ public class ServerConfig {
     private Double version = 2.0;
     @SerializedName("lang")
     private String lang = "en_us";
+    @SerializedName("lang-options")
+    private String langOptions = "en_us";
     @SerializedName("keep-active")
     private Boolean keepActive = true;
     @SerializedName("sit-while-seated")

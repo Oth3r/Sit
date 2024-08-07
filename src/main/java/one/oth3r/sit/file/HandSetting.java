@@ -3,12 +3,16 @@ package one.oth3r.sit.file;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class HandSetting {
 
     public boolean mainBlock;
     @SerializedName("requirement")
     private SittingRequirement sittingRequirement = SittingRequirement.NONE;
+    @SerializedName("requirement-options")
+    private String sittingRequirementOptions = Arrays.stream(SittingRequirement.values()).map(Enum::toString).collect(Collectors.joining(", "));
     @SerializedName("filter")
     private Filter filter = new Filter();
 
