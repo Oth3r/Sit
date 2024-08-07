@@ -114,14 +114,23 @@ public class Utl {
             // if there is a match for the item, return true immediately
             if (id.equalsIgnoreCase(itemId)) return true;
         }
+        // a boolean to check if one of the items are in a filtered tag
+        boolean tagCheck = false;
         // check the custom item tags
         for (String tag : filter.getCustomTags()) {
             // substring to remove # and if needed, !
-            // if there is a math for the NOT(!) tag, return false
-            if (tag.startsWith("!") && itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), Identifier.of(tag.substring(2))))) return false;
-            // if there is a match, return true
-            if (itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), Identifier.of(tag.substring(1))))) return true;
+            // if a NOT tag
+            if (tag.startsWith("!")) {
+                // if there is a math for the NOT(!) tag, return false
+                if (itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), Identifier.of(tag.substring(2))))) return false;
+            }
+            // else (normal tag), if there is a match, set tagCheck to true
+            else if (itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), Identifier.of(tag.substring(1))))) tagCheck = true;
         }
+
+        // if the item is in the tag, the boolean is true, return true
+        // not returning true in the loop because there might be a (!) not tag that the item might fall into, after the item was already in another tag
+        if (tagCheck) return tagCheck;
 
         // if none of the custom were met, try the default conditions
 
