@@ -21,10 +21,9 @@ public class SittingConfig {
     @SerializedName("hand-sitting")
     private Boolean handSitting = true;
     @SerializedName("main-hand")
-    private HandSetting mainHand = new HandSetting(HandSetting.SittingRequirement.EMPTY, new HandSetting.Filter());
+    private HandSetting mainHand = FileData.Defaults.MAIN_HAND;
     @SerializedName("off-hand")
-    private HandSetting offHand = new HandSetting(HandSetting.SittingRequirement.FILTER,
-            new HandSetting.Filter(false,true,false,new ArrayList<>(),new ArrayList<>())); // todo fill out some fox examples sake
+    private HandSetting offHand = FileData.Defaults.OFF_HAND;
 
     public SittingConfig() {}
 

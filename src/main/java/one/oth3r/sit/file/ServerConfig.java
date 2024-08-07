@@ -27,7 +27,7 @@ public class ServerConfig {
     @SerializedName("custom-enabled")
     private Boolean customEnabled = false;
     @SerializedName("custom-blocks")
-    private ArrayList<CustomBlock> customBlocks = new ArrayList<>();
+    private ArrayList<CustomBlock> customBlocks = FileData.Defaults.CUSTOM_BLOCKS;
     @SerializedName("blacklisted-blocks")
     private ArrayList<String> blacklistedBlocks = new ArrayList<>();
 

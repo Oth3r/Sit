@@ -2,7 +2,11 @@ package one.oth3r.sit.file;
 
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import one.oth3r.sit.utl.Data;
+import one.oth3r.sit.utl.Utl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class FileData {
@@ -102,5 +106,22 @@ public class FileData {
         if (Data.isClient() && Data.isSupportedServer()) {
             Utl.sendSettingsPackets();
         }
+    }
+
+    public static class Defaults {
+        public static final ArrayList<CustomBlock> CUSTOM_BLOCKS = new ArrayList<>(Arrays.asList(
+                new CustomBlock(new ArrayList<>(),new ArrayList<>(Arrays.asList("#minecraft:campfires")), new ArrayList<>(Arrays.asList("lit=false")),.43),
+                new CustomBlock(new ArrayList<>(Arrays.asList("!minecraft:oak_log", "minecraft:crimson_stem")), new ArrayList<>(Arrays.asList("#minecraft:logs")), new ArrayList<>(Arrays.asList("!axis=y")),1.0),
+                new CustomBlock(new ArrayList<>(Arrays.asList()), new ArrayList<>(Arrays.asList("#minecraft:beds")), new ArrayList<>(Arrays.asList("part=foot","occupied=false")),.5)
+        ));
+
+        public static final HandSetting MAIN_HAND = new HandSetting(HandSetting.SittingRequirement.EMPTY, new HandSetting.Filter(
+                false,false,false,new ArrayList<>(), new ArrayList<>(Arrays.asList("#minecraft:bookshelf_books","!#minecraft:lectern_books"))));
+
+        public static final HandSetting OFF_HAND = new HandSetting(HandSetting.SittingRequirement.FILTER, new HandSetting.Filter(
+                false,true,true, new ArrayList<>(Arrays.asList("minecraft:filled_map",
+                "minecraft:torch", "minecraft:soul_torch","minecraft:redstone_torch",
+                "minecraft:lantern", "minecraft:soul_lantern")),
+                new ArrayList<>()));
     }
 }
