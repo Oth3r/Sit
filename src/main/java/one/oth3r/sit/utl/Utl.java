@@ -161,6 +161,9 @@ public class Utl {
         ServerConfig config = FileData.getServerConfig();
         Block block = blockState.getBlock();
 
+        // make sure that the block that is being sit on has no interaction when hand sitting
+        if (hit != null && blockState.onUse(player.getWorld(), player, hit).isAccepted()) return null;
+
         // only if custom is enabled
         if (config.isCustomEnabled()) {
             // if the block is on the blacklist, false
@@ -183,9 +186,7 @@ public class Utl {
             && block instanceof CarpetBlock) return CARPET;
         if (config.getPresetBlocks().isFullBlocks()
                 // make sure the block is a full cube
-                && blockState.isFullCube(player.getWorld(),blockPos)
-                // make sure there isn't an action for the block IF the hit isn't null (manual command / no right click check)
-                && (hit == null || !blockState.onUse(player.getWorld(), player, hit).isAccepted())) return 1.0;
+                && blockState.isFullCube(player.getWorld(),blockPos)) return 1.0;
 
         // at the end, return false
         return null;
