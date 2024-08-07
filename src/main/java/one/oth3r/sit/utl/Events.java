@@ -180,7 +180,7 @@ public class Events {
                 if (player == null || player.isSpectator()) return ActionResult.PASS;
 
                 // consume if sitting, if not pass
-                return Logic.sit(player,hitResult.getBlockPos(),hitResult)? ActionResult.CONSUME : ActionResult.PASS;
+                return Logic.sit(player,hitResult.getBlockPos(),hitResult) ? ActionResult.CONSUME : ActionResult.PASS;
             });
 
         });
