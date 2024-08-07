@@ -98,5 +98,9 @@ public class FileData {
     public static void loadFiles(boolean tryLegacy) {
         ServerConfig.load(tryLegacy);
         SittingConfig.load();
+        // if loading file and is on supported server on client, send the new settings over
+        if (Data.isClient() && Data.isSupportedServer()) {
+            Utl.sendSettingsPackets();
+        }
     }
 }
