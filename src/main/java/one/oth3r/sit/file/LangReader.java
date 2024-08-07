@@ -80,12 +80,12 @@ public class LangReader {
     public static void loadLanguageFile() {
         ClassLoader classLoader = Sit.class.getClassLoader();
         try {
-            InputStream inputStream = classLoader.getResourceAsStream("assets/sit/lang/"+ FileData.getServerConfig().getLang() +".json");
+            InputStream inputStream = classLoader.getResourceAsStream("assets/sit-oth3r/lang/" + FileData.getServerConfig().getLang() +".json");
 
             // if the input stream is null, the language file wasn't found
             if (inputStream == null) {
                 // try loading the default language file
-                inputStream = classLoader.getResourceAsStream("assets/sit/lang/"+ new ServerConfig().getLang() +".json");
+                inputStream = classLoader.getResourceAsStream("assets/sit-oth3r/lang/" + new ServerConfig().getLang() +".json");
                 Data.LOGGER.error("COULDN'T LOAD THE LANGUAGE FILE. RESETTING TO en_us.");
             }
 
