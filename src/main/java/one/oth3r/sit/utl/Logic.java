@@ -54,6 +54,7 @@ public class Logic {
         // if can't sit with hand, false
         if (!sittingConfig.canSitWithHand()) return false;
 
+        // a boolean that shows if the player can sit or not
         boolean canSit = true;
 
         // for each hand

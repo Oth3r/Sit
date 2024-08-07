@@ -55,7 +55,7 @@ public class CustomBlock {
         if (!blockType) return false;
 
         // now check if the state is one of the acceptable states
-        for (String state : blockStates) {
+        for (String state : blockStates) { //todo extract the blockstates to check them better
             // if there is a NOT (!) blockstate
             if (state.startsWith("!")) {
                 // if it is contained in the block, return false
