@@ -171,7 +171,9 @@ public class Utl {
         Block block = blockState.getBlock();
 
         // make sure that the block that is being sit on has no interaction when hand sitting
-        if (hit != null && blockState.onUse(player.getWorld(), player, hit).isAccepted()) return null;
+        if (hit != null && hasInteraction(blockState)) {
+            return null;
+        }
 
         // only if custom is enabled
         if (config.isCustomEnabled()) {
@@ -199,6 +201,23 @@ public class Utl {
 
         // at the end, return false
         return null;
+    }
+
+    /**
+     * checks if a block has an interaction
+     * @param blockState
+     * @return
+     */
+    public static boolean hasInteraction(BlockState blockState) {
+        // todo flush out
+        Block block = blockState.getBlock();
+        // most blocks with entity has an interaction, just block all of them
+        if (block instanceof BlockWithEntity) return true;
+        if (block instanceof BedBlock) return true;
+        if (block instanceof DoorBlock) return true;
+        if (block instanceof TrapdoorBlock) return true;
+
+        return false;
     }
 
     public static class Entity {
