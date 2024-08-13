@@ -17,7 +17,7 @@ public class CustomBlock {
     private ArrayList<String> blockTags = new ArrayList<>();
     @SerializedName("blockstates")
     private ArrayList<String> blockStates = new ArrayList<>();
-    @SerializedName("sittingHeight")
+    @SerializedName("sitting-height")
     private Double sittingHeight = 0.5;
 
     public CustomBlock() {}
