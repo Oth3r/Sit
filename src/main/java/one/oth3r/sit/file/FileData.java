@@ -79,23 +79,6 @@ public class FileData {
     }
 
     /**
-     * a list of players who just joined, to check if they are mounted to a Sit! entity
-     */
-    private static final HashMap<ServerPlayerEntity, Integer> checkPlayers = new HashMap<>();
-
-    public static void setCheckPlayer(ServerPlayerEntity player, Integer time) {
-        checkPlayers.put(player, time);
-    }
-
-    public static void removeCheckPlayer(ServerPlayerEntity player) {
-        checkPlayers.remove(player);
-    }
-
-    public static HashMap<ServerPlayerEntity, Integer> getCheckPlayers() {
-        return new HashMap<>(checkPlayers);
-    }
-
-    /**
      * loads all config files to memory
      * @param tryLegacy try to load the legacy file, usually only used on server startup
      */

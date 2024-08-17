@@ -150,7 +150,7 @@ public class Events {
         // PLAYER JOIN
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             FileData.setPlayerSetting(handler.player, FileData.getSittingConfig());
-            FileData.setCheckPlayer(handler.player, 5);
+            Data.setCheckPlayer(handler.player, 5);
         });
 
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {

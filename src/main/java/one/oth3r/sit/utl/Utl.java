@@ -298,10 +298,7 @@ public class Utl {
          * spawns the entity and make the player sit on it
          */
         public static void spawnSit(ServerPlayerEntity player, DisplayEntity.TextDisplayEntity entity) {
-            player.getServerWorld().spawnEntity(entity);
-            player.startRiding(entity);
-            // add the entity to the list
-            FileData.addSitEntity(player, entity);
+            Data.setSpawnList(player, entity);
         }
 
         /**

@@ -30,13 +30,13 @@ public class LoopManager {
 
             // get the player's sit entity when they join
             // todo make it so it updates the sitting height and pos based on the block so if it changed while offline it still works (or if stair changes shape)
-            HashMap<ServerPlayerEntity, Integer> checkPlayers = FileData.getCheckPlayers();
+            HashMap<ServerPlayerEntity, Integer> checkPlayers = Data.getCheckPlayers();
             for (ServerPlayerEntity player : checkPlayers.keySet()) {
                 Integer time = checkPlayers.get(player);
                 // tick down or remove the player if at the end
                 time -= 1;
-                if (time <= 0) FileData.removeCheckPlayer(player);
-                else FileData.setCheckPlayer(player, time);
+                if (time <= 0) Data.removeCheckPlayer(player);
+                else Data.setCheckPlayer(player, time);
 
                 if (player.getVehicle() != null) {
                     Entity entity = player.getVehicle();
@@ -46,9 +46,21 @@ public class LoopManager {
                         // check if the player is still allowed to sit
                         Logic.checkSittingValidity(player);
                         // remove the player from the check
-                        FileData.removeCheckPlayer(player);
+                        Data.removeCheckPlayer(player);
                     }
                 }
+            }
+
+            HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> spawnList = Data.getSpawnList();
+            for (ServerPlayerEntity player : spawnList.keySet()) {
+                DisplayEntity.TextDisplayEntity sitEntity = spawnList.get(player);
+
+                player.getServerWorld().spawnEntity(sitEntity);
+                player.startRiding(sitEntity);
+                // add the entity to the list
+                FileData.addSitEntity(player, sitEntity);
+                // remove the entity from the list
+                Data.removeSpawnList(player);
             }
         }
     }

@@ -1,9 +1,13 @@
 package one.oth3r.sit.utl;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
 
 public class Data {
     public static final String MOD_ID = "sit-oth3r";
@@ -60,5 +64,39 @@ public class Data {
 
     public static void setSupportedServer(boolean supportedServer) {
         Data.supportedServer = supportedServer;
+    }
+
+    /**
+     * a list of players who just joined, to check if they are mounted to a Sit! entity
+     */
+    private static final HashMap<ServerPlayerEntity, Integer> checkPlayers = new HashMap<>();
+
+    public static void setCheckPlayer(ServerPlayerEntity player, Integer time) {
+        checkPlayers.put(player, time);
+    }
+
+    public static void removeCheckPlayer(ServerPlayerEntity player) {
+        checkPlayers.remove(player);
+    }
+
+    public static HashMap<ServerPlayerEntity, Integer> getCheckPlayers() {
+        return new HashMap<>(checkPlayers);
+    }
+
+    /**
+     * a list of players who just joined, to check if they are mounted to a Sit! entity
+     */
+    private static final HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> spawnList = new HashMap<>();
+
+    public static void setSpawnList(ServerPlayerEntity player, DisplayEntity.TextDisplayEntity entity) {
+        spawnList.put(player, entity);
+    }
+
+    public static void removeSpawnList(ServerPlayerEntity player) {
+        spawnList.remove(player);
+    }
+
+    public static HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> getSpawnList() {
+        return new HashMap<>(spawnList);
     }
 }
