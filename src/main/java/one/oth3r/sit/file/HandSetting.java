@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 public class HandSetting {
 
-    public boolean mainBlock;
     @SerializedName("requirement")
     private SittingRequirement sittingRequirement = SittingRequirement.NONE;
     @SerializedName("requirement-options")
