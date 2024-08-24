@@ -11,6 +11,7 @@ import net.minecraft.block.enums.SlabType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.DisplayEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -212,6 +213,8 @@ public class Events {
             Sit.commandManager = s.getCommandManager();
             UseBlockCallback.EVENT.register((pl, world, hand, hitResult) -> {
                 if (!Config.handSitting) return ActionResult.PASS;
+                // make sure its a server player
+                if (pl.getClass() != ServerPlayerEntity.class) return ActionResult.PASS;
                 ServerPlayerEntity player = Sit.server.getPlayerManager().getPlayer(pl.getUuid());
                 if (player == null) return ActionResult.PASS;
                 if (hand == net.minecraft.util.Hand.MAIN_HAND && hitResult.getType() == HitResult.Type.BLOCK) {
