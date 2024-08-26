@@ -85,6 +85,26 @@ public class Logic {
     }
 
     /**
+     * spawns a sit entity for the player, they HAVE TO BE in the spawn list
+     */
+    public static void spawnEntity(ServerPlayerEntity player) {
+        // return if not in the list
+        if (Data.getSpawnList().get(player) == null) return;
+
+        // if the player is already sitting on a sit entity, remove it before spawning a new one
+        if (FileData.getSitEntity(player) != null) Logic.removeEntity(player);
+        // get the new entity
+        DisplayEntity.TextDisplayEntity sitEntity = Data.getSpawnList().get(player);
+        // spawn and ride the entity
+        player.getServerWorld().spawnEntity(sitEntity);
+        player.startRiding(sitEntity);
+        // add the entity to the list
+        FileData.addSitEntity(player, sitEntity);
+        // remove the entity from the spawn list
+        Data.removeSpawnList(player);
+    }
+
+    /**
      * checks if the player should still be sitting, e.g. the block was destroyed ect.
      */
     public static void checkSittingValidity(ServerPlayerEntity player) {

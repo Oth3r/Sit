@@ -51,16 +51,10 @@ public class LoopManager {
                 }
             }
 
+            // spawn entities for everyone in the spawn list
             HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> spawnList = Data.getSpawnList();
             for (ServerPlayerEntity player : spawnList.keySet()) {
-                DisplayEntity.TextDisplayEntity sitEntity = spawnList.get(player);
-
-                player.getServerWorld().spawnEntity(sitEntity);
-                player.startRiding(sitEntity);
-                // add the entity to the list
-                FileData.addSitEntity(player, sitEntity);
-                // remove the entity from the list
-                Data.removeSpawnList(player);
+                Logic.spawnEntity(player);
             }
         }
     }
