@@ -139,7 +139,7 @@ public class Logic {
      * reloads the config files
      */
     public static void reload() {
-        FileData.loadFiles(false);
+        FileData.loadFiles();
     }
 
 }

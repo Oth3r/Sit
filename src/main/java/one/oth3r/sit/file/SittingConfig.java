@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.util.Hand;
 import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Utl;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 
-public class SittingConfig {
+public class SittingConfig implements CustomFile<SittingConfig> {
 
     @SerializedName("version")
     private Double version = 1.0;
@@ -36,11 +37,7 @@ public class SittingConfig {
     }
 
     public SittingConfig(SittingConfig sittingConfig) {
-        this.version = sittingConfig.version;
-        this.enabled = sittingConfig.enabled;
-        this.handSitting = sittingConfig.handSitting;
-        this.mainHand = sittingConfig.mainHand;
-        this.offHand = sittingConfig.offHand;
+        updateToNewFile(sittingConfig);
     }
 
     public Double getVersion() {
@@ -75,38 +72,27 @@ public class SittingConfig {
         return offHand;
     }
 
-    public static File getFile() {
-        return new File(Data.CONFIG_DIR+"sitting-config.json");
+    @Override
+    public @NotNull Class<SittingConfig> getFileClass() {
+        return SittingConfig.class;
     }
 
-    /**
-     * loads the Config file to Data
-     */
-    public static void load() {
-
-        File file = getFile();
-        if (!file.exists()) save();
-        // try reading the file
-        try (BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
-            Updater.SittingConfigFile.run(reader);
-        } catch (Exception e) {
-            Data.LOGGER.error(String.format("ERROR LOADING '%s`: %s", file.getName(),e.getMessage()));
-        }
-        // save after loading
-        save();
+    @Override
+    public void updateToNewFile(SittingConfig newFile) {
+        this.version = newFile.version;
+        this.enabled = newFile.enabled;
+        this.handSitting = newFile.handSitting;
+        this.mainHand = newFile.mainHand;
+        this.offHand = newFile.offHand;
     }
 
-    /**
-     * saves Data.config to config.json
-     */
-    public static void save() {
-        if (!getFile().exists()) {
-            Data.LOGGER.info(String.format("Creating new `%s`", getFile().getName()));
-        }
-        try (BufferedWriter writer = Files.newBufferedWriter(getFile().toPath(), StandardCharsets.UTF_8)) {
-            writer.write(Utl.getGson().toJson(FileData.getSittingConfig()));
-        } catch (Exception e) {
-            Data.LOGGER.error(String.format("ERROR SAVING '%s`: %s", getFile().getName(), e.getMessage()));
-        }
+    @Override
+    public String getFileName() {
+        return "sitting-config.json";
+    }
+
+    @Override
+    public String getDirectory() {
+        return Data.CONFIG_DIR;
     }
 }
