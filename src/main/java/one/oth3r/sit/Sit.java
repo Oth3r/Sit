@@ -9,7 +9,7 @@ public class Sit implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		FileData.loadFiles(true);
+		FileData.loadFiles();
 		Events.registerCommon();
 	}
 }

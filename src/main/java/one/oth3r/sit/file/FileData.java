@@ -16,7 +16,7 @@ public class FileData {
     private static ServerConfig serverConfig = new ServerConfig();
 
     public static ServerConfig getServerConfig() {
-        return new ServerConfig(serverConfig);
+        return serverConfig;
     }
 
     public static void setServerConfig(ServerConfig newServerConfig) {
@@ -29,7 +29,7 @@ public class FileData {
     private static SittingConfig sittingConfig = new SittingConfig();
 
     public static SittingConfig getSittingConfig() {
-        return new SittingConfig(sittingConfig);
+        return sittingConfig;
     }
 
     public static void setSittingConfig(SittingConfig newSittingConfig) {
@@ -80,11 +80,11 @@ public class FileData {
 
     /**
      * loads all config files to memory
-     * @param tryLegacy try to load the legacy file, usually only used on server startup
      */
-    public static void loadFiles(boolean tryLegacy) {
-        ServerConfig.load(tryLegacy);
-        SittingConfig.load();
+    public static void loadFiles() {
+        getServerConfig().load();
+
+        getSittingConfig().load();
         // if loading file and is on supported server on client, send the new settings over
         if (Data.isClient() && Data.isSupportedServer()) {
             Utl.sendSettingsPackets();

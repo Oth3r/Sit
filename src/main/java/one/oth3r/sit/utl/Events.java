@@ -55,7 +55,7 @@ public class Events {
                         // set the sitting config to the new value
                         FileData.setSittingConfig(config);
                         // save the changes to the file
-                        SittingConfig.save();
+                        config.save();
                         // send the changes to the server
                         Utl.sendSettingsPackets();
 
