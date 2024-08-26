@@ -144,6 +144,18 @@ public class Updater {
             }
 
             /**
+             * converts the legacy hand requirement enum to the new one
+             * @param requirement the old string
+             */
+            private static HandSetting.SittingRequirement handRequirementUpdater(String requirement) {
+                return switch (requirement) {
+                    case "restrictive" -> HandSetting.SittingRequirement.FILTER;
+                    case "none" -> HandSetting.SittingRequirement.NONE;
+                    default -> HandSetting.SittingRequirement.EMPTY;
+                };
+            }
+
+            /**
              * gets a list of custom blocks from the legacy way of entering custom sit blocks
              */
             private static ArrayList<CustomBlock> getCustomBlocks(ArrayList<String> fix) {
@@ -210,7 +222,7 @@ public class Updater {
                         sittingConfig = new SittingConfig(
                                 1.0, true, Boolean.parseBoolean((String) properties.computeIfAbsent("hand.sitting", a -> String.valueOf(defaultSittingConfig.canSitWithHand()))),
                                 new HandSetting(
-                                    Utl.Enum.get(properties.computeIfAbsent("hand.main.requirement", a -> String.valueOf(defaultSittingConfig.getHand(Hand.MAIN_HAND).getSittingRequirement())),HandSetting.SittingRequirement.class,HandSetting.SittingRequirement.FILTER),
+                                        handRequirementUpdater((String) properties.computeIfAbsent("hand.main.requirement", a -> String.valueOf(defaultSittingConfig.getHand(Hand.MAIN_HAND).getSittingRequirement()))),
                                         new HandSetting.Filter(
                                                 !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.block", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isBlock()))),
                                                 !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.food", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isFood()))),
@@ -223,7 +235,7 @@ public class Updater {
                                         )
                                 ),
                                 new HandSetting(
-                                        Utl.Enum.get(properties.computeIfAbsent("hand.off.requirement", a -> String.valueOf(defaultSittingConfig.getHand(Hand.OFF_HAND).getSittingRequirement())),HandSetting.SittingRequirement.class,HandSetting.SittingRequirement.FILTER),
+                                        handRequirementUpdater((String) properties.computeIfAbsent("hand.off.requirement", a -> String.valueOf(defaultSittingConfig.getHand(Hand.OFF_HAND).getSittingRequirement()))),
                                         new HandSetting.Filter(
                                                 !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.off.block", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isBlock()))),
                                                 !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.off.food", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isFood()))),
@@ -244,7 +256,7 @@ public class Updater {
                             sittingConfig = new SittingConfig(
                                     1.0, true, defaultSittingConfig.canSitWithHand(),
                                     new HandSetting(
-                                            Utl.Enum.get(properties.computeIfAbsent("main-hand-requirement", a -> String.valueOf(defaultSittingConfig.getHand(Hand.MAIN_HAND).getSittingRequirement())),HandSetting.SittingRequirement.class,HandSetting.SittingRequirement.FILTER),
+                                            handRequirementUpdater((String) properties.computeIfAbsent("main-hand-requirement", a -> String.valueOf(defaultSittingConfig.getHand(Hand.MAIN_HAND).getSittingRequirement()))),
                                             new HandSetting.Filter(
                                                     !Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-block", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isBlock()))),
                                                     !Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-food", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isFood()))),
@@ -257,7 +269,7 @@ public class Updater {
                                             )
                                     ),
                                     new HandSetting(
-                                            Utl.Enum.get(properties.computeIfAbsent("off-hand-requirement", a -> String.valueOf(defaultSittingConfig.getHand(Hand.OFF_HAND).getSittingRequirement())),HandSetting.SittingRequirement.class,HandSetting.SittingRequirement.FILTER),
+                                            handRequirementUpdater((String) properties.computeIfAbsent("off-hand-requirement", a -> String.valueOf(defaultSittingConfig.getHand(Hand.OFF_HAND).getSittingRequirement()))),
                                             new HandSetting.Filter(
                                                     !Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-block", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isBlock()))),
                                                     !Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-food", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isFood()))),
