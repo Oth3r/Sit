@@ -69,7 +69,7 @@ public class ServerConfig {
         return keepActive;
     }
 
-    public boolean isSitWhileSeated() {
+    public boolean canSitWhileSeated() {
         return sitWhileSeated;
     }
 

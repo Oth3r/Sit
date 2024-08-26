@@ -17,8 +17,8 @@ public class Logic {
         // cant sit if crouching
         if (player.isSneaking()) return false;
 
-        // if sitting on a stair and sit while seated off, false
-        if (FileData.getSitEntity(player) != null && !FileData.getServerConfig().isSitWhileSeated()) return false;
+        // if sitting on a sit entity and sit while seated off, false
+        if (!FileData.getServerConfig().canSitWhileSeated() && FileData.getSitEntity(player) != null) return false;
 
         // if hit result isnt null (check the hands of the player) & the player hand checker returns false (can't sit with the items in the hand), quit
         if (hitResult != null) {
