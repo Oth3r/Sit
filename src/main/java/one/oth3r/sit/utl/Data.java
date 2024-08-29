@@ -84,7 +84,7 @@ public class Data {
     }
 
     /**
-     * a list of players who just joined, to check if they are mounted to a Sit! entity
+     * a list of players that need a sit entity spawned for them, on the server loop to stop crashing with other mods (ASYNC)
      */
     private static final HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> spawnList = new HashMap<>();
 

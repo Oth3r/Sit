@@ -73,7 +73,7 @@ public class Logic {
     }
 
     /**
-     * removes the entity from the game, using the player
+     * removes the entity bound to the player from the game, using the player
      */
     public static void removeEntity(ServerPlayerEntity player) {
         DisplayEntity.TextDisplayEntity entity = FileData.getSitEntity(player);
