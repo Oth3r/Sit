@@ -90,5 +90,12 @@
   "key.config": "Open Config",
 
   "screen.config": "Sit! Config",
+  "gui.button.file": "Open File",
+  "gui.button.folder": "Open Folder",
+  "gui.button.reset": "Reset",
+  "gui.button.issues": "Issues",
+  "gui.button.donate": "Donate",
+  "gui.button.revert": "Revert Changes",
+  "gui.button.save": "Save and Close",
   "gui.button.website": "Website"
 }
