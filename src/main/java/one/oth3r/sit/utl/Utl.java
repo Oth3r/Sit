@@ -35,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -209,16 +210,48 @@ public class Utl {
      * @return
      */
     public static boolean hasInteraction(BlockState blockState) {
-        // todo flush out
-        Block block = blockState.getBlock();
-        // most blocks with entity has an interaction, just block all of them
-        if (block instanceof BlockWithEntity) return true;
-        if (block instanceof BedBlock) return true;
-        if (block instanceof DoorBlock) return true;
-        if (block instanceof TrapdoorBlock) return true;
+        return isMethodOverridden(AbstractBlock.class, blockState.getBlock().getClass(), "onUse", BlockState.class, World.class, BlockPos.class, PlayerEntity.class, BlockHitResult.class);
+    }
 
+    /**
+     * checks if a method in the base class has been overridden in the subclass(es) by:
+     * checking the subclass and its supers till the original method is found or the original method is found
+     * @param baseClass the base class
+     * @param subclass the subclass to check
+     * @param methodName the method to check for
+     * @param parameterTypes the parameterTypes for the method, see {@link java.lang.Class#getDeclaredMethod(java.lang.String, java.lang.Class[])}
+     * @return if the method is overridden or not
+     */
+    public static boolean isMethodOverridden(Class<?> baseClass, Class<?> subclass, String methodName, Class<?>... parameterTypes) {
+        try {
+            // get the original method
+            Method superMethod = baseClass.getMethod(methodName, parameterTypes);
+
+            // the current class to check, starting with the subclass
+            Class<?> currentClass = subclass;
+            // while the class is null and the current class isn't the same as the baseclass.
+            while (currentClass != null && !currentClass.equals(baseClass)) {
+                try {
+                    // get the submethod
+                    Method subMethod = currentClass.getDeclaredMethod(methodName, parameterTypes);
+
+                    // check if the methods are different
+                    if (!superMethod.equals(subMethod)) {
+                        return true;
+                    }
+                } catch (NoSuchMethodException ignored) {
+                    // method isnt in this class, bump up a class and check that one
+                }
+                currentClass = currentClass.getSuperclass();
+            }
+        } catch (NoSuchMethodException e) {
+            // method doesn't exist in the base class
+            return false;
+        }
+        // an override wasn't found
         return false;
     }
+
 
     public static class Entity {
 
