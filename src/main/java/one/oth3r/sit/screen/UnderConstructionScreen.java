@@ -56,6 +56,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
 
         ButtonWidget saveExitButton = this.addDrawableChild(new ButtonWidget.Builder(Text.translatable("gui.button.save"),
                 (button) -> {
+                    this.file.load();
                     this.file.save();
                     this.client.setScreen(parent);
                 })
