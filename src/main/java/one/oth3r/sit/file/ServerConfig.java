@@ -34,9 +34,11 @@ public class ServerConfig implements CustomFile<ServerConfig> {
     @SerializedName("custom-enabled")
     private Boolean customEnabled = false;
     @SerializedName("custom-blocks")
-    private ArrayList<CustomBlock> customBlocks = FileData.Defaults.CUSTOM_BLOCKS;
+    private ArrayList<SittingBlock> sittingBlocks = FileData.Defaults.SITTING_BLOCKS;
     @SerializedName("blacklisted-blocks")
     private ArrayList<String> blacklistedBlocks = new ArrayList<>();
+    @SerializedName("blacklisted-interactions")
+    private ArrayList<String> blacklistedInteractions = new ArrayList<>();
 
     public ServerConfig() {}
 
@@ -47,18 +49,18 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         this.sitWhileSeated = serverConfig.sitWhileSeated;
         this.presetBlocks = serverConfig.presetBlocks;
         this.customEnabled = serverConfig.customEnabled;
-        this.customBlocks = serverConfig.customBlocks;
+        this.sittingBlocks = serverConfig.sittingBlocks;
         this.blacklistedBlocks = serverConfig.blacklistedBlocks;
     }
 
-    public ServerConfig(Double version, String lang, boolean keepActive, boolean sitWhileSeated, PresetBlocks presetBlocks, boolean customEnabled, ArrayList<CustomBlock> customBlocks, ArrayList<String> blacklistedBlocks) {
+    public ServerConfig(Double version, String lang, boolean keepActive, boolean sitWhileSeated, PresetBlocks presetBlocks, boolean customEnabled, ArrayList<SittingBlock> sittingBlocks, ArrayList<String> blacklistedBlocks) {
         this.version = version;
         this.lang = lang;
         this.keepActive = keepActive;
         this.sitWhileSeated = sitWhileSeated;
         this.presetBlocks = presetBlocks;
         this.customEnabled = customEnabled;
-        this.customBlocks = customBlocks;
+        this.sittingBlocks = sittingBlocks;
         this.blacklistedBlocks = blacklistedBlocks;
     }
 
@@ -86,8 +88,8 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         return customEnabled;
     }
 
-    public ArrayList<CustomBlock> getCustomBlocks() {
-        return customBlocks;
+    public ArrayList<SittingBlock> getSittingBlocks() {
+        return sittingBlocks;
     }
 
     public ArrayList<String> getBlacklistedBlocks() {
@@ -149,7 +151,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         this.sitWhileSeated = newFile.sitWhileSeated;
         this.presetBlocks = newFile.presetBlocks;
         this.customEnabled = newFile.customEnabled;
-        this.customBlocks = newFile.customBlocks;
+        this.sittingBlocks = newFile.sittingBlocks;
         this.blacklistedBlocks = newFile.blacklistedBlocks;
     }
 
@@ -229,9 +231,9 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         /**
          * gets a list of custom blocks from the legacy way of entering custom sit blocks
          */
-        private static ArrayList<CustomBlock> getCustomBlocks(ArrayList<String> fix) {
+        private static ArrayList<SittingBlock> getCustomBlocks(ArrayList<String> fix) {
             //eg. minecraft:campfire|.46|1|lit=false
-            ArrayList<CustomBlock> out = new ArrayList<>();
+            ArrayList<SittingBlock> out = new ArrayList<>();
             for (String entry : fix) {
                 String[] split = entry.split("\\|");
                 // skip if not the right size
@@ -247,7 +249,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                 }
 
                 // add if everything is A-OK
-                out.add(new CustomBlock(
+                out.add(new SittingBlock(
                         new ArrayList<>(Arrays.asList(split[0])),
                         new ArrayList<>(),blockstates,Double.parseDouble(split[1])));
             }

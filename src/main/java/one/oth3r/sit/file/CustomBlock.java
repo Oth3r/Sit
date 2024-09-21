@@ -17,16 +17,14 @@ public class CustomBlock {
     private ArrayList<String> blockTags = new ArrayList<>();
     @SerializedName("blockstates")
     private ArrayList<String> blockStates = new ArrayList<>();
-    @SerializedName("sitting-height")
-    private Double sittingHeight = 0.5;
+
 
     public CustomBlock() {}
 
-    public CustomBlock(ArrayList<String> blockIds, ArrayList<String> blockTags, ArrayList<String> blockStates, Double sittingHeight) {
+    public CustomBlock(ArrayList<String> blockIds, ArrayList<String> blockTags, ArrayList<String> blockStates) {
         this.blockIds = blockIds;
         this.blockTags = blockTags;
         this.blockStates = blockStates;
-        this.sittingHeight = sittingHeight;
     }
 
     public ArrayList<String> getBlockIds() {
@@ -41,9 +39,7 @@ public class CustomBlock {
         return blockStates;
     }
 
-    public Double getSittingHeight() {
-        return sittingHeight;
-    }
+
 
     /**
      * checks if the blockstate matches the CustomBlock params

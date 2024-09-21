@@ -180,9 +180,9 @@ public class Utl {
             // if the block is on the blacklist, false
             if (config.getBlacklistedBlocks().contains(getBlockID(blockState))) return null;
 
-            for (CustomBlock customBlock : config.getCustomBlocks()) {
+            for (SittingBlock dittingBlock : config.getSittingBlocks()) {
                 // if the block is valid, true
-                if (customBlock.isValid(blockState)) return customBlock.getSittingHeight();
+                if (dittingBlock.isValid(blockState)) return dittingBlock.getSittingHeight();
             }
         }
 
