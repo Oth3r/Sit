@@ -4,6 +4,7 @@
   "package": "one.oth3r.sit.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ReloadCommandMixin",
     "TextDisplayDismountMixin"
   ],
   "injectors": {
