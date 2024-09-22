@@ -104,34 +104,13 @@ public class Utl {
      * @return if true, the item isn't filtered out
      */
     public static boolean checkItem(HandSetting.Filter filter, ItemStack itemStack) {
-        // default to true if theres nothing
+        // default to true if there's nothing
         if (itemStack.isEmpty()) return true;
 
-        String itemId = Registries.ITEM.getId(itemStack.getItem()).toString();
-        // check the custom item ids
-        for (String id : filter.getCustomItems()) {
-            // if there is a match for the NOT(!) item, its filtered, false
-            if (id.startsWith("!") && id.substring(1).equalsIgnoreCase(itemId)) return false;
-            // if there is a match for the item, return true immediately
-            if (id.equalsIgnoreCase(itemId)) return true;
-        }
-        // a boolean to check if one of the items are in a filtered tag
-        boolean tagCheck = false;
-        // check the custom item tags
-        for (String tag : filter.getCustomTags()) {
-            // substring to remove # and if needed, !
-            // if a NOT tag
-            if (tag.startsWith("!")) {
-                // if there is a math for the NOT(!) tag, return false
-                if (itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), Identifier.of(tag.substring(2))))) return false;
-            }
-            // else (normal tag), if there is a match, set tagCheck to true
-            else if (itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), Identifier.of(tag.substring(1))))) tagCheck = true;
-        }
+        boolean itemcheck = filter.getCustomItems().checkItem(itemStack);
 
-        // if the item is in the tag, the boolean is true, return true
-        // not returning true in the loop because there might be a (!) not tag that the item might fall into, after the item was already in another tag
-        if (tagCheck) return tagCheck;
+        // iif the item passes the checks, return true
+        if (itemcheck) return true;
 
         // if none of the custom were met, try the default conditions
 

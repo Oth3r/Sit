@@ -45,18 +45,15 @@ public class HandSetting {
         @SerializedName("usable")
         private boolean usable = false;
         @SerializedName("custom-items")
-        private ArrayList<String> customItems = new ArrayList<>();
-        @SerializedName("custom-tags")
-        private ArrayList<String> customTags = new ArrayList<>();
+        private CustomItem customItems = new CustomItem();
 
         public Filter() {}
 
-        public Filter(boolean block, boolean food, boolean usable, ArrayList<String> customItems, ArrayList<String> customTags) {
+        public Filter(boolean block, boolean food, boolean usable, CustomItem customItems) {
             this.block = block;
             this.food = food;
             this.usable = usable;
             this.customItems = customItems;
-            this.customTags = customTags;
         }
 
         public boolean isBlock() {
@@ -71,12 +68,8 @@ public class HandSetting {
             return usable;
         }
 
-        public ArrayList<String> getCustomItems() {
+        public CustomItem getCustomItems() {
             return customItems;
-        }
-
-        public ArrayList<String> getCustomTags() {
-            return customTags;
         }
     }
 }

@@ -299,11 +299,11 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                                             !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.block", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isBlock()))),
                                             !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.food", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isFood()))),
                                             !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.main.usable", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isUsable()))),
-                                            getFilterList(
-                                                    new Gson().fromJson((String) properties.computeIfAbsent("hand.main.whitelist", a -> "[]"), listType),
-                                                    new Gson().fromJson((String) properties.computeIfAbsent("hand.main.blacklist", a -> "[]"), listType)
-                                            ),
-                                            new ArrayList<>()
+                                            new CustomItem(getFilterList(
+                                                        new Gson().fromJson((String) properties.computeIfAbsent("hand.main.whitelist", a -> "[]"), listType),
+                                                        new Gson().fromJson((String) properties.computeIfAbsent("hand.main.blacklist", a -> "[]"), listType)
+                                                ),
+                                                new ArrayList<>())
                                     )
                             ),
                             new HandSetting(
@@ -312,11 +312,11 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                                             !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.off.block", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isBlock()))),
                                             !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.off.food", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isFood()))),
                                             !Boolean.parseBoolean((String) properties.computeIfAbsent("hand.off.usable", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isUsable()))),
-                                            getFilterList(
-                                                    new Gson().fromJson((String) properties.computeIfAbsent("hand.off.whitelist", a -> "[]"), listType),
-                                                    new Gson().fromJson((String) properties.computeIfAbsent("hand.off.blacklist", a -> "[]"), listType)
-                                            ),
-                                            new ArrayList<>()
+                                            new CustomItem(getFilterList(
+                                                        new Gson().fromJson((String) properties.computeIfAbsent("hand.off.whitelist", a -> "[]"), listType),
+                                                        new Gson().fromJson((String) properties.computeIfAbsent("hand.off.blacklist", a -> "[]"), listType)
+                                                ),
+                                                new ArrayList<>())
                                     )
                             )
                     );
@@ -333,11 +333,11 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                                                 !Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-block", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isBlock()))),
                                                 !Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-food", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isFood()))),
                                                 !Boolean.parseBoolean((String) properties.computeIfAbsent("main-hand-usable", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.MAIN_HAND).getFilter().isUsable()))),
-                                                getFilterList(
-                                                        new Gson().fromJson((String) properties.computeIfAbsent("main-hand-whitelist", a -> "[]"), listType),
-                                                        new Gson().fromJson((String) properties.computeIfAbsent("main-hand-blacklist", a -> "[]"), listType)
-                                                ),
-                                                new ArrayList<>()
+                                                new CustomItem(getFilterList(
+                                                            new Gson().fromJson((String) properties.computeIfAbsent("main-hand-whitelist", a -> "[]"), listType),
+                                                            new Gson().fromJson((String) properties.computeIfAbsent("main-hand-blacklist", a -> "[]"), listType)
+                                                    ),
+                                                    new ArrayList<>())
                                         )
                                 ),
                                 new HandSetting(
@@ -346,11 +346,11 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                                                 !Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-block", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isBlock()))),
                                                 !Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-food", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isFood()))),
                                                 !Boolean.parseBoolean((String) properties.computeIfAbsent("off-hand-usable", a -> String.valueOf(!defaultSittingConfig.getHand(Hand.OFF_HAND).getFilter().isUsable()))),
-                                                getFilterList(
-                                                        new Gson().fromJson((String) properties.computeIfAbsent("off-hand-whitelist", a -> "[]"), listType),
-                                                        new Gson().fromJson((String) properties.computeIfAbsent("off-hand-blacklist", a -> "[]"), listType)
-                                                ),
-                                                new ArrayList<>()
+                                                new CustomItem(getFilterList(
+                                                            new Gson().fromJson((String) properties.computeIfAbsent("off-hand-whitelist", a -> "[]"), listType),
+                                                            new Gson().fromJson((String) properties.computeIfAbsent("off-hand-blacklist", a -> "[]"), listType)
+                                                    ),
+                                                    new ArrayList<>())
                                         )
                                 )
                         );
