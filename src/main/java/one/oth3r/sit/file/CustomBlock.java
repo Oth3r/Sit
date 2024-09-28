@@ -88,7 +88,7 @@ public class CustomBlock {
             // if there is a math for the NOT(!) tag, return false
             if (tag.startsWith("!") && blockState.isIn(TagKey.of(Registries.BLOCK.getKey(), Identifier.of(tag.substring(2))))) return false;
             // if there is a match, return true
-            if (blockState.isIn(TagKey.of(Registries.BLOCK.getKey(), Identifier.of(tag.substring(1))))) tagCheck = true;
+            if (blockState.isIn(TagKey.of(Registries.BLOCK.getKey(), Identifier.tryParse(tag.substring(1))))) tagCheck = true;
         }
 
         // not returning true in the loop because there might be a (!) not tag that the block might fall into, after the block was already in another tag
