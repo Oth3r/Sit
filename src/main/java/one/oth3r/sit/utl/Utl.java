@@ -94,8 +94,8 @@ public class Utl {
         }
     }
 
-    public static final double HALF_BLOCK = 0.49;
-    public static final double CARPET = 0.05;
+    public static final double HALF_BLOCK = 0.5;
+    public static final double CARPET = 0.062;
 
     /**
      * checks if the provided itemstack is a valid one for the provided filter
