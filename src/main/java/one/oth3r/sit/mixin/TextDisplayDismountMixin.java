@@ -20,7 +20,8 @@ public class TextDisplayDismountMixin extends DisplayEntity {
 
     @Override
     public Vec3d updatePassengerForDismount(LivingEntity passenger) {
-        int[][] offset = Dismounting.getDismountOffsets(Direction.NORTH);
+        // get the passenger's horizontal rotation, rotated counterclockwise, because the method rotates it clockwise for some reason
+        int[][] offset = Dismounting.getDismountOffsets(passenger.getHorizontalFacing().rotateYCounterclockwise());
         // new array with another slot
         int[][] dismountOffsets = new int[offset.length + 1][];
         // add an empty offset to the start of the array
