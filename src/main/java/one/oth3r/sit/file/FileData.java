@@ -93,9 +93,9 @@ public class FileData {
 
     public static class Defaults {
         public static final ArrayList<SittingBlock> SITTING_BLOCKS = new ArrayList<>(Arrays.asList(
-                new SittingBlock(new ArrayList<>(),new ArrayList<>(Arrays.asList("#minecraft:campfires")), new ArrayList<>(Arrays.asList("lit=false")),.43),
-                new SittingBlock(new ArrayList<>(Arrays.asList("!minecraft:oak_log", "minecraft:crimson_stem")), new ArrayList<>(Arrays.asList("#minecraft:logs")), new ArrayList<>(Arrays.asList("!axis=y")),1.0),
-                new SittingBlock(new ArrayList<>(Arrays.asList()), new ArrayList<>(Arrays.asList("#minecraft:beds")), new ArrayList<>(Arrays.asList("part=foot","occupied=false")),.5)
+                new SittingBlock(new ArrayList<>(),new ArrayList<>(Arrays.asList("#minecraft:campfires")), new ArrayList<>(Arrays.asList("lit=false")),.437),
+                new SittingBlock(new ArrayList<>(Arrays.asList("!minecraft:crimson_stem","!minecraft:warped_stem","minecraft:polished_basalt")), new ArrayList<>(Arrays.asList("#minecraft:logs","!#minecraft:oak_logs")), new ArrayList<>(Arrays.asList("!axis=y")),1.0),
+                new SittingBlock(new ArrayList<>(Arrays.asList()), new ArrayList<>(Arrays.asList("#minecraft:beds")), new ArrayList<>(Arrays.asList("part=foot","occupied=false")),.5625)
         ));
 
         public static final HandSetting MAIN_HAND = new HandSetting(HandSetting.SittingRequirement.EMPTY, new HandSetting.Filter(
