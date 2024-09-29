@@ -4,6 +4,8 @@ import net.minecraft.block.*;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.MutableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -140,6 +142,39 @@ public class Logic {
      */
     public static void reload() {
         FileData.loadFiles();
+    }
+
+    /**
+     * toggles the sit ablity config option
+     * @return returns a message, that can be sent to the player
+     */
+    public static MutableText toggleSiting() {
+        if (Data.isSupportedServer()) {
+            // get the sitting config
+            SittingConfig config = FileData.getSittingConfig();
+            // toggle the setting
+            config.setEnabled(!config.getEnabled());
+
+            // set the sitting config to the new value
+            FileData.setSittingConfig(config);
+            // save the changes to the file
+            config.save();
+            // send the changes to the server
+            Utl.sendSettingsPackets();
+
+
+            // get the message settings
+            String messageKey = "msg.sit_toggle."+(config.getEnabled()?"on":"off");
+            Formatting messageColor = config.getEnabled()?Formatting.GREEN:Formatting.RED;
+
+            // send the player the actionbar message
+            return Utl.lang("msg.sit_toggle",
+                    Utl.lang(messageKey).formatted(messageColor));
+        } else {
+            // unsupported server message if not in a Sit! server
+            return Utl.lang("msg.unsupported")
+                    .formatted(Formatting.RED);
+        }
     }
 
 }
