@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -21,6 +22,7 @@ import one.oth3r.sit.file.FileData;
 import one.oth3r.sit.file.LangReader;
 import one.oth3r.sit.file.SittingConfig;
 import one.oth3r.sit.packet.SitPayloads;
+import one.oth3r.sit.screen.ConfigScreen;
 import org.lwjgl.glfw.GLFW;
 
 public class Events {
@@ -28,6 +30,7 @@ public class Events {
     private static class Keybindings {
         private static KeyBinding toggle_key;
         private static KeyBinding sit_key;
+        private static KeyBinding config__key;
 
         private static void register() {
             toggle_key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -40,9 +43,23 @@ public class Events {
                     GLFW.GLFW_KEY_UNKNOWN,
                     "category.sit"
             ));
+            config__key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                    "key.config",
+                    GLFW.GLFW_KEY_UNKNOWN,
+                    "category.sit"
+            ));
         }
 
-        private static void loopLogic(ClientPlayerEntity player) {
+        private static void loopLogic(MinecraftClient client) {
+            ClientPlayerEntity player = client.player;
+
+            while (config__key.wasPressed()) {
+                client.setScreen(new ConfigScreen(client.currentScreen));
+            }
+
+            // anything below uses the player object, make sure it's not null
+            if (player == null) return;
+
             while (toggle_key.wasPressed()) {
                 if (Data.isInGame()) {
                     player.sendMessage(Logic.toggleSiting(), true);
@@ -94,7 +111,7 @@ public class Events {
         // client tick loop
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             assert client.player != null;
-            Keybindings.loopLogic(client.player);
+            Keybindings.loopLogic(client);
         });
     }
 
