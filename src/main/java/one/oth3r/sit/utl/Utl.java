@@ -336,6 +336,12 @@ public class Utl {
         }
     }
 
+    public static MutableText messageTag() {
+        return Text.literal("[").append(Text.literal("Sit!").styled(
+                style -> style.withColor(TextColor.parse("#c400ff").result().orElse(TextColor.fromFormatting(Formatting.DARK_PURPLE))))
+        ).append("] ");
+    }
+
     /**
      * gets a MutableText using the language key, if on server, using the custom lang reader
      */
