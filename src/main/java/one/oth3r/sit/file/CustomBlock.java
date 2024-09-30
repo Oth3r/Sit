@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.state.State;
 import net.minecraft.util.Identifier;
 import one.oth3r.sit.utl.Utl;
 
@@ -51,14 +52,16 @@ public class CustomBlock {
         if (!blockType) return false;
 
         // now check if the state is one of the acceptable states
-        for (String state : blockStates) { //todo extract the blockstates to check them better
+        for (String state : blockStates) {
             // if there is a NOT (!) blockstate
             if (state.startsWith("!")) {
                 // if it is contained in the block, return false
-                if (blockState.toString().contains(state.substring(1))) return false;
+                // remove the '!'
+                String fixedState = state.substring(1);
+                if (blockState.getEntries().entrySet().stream().map(State.PROPERTY_MAP_PRINTER).anyMatch(s -> s.equals(fixedState))) return false;
             }
             // else check if the blockstate matches, if not return false
-            else if (!blockState.toString().contains(state)) return false;
+            else if (blockState.getEntries().entrySet().stream().map(State.PROPERTY_MAP_PRINTER).noneMatch(s -> s.equals(state))) return false;
         }
 
         // if here, all passes have passed
