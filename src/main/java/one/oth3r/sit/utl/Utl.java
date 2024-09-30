@@ -323,15 +323,22 @@ public class Utl {
                     .getEntitiesByType(TypeFilter.instanceOf(DisplayEntity.TextDisplayEntity.class),
                             entity -> entity.getName().getString().equals(Data.ENTITY_NAME));
 
-            // remove each one
+            // amount of sit entities purged
+            int count = 0;
+
+            // remove each one & count
             for (DisplayEntity.TextDisplayEntity entity : list) {
                 remove(entity);
+                count++;
             }
 
             // send a message if needed
             if (message) {
-                // todo maybe a count for the message for debuging
-                player.sendMessage(Utl.lang("msg.purged"));
+                player.sendMessage(messageTag().append(Utl.lang("msg.purged",Utl.lang("msg.purged.total",count).styled(
+                        style -> style.withColor(Colors.LIGHT_GRAY).withItalic(true)
+                )).styled(
+                        style -> style.withColor(Colors.GREEN)
+                )));
             }
         }
     }
