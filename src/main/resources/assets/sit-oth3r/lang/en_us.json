@@ -83,7 +83,8 @@
   "msg.sit_toggle.off": "Disabled",
   "msg.unsupported": "Sit! is not available on this server.",
   "msg.reloaded": "Reloaded the config!",
-  "msg.purged": "Purged all loaded Sit! entities!",
+  "msg.purged": "Purged all loaded Sit! entities! %s",
+  "msg.purged.total": "(%s removed)",
 
   "key.toggle": "Toggle Sitting",
   "key.sit": "Sit",
