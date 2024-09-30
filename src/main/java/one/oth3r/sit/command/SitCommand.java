@@ -8,7 +8,6 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import one.oth3r.sit.utl.Data;
@@ -77,7 +76,7 @@ public class SitCommand {
 
         if (args[0].equalsIgnoreCase("reload")) {
             Logic.reload();
-            player.sendMessage(Utl.lang("msg.reloaded").styled(style -> style.withColor(TextColor.fromFormatting(Formatting.GREEN))));
+            player.sendMessage(Utl.messageTag().append(Utl.lang("msg.reloaded").formatted(Formatting.GREEN)));
         }
 
         if (args[0].equalsIgnoreCase("purgeChairEntities")) Utl.Entity.purge(player,true);
