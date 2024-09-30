@@ -9,14 +9,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(DisplayEntity.TextDisplayEntity.class)
-public class TextDisplayDismountMixin extends DisplayEntity {
-
-    public TextDisplayDismountMixin(EntityType<?> type, World world) {
-        super(type, world);
+public abstract class TextDisplayDismountMixin extends DisplayEntity {
+    public TextDisplayDismountMixin(EntityType<?> entityType, World world) {
+        super(entityType, world);
     }
-
-    @Override
-    public void refreshData(boolean shouldLerp, float lerpProgress) {}
 
     @Override
     public Vec3d updatePassengerForDismount(LivingEntity passenger) {
