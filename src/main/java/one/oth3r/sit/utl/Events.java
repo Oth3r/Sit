@@ -89,14 +89,22 @@ public class Events {
             PayloadTypeRegistry.playS2C().register(SitPayloads.ResponsePayload.ID, SitPayloads.ResponsePayload.CODEC);
 
             // server receiver is common
+
+            /// receiving the sitting setting payload
             ServerPlayNetworking.registerGlobalReceiver(SitPayloads.SettingsPayload.ID,((payload, context) -> Data.getServer().execute(() -> {
+                // save the setting on the server for that player
                 FileData.setPlayerSetting(context.player(),Utl.getGson().fromJson(payload.value(), SittingConfig.class));
-                // send the player back a packet for conformation
+
+                // send the player back a response packet for confirmation
                 ServerPlayNetworking.send(context.player(),new SitPayloads.ResponsePayload(SitPayloads.ResponsePayload.VERSION));
+
+                // log the receiving of the packet from the player
+                Data.LOGGER.info("Received custom sitting settings from {}!", context.player().getName().getString());
             })));
         }
 
         private static void client() {
+            /// receiving the response packet from the server
             ClientPlayNetworking.registerGlobalReceiver(SitPayloads.ResponsePayload.ID, ((payload, context) -> {
                 // only update when needed
                 if (!Data.isSupportedServer()) {
