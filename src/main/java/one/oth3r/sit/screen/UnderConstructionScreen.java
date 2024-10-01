@@ -8,7 +8,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import one.oth3r.sit.file.CustomFile;
+import one.oth3r.sit.file.SittingConfig;
 import one.oth3r.sit.utl.Data;
+import one.oth3r.sit.utl.Utl;
 
 import java.net.URI;
 import java.nio.file.Paths;
@@ -58,6 +60,12 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
                 (button) -> {
                     this.file.load();
                     this.file.save();
+
+                    // send the settings to the server if editing the sitting file and on a supported server
+                    if (this.file instanceof SittingConfig && Data.isSupportedServer()) {
+                        Utl.sendSettingsPackets();
+                    }
+
                     this.client.setScreen(parent);
                 })
                 .dimensions(0, 0, 140,20).build());
