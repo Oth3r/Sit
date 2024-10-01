@@ -99,7 +99,7 @@ public class Events {
                 ServerPlayNetworking.send(context.player(),new SitPayloads.ResponsePayload(SitPayloads.ResponsePayload.VERSION));
 
                 // log the receiving of the packet from the player
-                Data.LOGGER.info("Received custom sitting settings from {}!", context.player().getName().getString());
+                Data.LOGGER.info(Utl.lang("sit!.console.player_settings",context.player().getName().getString()).getString());
             })));
         }
 
@@ -109,7 +109,7 @@ public class Events {
                 // only update when needed
                 if (!Data.isSupportedServer()) {
                     Data.setSupportedServer(true);
-                    Data.LOGGER.info("Connected to Sit! server! packet: {}", payload.value());
+                    Data.LOGGER.info(Utl.lang("sit!.console.connected",payload.value()).getString());
                 }
             }));
         }

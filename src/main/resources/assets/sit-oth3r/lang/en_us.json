@@ -99,4 +99,6 @@
   "gui.button.revert": "Revert Changes",
   "gui.button.save": "Save and Close",
   "gui.button.website": "Website"
+  "sit!.console.connected": "Connected to Sit! server: %s",
+  "sit!.console.player_settings": "Received custom sitting settings from %s!",
 }
