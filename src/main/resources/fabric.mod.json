@@ -3,7 +3,7 @@
 	"id": "sit-oth3r",
 	"version": "${version}",
 	"name": "Sit!",
-	"description": "Adds sitting to minecraft! Endless customizability for hand restrictions and sittable blocks.",
+	"description": "Adds sitting to minecraft! Endless customizability for hand restrictions and sittable blocks.\n Players can have their own sitting settings when using the Sit! client on the server!",
 	"authors": [
 		"Oth3r"
 	],

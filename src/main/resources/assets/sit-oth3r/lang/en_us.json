@@ -101,4 +101,6 @@
   "gui.button.website": "Website"
   "sit!.console.connected": "Connected to Sit! server: %s",
   "sit!.console.player_settings": "Received custom sitting settings from %s!",
+
+  "modmenu.descriptionTranslation.sit-oth3r": "Adds sitting to minecraft! Endless customizability for hand restrictions and sittable blocks.\n Players can have their own sitting settings when using the Sit! client on the server!"
 }
