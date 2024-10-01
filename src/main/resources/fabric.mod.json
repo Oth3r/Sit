@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"id": "oth3r-sit",
+	"id": "sit-oth3r",
 	"version": "${version}",
 	"name": "Sit!",
 	"description": "Adds sitting to minecraft! Endless customizability for hand restrictions and sittable blocks.",
