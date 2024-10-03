@@ -27,7 +27,7 @@ public class ReloadCommandMixin {
         // send a reloaded message to all players with permissions
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
              if (player.isCreativeLevelTwoOp()) {
-                 player.sendMessage(Utl.messageTag().append(Utl.lang("msg.reloaded").formatted(Formatting.GREEN)));
+                 player.sendMessage(Utl.messageTag().append(Utl.lang("sit!.chat.reloaded").formatted(Formatting.GREEN)));
              }
         }
     }

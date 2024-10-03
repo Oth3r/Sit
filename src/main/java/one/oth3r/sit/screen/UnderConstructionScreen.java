@@ -20,7 +20,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
     protected T file;
 
     public UnderConstructionScreen(Screen parent, T file) {
-        super(Text.translatable("screen.config"));
+        super(Text.translatable("sit!.screen.config"));
         this.parent = parent;
         this.file = file;
     }
@@ -32,17 +32,17 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
                 Identifier.of(Data.MOD_ID, "textures/gui/fox.png"), ConfirmLinkScreen.opening(this, URI.create("https://www.instagram.com/bunnestbun/"))));
         foxPNG.setPosition(this.width / 2 - (foxPNG.getWidth()/2), startY-35);
 
-        ButtonWidget openFileButton = this.addDrawableChild(new ButtonWidget.Builder(Text.translatable("gui.button.file"),
+        ButtonWidget openFileButton = this.addDrawableChild(new ButtonWidget.Builder(Text.translatable("sit!.gui.button.file"),
                 (button) -> Util.getOperatingSystem().open(this.file.getFile()))
                 .dimensions(0, 0, 118 ,20).build());
         openFileButton.setPosition(this.width / 2 - 70, startY+110);
 
-        TextureButtonWidget folderButton = this.addDrawableChild(new TextureButtonWidget.Builder(Text.translatable("gui.button.folder"),
+        TextureButtonWidget folderButton = this.addDrawableChild(new TextureButtonWidget.Builder(Text.translatable("sit!.gui.button.folder"),
                 (button) -> Util.getOperatingSystem().open(Paths.get(this.file.getFile().getParent())), true)
                 .dimensions(20,20).texture(Identifier.of(Data.MOD_ID, "folder"), 15, 15).build());
         folderButton.setPosition(this.width / 2 + 50, startY + 110);
 
-        TextureButtonWidget resetButton = this.addDrawableChild(new TextureButtonWidget.Builder(Text.translatable("gui.button.reset"),
+        TextureButtonWidget resetButton = this.addDrawableChild(new TextureButtonWidget.Builder(Text.translatable("sit!.gui.button.reset"),
                 (button) -> {
                     this.file.reset();
                     this.file.save();
@@ -50,13 +50,13 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
                 .dimensions(20,20).texture(Identifier.of(Data.MOD_ID, "reset_file"), 15, 15).build());
         resetButton.setPosition(this.width / 2 -70, startY + 135);
 
-        ButtonWidget revertButton = this.addDrawableChild(new ButtonWidget.Builder(Text.translatable("gui.button.revert"),
+        ButtonWidget revertButton = this.addDrawableChild(new ButtonWidget.Builder(Text.translatable("sit!.gui.button.revert"),
                 (button) -> this.file.save())
                 .dimensions(0, 0, 118,20).build());
         revertButton.setPosition(this.width / 2 - 48, startY+135);
 
 
-        ButtonWidget saveExitButton = this.addDrawableChild(new ButtonWidget.Builder(Text.translatable("gui.button.save"),
+        ButtonWidget saveExitButton = this.addDrawableChild(new ButtonWidget.Builder(Text.translatable("sit!.gui.button.save"),
                 (button) -> {
                     this.file.load();
                     this.file.save();

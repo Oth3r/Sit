@@ -15,14 +15,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.TypeFilter;
-import net.minecraft.util.UseAction;
+import net.minecraft.text.TextColor;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -334,7 +332,7 @@ public class Utl {
 
             // send a message if needed
             if (message) {
-                player.sendMessage(messageTag().append(Utl.lang("msg.purged",Utl.lang("msg.purged.total",count).styled(
+                player.sendMessage(messageTag().append(Utl.lang("sit!.chat.purged",Utl.lang("sit!.chat.purged.total",count).styled(
                         style -> style.withColor(Colors.LIGHT_GRAY).withItalic(true)
                 )).styled(
                         style -> style.withColor(Colors.GREEN)

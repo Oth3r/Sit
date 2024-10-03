@@ -50,7 +50,7 @@ public class SitCommand {
         if (player == null) {
             if (args[0].equalsIgnoreCase("reload")) {
                 Logic.reload();
-                Data.LOGGER.info(Utl.lang("msg.reloaded").getString());
+                Data.LOGGER.info(Utl.lang("sit!.chat.reloaded").getString());
             }
             return 1;
         }
@@ -76,7 +76,7 @@ public class SitCommand {
 
         if (args[0].equalsIgnoreCase("reload")) {
             Logic.reload();
-            player.sendMessage(Utl.messageTag().append(Utl.lang("msg.reloaded").formatted(Formatting.GREEN)));
+            player.sendMessage(Utl.messageTag().append(Utl.lang("sit!.chat.reloaded").formatted(Formatting.GREEN)));
         }
 
         if (args[0].equalsIgnoreCase("purgeChairEntities")) Utl.Entity.purge(player,true);

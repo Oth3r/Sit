@@ -16,7 +16,7 @@ public class ConfigScreen extends Screen {
     protected final Screen parent;
 
     public ConfigScreen(Screen parent) {
-        super(Text.translatable("screen.config"));
+        super(Text.translatable("sit!.screen.config"));
         this.parent = parent;
     }
 
@@ -35,13 +35,13 @@ public class ConfigScreen extends Screen {
         sittingConfigButton.setPosition(this.width / 2 - (sittingConfigButton.getWidth()/2), startY+36);
 
 
-        TextureButtonWidget issuesButton = this.addDrawableChild(new TextureButtonWidget.Builder(Text.translatable("gui.button.issues"),
+        TextureButtonWidget issuesButton = this.addDrawableChild(new TextureButtonWidget.Builder(Text.translatable("sit!.gui.button.issues"),
                         ConfirmLinkScreen.opening(this, URI.create("https://github.com/Oth3r/Sit/issues")), true)
                 .dimensions(20,20).texture(Identifier.of(Data.MOD_ID, "issues"), 15, 15).build());
         issuesButton.setPosition(this.width / 2 - 125, startY + 72 + 12);
 
 
-        this.addDrawableChild(ButtonWidget.builder(Text.translatable("gui.button.website"),
+        this.addDrawableChild(ButtonWidget.builder(Text.translatable("sit!.gui.button.website"),
                 ConfirmLinkScreen.opening(this, URI.create("https://modrinth.com/mod/sit!"))
         ).dimensions(this.width / 2 - 100, startY + 72 + 12, 98, 20).build());
 
@@ -49,7 +49,7 @@ public class ConfigScreen extends Screen {
             close();
         }).dimensions(this.width / 2 + 2, startY + 72 + 12, 98, 20).build());
 
-        TextureButtonWidget donateButton = this.addDrawableChild(new TextureButtonWidget.Builder(Text.translatable("gui.button.donate"),
+        TextureButtonWidget donateButton = this.addDrawableChild(new TextureButtonWidget.Builder(Text.translatable("sit!.gui.button.donate"),
                 ConfirmLinkScreen.opening(this, URI.create("https://Ko-fi.com/oth3r")), true)
                 .dimensions(20,20).texture(Identifier.of(Data.MOD_ID, "donate"), 15, 15).build());
         donateButton.setPosition(this.width / 2 + 105, startY + 72 + 12);

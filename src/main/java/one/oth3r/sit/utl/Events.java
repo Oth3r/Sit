@@ -34,19 +34,19 @@ public class Events {
 
         private static void register() {
             toggle_key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                    "key.toggle",
+                    "key.sit!.toggle",
                     GLFW.GLFW_KEY_UNKNOWN,
-                    "category.sit"
+                    "category.sit!"
             ));
             sit_key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                    "key.sit",
+                    "key.sit!.sit",
                     GLFW.GLFW_KEY_UNKNOWN,
-                    "category.sit"
+                    "category.sit!"
             ));
             config__key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                    "key.config",
+                    "key.sit!.config",
                     GLFW.GLFW_KEY_UNKNOWN,
-                    "category.sit"
+                    "category.sit!"
             ));
         }
 
@@ -73,7 +73,7 @@ public class Events {
                         player.networkHandler.sendCommand("sit");
                     } else {
                         // unsupported server message if not in a Sit! server
-                        player.sendMessage(Utl.lang("msg.unsupported")
+                        player.sendMessage(Utl.lang("sit!.chat.unsupported")
                                 .formatted(Formatting.RED), true);
                     }
                 }
