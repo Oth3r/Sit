@@ -2,7 +2,7 @@
 ⚠️ **Finalizing the beta, report any bugs that are found, thank you!**
 \
 Help localize the mod to have more languages on release! [Crowdin](https://crowdin.com/project/oth3r-sit)
-* fixed the sit mod making text displays invisible
+* fixed the sit mod making text displays invisible - [#14](https://github.com/Oth3r/Sit/issues/14)
 * added a tag to all mod messages: `[Sit!]`
 * added a count to the amount of sit entities purged
 * now sends sit reload message to all players with permissions when reloading with `/reload`
