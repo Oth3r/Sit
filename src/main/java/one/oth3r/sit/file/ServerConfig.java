@@ -36,7 +36,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
     @SerializedName("custom-blocks")
     private ArrayList<SittingBlock> sittingBlocks = FileData.Defaults.SITTING_BLOCKS;
     @SerializedName("blacklisted-blocks")
-    private ArrayList<String> blacklistedBlocks = new ArrayList<>();
+    private ArrayList<CustomBlock> blacklistedBlocks = FileData.Defaults.BLACKLISTED_BLOCKS;
 
     public ServerConfig() {}
 
@@ -51,7 +51,9 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         this.blacklistedBlocks = serverConfig.blacklistedBlocks;
     }
 
-    public ServerConfig(Double version, String lang, boolean keepActive, boolean sitWhileSeated, PresetBlocks presetBlocks, boolean customEnabled, ArrayList<SittingBlock> sittingBlocks, ArrayList<String> blacklistedBlocks) {
+    public ServerConfig(Double version, String lang, boolean keepActive, boolean sitWhileSeated,
+                        PresetBlocks presetBlocks, boolean customEnabled,
+                        ArrayList<SittingBlock> sittingBlocks, ArrayList<CustomBlock> blacklistedBlocks) {
         this.version = version;
         this.lang = lang;
         this.keepActive = keepActive;
@@ -90,7 +92,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         return sittingBlocks;
     }
 
-    public ArrayList<String> getBlacklistedBlocks() {
+    public ArrayList<CustomBlock> getBlacklistedBlocks() {
         return blacklistedBlocks;
     }
 

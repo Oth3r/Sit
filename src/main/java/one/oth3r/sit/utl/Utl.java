@@ -156,7 +156,7 @@ public class Utl {
         // only if custom is enabled
         if (config.isCustomEnabled()) {
             // if the block is on the blacklist, false
-            if (config.getBlacklistedBlocks().contains(getBlockID(blockState))) return null;
+            if (config.getBlacklistedBlocks().stream().anyMatch(c -> c.isValid(blockState))) return null;
 
             for (SittingBlock sittingBlock : config.getSittingBlocks()) {
                 // if the block is valid, true
