@@ -29,7 +29,6 @@ public class LoopManager {
             }
 
             // get the player's sit entity when they join
-            // todo make it so it updates the sitting height and pos based on the block so if it changed while offline it still works (or if stair changes shape)
             HashMap<ServerPlayerEntity, Integer> checkPlayers = Data.getCheckPlayers();
             for (ServerPlayerEntity player : checkPlayers.keySet()) {
                 Integer time = checkPlayers.get(player);

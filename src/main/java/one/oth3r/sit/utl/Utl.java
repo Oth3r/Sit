@@ -315,7 +315,8 @@ public class Utl {
          * removes all sit entities loaded on the server
          */
         public static void purge(ServerPlayerEntity player, boolean message) {
-            // todo test if it can purge an entity from a disconnected player or unloaded chunks
+            /// FYI it cant purge an entity from a disconnected player or unloaded chunks
+
             // get a list of sit entities
             List<? extends DisplayEntity.TextDisplayEntity> list = player.getServerWorld()
                     .getEntitiesByType(TypeFilter.instanceOf(DisplayEntity.TextDisplayEntity.class),

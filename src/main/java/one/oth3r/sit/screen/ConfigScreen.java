@@ -58,7 +58,7 @@ public class ConfigScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        //todo fade?
+        // todo fade in like the title screen on first load?
         renderBanner(context,width/2  - 64,this.height / 4 -38,1);
     }
 
