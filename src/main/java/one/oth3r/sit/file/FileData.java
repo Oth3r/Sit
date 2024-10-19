@@ -98,6 +98,10 @@ public class FileData {
                 new SittingBlock(new ArrayList<>(Arrays.asList()), new ArrayList<>(Arrays.asList("#minecraft:beds")), new ArrayList<>(Arrays.asList("part=foot","occupied=false")),.5625)
         ));
 
+        public static final ArrayList<CustomBlock> BLACKLISTED_BLOCKS = new ArrayList<>(Arrays.asList(
+                new CustomBlock(new ArrayList<>(),new ArrayList<>(Arrays.asList("#minecraft:shulker_boxes")),new ArrayList<>())
+        ));
+
         public static final HandSetting MAIN_HAND = new HandSetting(HandSetting.SittingRequirement.EMPTY, new HandSetting.Filter(
                 false,false,false,new CustomItem(new ArrayList<>(), new ArrayList<>(Arrays.asList("#minecraft:bookshelf_books","!#minecraft:lectern_books")))));
 
