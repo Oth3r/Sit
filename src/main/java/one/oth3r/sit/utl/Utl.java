@@ -129,7 +129,7 @@ public class Utl {
     }
 
     /**
-     * get a block ID (namespace, minecraft:air) from a blockstate. (it is easier with a block, but we are mostly working with block states
+     * get a block ID (eg. minecraft:air) from a blockstate. (it is easier with a block, but we are mostly working with block states
      * @return the block ID (minecraft:air)
      */
     public static String getBlockID(BlockState blockState) {
@@ -183,8 +183,8 @@ public class Utl {
 
     /**
      * checks if a block has an interaction
-     * @param blockState
-     * @return
+     * @param blockState the blockstate of the block to check
+     * @return if the block has an interaction or not
      */
     public static boolean hasInteraction(BlockState blockState) {
         return isMethodOverridden(AbstractBlock.class, blockState.getBlock().getClass(), "onUse", BlockState.class, World.class, BlockPos.class, PlayerEntity.class, BlockHitResult.class);
@@ -378,7 +378,6 @@ public class Utl {
         }
     }
 
-    // todo call when editing a config on the client
     /**
      * sends the settings packets to the server, if client & in game
      */
