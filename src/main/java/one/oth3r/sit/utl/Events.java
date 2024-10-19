@@ -57,7 +57,7 @@ public class Events {
                 client.setScreen(new ConfigScreen(client.currentScreen));
             }
 
-            // anything below uses the player object, make sure it's not null
+            /// anything below uses the player object, make sure it's not null
             if (player == null) return;
 
             while (toggle_key.wasPressed()) {

@@ -42,7 +42,7 @@ import java.util.List;
 public class Utl {
 
     /**
-     * check if a block is obstructed (no collision / custom list)
+     * check if a block is obstructed (no collision)
      * @return true if not obstructed
      */
     public static boolean isNotObstructed(World world, BlockPos blockPos) {
@@ -274,16 +274,21 @@ public class Utl {
         public static DisplayEntity.TextDisplayEntity create(World world, BlockPos blockPos, double sitHeight) {
             DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,world);
 
+            // entity flags
             entity.setCustomName(Text.of(Data.ENTITY_NAME));
             entity.setCustomNameVisible(false);
             entity.setInvulnerable(true);
             entity.setInvisible(true);
 
-            entity.updatePositionAndAngles(blockPos.getX()+.5, blockPos.getY()+sitHeight, blockPos.getZ()+.5, 0, 0);
+            /// make a double for adjusting the entity height if some versions change the player sit height on entities again
+            double adjustmentY = 0;
 
-    //        // 1.20.2 mounting pos change (shifts everything down by .25)
-    //        double oneTwentyTwo = .25;
-    //        entity.updatePositionAndAngles(entity.getX(),entity.getY()+oneTwentyTwo,entity.getZ(),0,0);
+            // get the entities y level
+            double entityY = blockPos.getY();
+            entityY += sitHeight + adjustmentY;
+
+            // set the entities position
+            entity.updatePositionAndAngles(blockPos.getX()+.5, entityY, blockPos.getZ()+.5, 0, 0);
 
             // change pitch based on if player is sitting below block height or not (full block height only)
             if (entity.getY() == blockPos.getY() + 1) entity.setPitch(90); // below
