@@ -37,8 +37,6 @@ public class ServerConfig implements CustomFile<ServerConfig> {
     private ArrayList<SittingBlock> sittingBlocks = FileData.Defaults.SITTING_BLOCKS;
     @SerializedName("blacklisted-blocks")
     private ArrayList<String> blacklistedBlocks = new ArrayList<>();
-    @SerializedName("blacklisted-interactions")
-    private ArrayList<String> blacklistedInteractions = new ArrayList<>();
 
     public ServerConfig() {}
 
