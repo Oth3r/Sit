@@ -1,9 +1,9 @@
 plugins {
-	id 'fabric-loom' version '1.6-SNAPSHOT'
+	id 'fabric-loom' version '1.8-SNAPSHOT'
 	id 'maven-publish'
-	id "com.modrinth.minotaur" version "2.+"
+	id 'com.modrinth.minotaur' version '2.+'
 	id 'net.darkhax.curseforgegradle' version '1.1.+'
-	id 'co.uzzu.dotenv.gradle' version "4.0.0"
+	id 'co.uzzu.dotenv.gradle' version '4.0.0'
 }
 
 version = project.mod_version
@@ -30,7 +30,6 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-	modImplementation ("dev.isxander:yet-another-config-lib:${project.yacl_version}")
 }
 
 processResources {
