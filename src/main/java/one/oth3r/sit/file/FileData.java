@@ -103,12 +103,16 @@ public class FileData {
         ));
 
         public static final HandSetting MAIN_HAND = new HandSetting(HandSetting.SittingRequirement.EMPTY, new HandSetting.Filter(
-                false,false,false,new CustomItem(new ArrayList<>(), new ArrayList<>(Arrays.asList("#minecraft:bookshelf_books","!#minecraft:lectern_books")))));
+                false,new HandSetting.Filter.Presets(),
+                new CustomItem(
+                        new ArrayList<>(),
+                        new ArrayList<>(Arrays.asList("#minecraft:bookshelf_books","!#minecraft:lectern_books")))));
 
         public static final HandSetting OFF_HAND = new HandSetting(HandSetting.SittingRequirement.FILTER, new HandSetting.Filter(
-                false,true,false, new CustomItem(new ArrayList<>(Arrays.asList("minecraft:filled_map",
-                "minecraft:torch", "minecraft:soul_torch","minecraft:redstone_torch",
-                "minecraft:lantern", "minecraft:soul_lantern")),
-                new ArrayList<>())));
+                false, new HandSetting.Filter.Presets(false, true, false),
+                new CustomItem(new ArrayList<>(Arrays.asList("minecraft:filled_map",
+                        "minecraft:torch", "minecraft:soul_torch","minecraft:redstone_torch",
+                        "minecraft:lantern", "minecraft:soul_lantern")),
+                        new ArrayList<>())));
     }
 }

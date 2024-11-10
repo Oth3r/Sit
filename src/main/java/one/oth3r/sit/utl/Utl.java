@@ -107,10 +107,16 @@ public class Utl {
         // default to true if there's nothing
         if (itemStack.isEmpty()) return true;
 
+        boolean TRUE = true, FALSE = false;
+        if (filter.isInverted()) {
+            TRUE = false;
+            FALSE = true;
+        }
+
         boolean itemcheck = filter.getCustomItems().checkItem(itemStack);
 
         // iif the item passes the checks, return true
-        if (itemcheck) return true;
+        if (itemcheck) return TRUE;
 
         // if none of the custom were met, try the default conditions
 
@@ -121,13 +127,15 @@ public class Utl {
         ArrayList<UseAction> notUsable = new ArrayList<>(food);
         notUsable.add(UseAction.NONE);
 
+        HandSetting.Filter.Presets presets = filter.getPresets();
+
         // try the default conditions
-        if (filter.isBlock() && itemStack.getItem() instanceof BlockItem) return true;
-        if (filter.isFood() && food.contains(itemStack.getUseAction())) return true;
-        if (filter.isUsable() && hasItemUse(itemStack)) return true;
+        if (presets.isBlock() && itemStack.getItem() instanceof BlockItem) return TRUE;
+        if (presets.isFood() && food.contains(itemStack.getUseAction())) return TRUE;
+        if (presets.isUsable() && hasItemUse(itemStack)) return TRUE;
 
         // if nothing else is met, the item is filtered out
-        return false;
+        return FALSE;
     }
 
     /**
