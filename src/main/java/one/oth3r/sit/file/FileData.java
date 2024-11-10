@@ -106,7 +106,7 @@ public class FileData {
                 false,false,false,new CustomItem(new ArrayList<>(), new ArrayList<>(Arrays.asList("#minecraft:bookshelf_books","!#minecraft:lectern_books")))));
 
         public static final HandSetting OFF_HAND = new HandSetting(HandSetting.SittingRequirement.FILTER, new HandSetting.Filter(
-                false,true,true, new CustomItem(new ArrayList<>(Arrays.asList("minecraft:filled_map",
+                false,true,false, new CustomItem(new ArrayList<>(Arrays.asList("minecraft:filled_map",
                 "minecraft:torch", "minecraft:soul_torch","minecraft:redstone_torch",
                 "minecraft:lantern", "minecraft:soul_lantern")),
                 new ArrayList<>())));
