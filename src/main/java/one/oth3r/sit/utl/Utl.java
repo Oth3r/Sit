@@ -13,6 +13,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.UseAction;
 import net.minecraft.registry.Registries;
@@ -123,7 +124,7 @@ public class Utl {
         // try the default conditions
         if (filter.isBlock() && itemStack.getItem() instanceof BlockItem) return true;
         if (filter.isFood() && food.contains(itemStack.getUseAction())) return true;
-        if (filter.isUsable() && !notUsable.contains(itemStack.getUseAction())) return true;
+        if (filter.isUsable() && hasItemUse(itemStack)) return true;
 
         // if nothing else is met, the item is filtered out
         return false;
@@ -189,6 +190,15 @@ public class Utl {
      */
     public static boolean hasInteraction(BlockState blockState) {
         return isMethodOverridden(AbstractBlock.class, blockState.getBlock().getClass(), "onUse", BlockState.class, World.class, BlockPos.class, PlayerEntity.class, BlockHitResult.class);
+    }
+
+    /**
+     * checks if an item has a use
+     * @param itemStack the itemstack to check
+     * @return if the item has a use or not
+     */
+    public static boolean hasItemUse(ItemStack itemStack) {
+        return isMethodOverridden(Item.class, itemStack.getItem().getClass(), "use", World.class, PlayerEntity.class, Hand.class);
     }
 
     /**
