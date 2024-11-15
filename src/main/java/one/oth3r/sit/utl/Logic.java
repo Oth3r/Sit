@@ -134,7 +134,9 @@ public class Logic {
         if (pos.getY() > entity.getY() - .80) pos2 = pos2.add(0,-1,0);
 
         // check if both poses are obstructed or not
-        return Utl.isNotObstructed(entity.getWorld(),pos1) && Utl.isNotObstructed(entity.getWorld(),pos2);
+        return Utl.isNotObstructed(entity.getWorld(),pos1) && Utl.isNotObstructed(entity.getWorld(),pos2)
+                // also check if occupied
+            && Utl.isNotOccupied(pos1) && Utl.isNotOccupied(pos2);
     }
 
     /**

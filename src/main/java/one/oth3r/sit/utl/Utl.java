@@ -54,6 +54,16 @@ public class Utl {
         return state.getCollisionShape(world,blockPos).isEmpty();
     }
 
+    /**
+     * checks the list of sit entities and sees if any of them are occupying the block pos
+     */
+    public static boolean isNotOccupied(BlockPos pos) {
+        for (DisplayEntity.TextDisplayEntity entity : Data.getSitEntities().values()) {
+            if (entity.getBlockPos().equals(pos)) return false;
+        }
+        return true;
+    }
+
     public static class Num {
 
         public static boolean isInt(String string) {
