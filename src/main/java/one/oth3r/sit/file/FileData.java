@@ -1,6 +1,5 @@
 package one.oth3r.sit.file;
 
-import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Utl;
@@ -55,27 +54,6 @@ public class FileData {
 
     public static SittingConfig getPlayerSetting(ServerPlayerEntity player) {
         return playerSettings.getOrDefault(player, sittingConfig);
-    }
-
-    /**
-     * a list of every Sit! entity in the server, bound to the player
-     */
-    private static final HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> sitEntities = new HashMap<>();
-
-    public static void addSitEntity(ServerPlayerEntity player, DisplayEntity.TextDisplayEntity entity) {
-        sitEntities.put(player, entity);
-    }
-
-    public static void removeSitEntity(DisplayEntity.TextDisplayEntity entity) {
-        sitEntities.values().remove(entity);
-    }
-
-    public static DisplayEntity.TextDisplayEntity getSitEntity(ServerPlayerEntity player) {
-        return sitEntities.get(player);
-    }
-
-    public static HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> getSitEntities() {
-        return new HashMap<>(sitEntities);
     }
 
     /**

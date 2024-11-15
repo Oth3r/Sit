@@ -325,7 +325,7 @@ public class Utl {
             // remove the entity
             entity.setRemoved(net.minecraft.entity.Entity.RemovalReason.DISCARDED);
             // remove the entity from the data set if exists
-            FileData.removeSitEntity(entity);
+            Data.removeSitEntity(entity);
         }
 
         /**

@@ -20,7 +20,7 @@ public class Logic {
         if (player.isSneaking()) return false;
 
         // if sitting on a sit entity and sit while seated off, false
-        if (!FileData.getServerConfig().canSitWhileSeated() && FileData.getSitEntity(player) != null) return false;
+        if (!FileData.getServerConfig().canSitWhileSeated() && Data.getSitEntity(player) != null) return false;
 
         // if hit result isnt null (check the hands of the player) & the player hand checker returns false (can't sit with the items in the hand), quit
         if (hitResult != null) {
@@ -78,7 +78,7 @@ public class Logic {
      * removes the entity bound to the player from the game, using the player
      */
     public static void removeEntity(ServerPlayerEntity player) {
-        DisplayEntity.TextDisplayEntity entity = FileData.getSitEntity(player);
+        DisplayEntity.TextDisplayEntity entity = Data.getSitEntity(player);
         // make sure the player has a sit entity bounded to them
         if (entity == null) return;
 
@@ -94,14 +94,14 @@ public class Logic {
         if (Data.getSpawnList().get(player) == null) return;
 
         // if the player is already sitting on a sit entity, remove it before spawning a new one
-        if (FileData.getSitEntity(player) != null) Logic.removeEntity(player);
+        if (Data.getSitEntity(player) != null) Logic.removeEntity(player);
         // get the new entity
         DisplayEntity.TextDisplayEntity sitEntity = Data.getSpawnList().get(player);
         // spawn and ride the entity
         player.getServerWorld().spawnEntity(sitEntity);
         player.startRiding(sitEntity);
         // add the entity to the list
-        FileData.addSitEntity(player, sitEntity);
+        Data.addSitEntity(player, sitEntity);
         // remove the entity from the spawn list
         Data.removeSpawnList(player);
     }
@@ -110,7 +110,7 @@ public class Logic {
      * checks if the player should still be sitting, e.g. the block was destroyed ect.
      */
     public static void checkSittingValidity(ServerPlayerEntity player) {
-        DisplayEntity.TextDisplayEntity entity = FileData.getSitEntity(player);
+        DisplayEntity.TextDisplayEntity entity = Data.getSitEntity(player);
         // make sure the player has a sit entity bounded to them
         if (entity == null) return;
 

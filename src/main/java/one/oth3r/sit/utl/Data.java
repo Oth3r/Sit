@@ -101,4 +101,25 @@ public class Data {
     public static HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> getSpawnList() {
         return new HashMap<>(spawnList);
     }
+
+    /**
+     * a list of every Sit! entity in the server, bound to the player
+     */
+    private static final HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> sitEntities = new HashMap<>();
+
+    public static void addSitEntity(ServerPlayerEntity player, DisplayEntity.TextDisplayEntity entity) {
+        sitEntities.put(player, entity);
+    }
+
+    public static void removeSitEntity(DisplayEntity.TextDisplayEntity entity) {
+        sitEntities.values().remove(entity);
+    }
+
+    public static DisplayEntity.TextDisplayEntity getSitEntity(ServerPlayerEntity player) {
+        return sitEntities.get(player);
+    }
+
+    public static HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> getSitEntities() {
+        return new HashMap<>(sitEntities);
+    }
 }

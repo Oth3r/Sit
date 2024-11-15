@@ -13,7 +13,6 @@ import net.minecraft.util.math.BlockPos;
 import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Logic;
 import one.oth3r.sit.utl.Utl;
-import one.oth3r.sit.file.FileData;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -67,7 +66,7 @@ public class SitCommand {
                 }
 
                 // if already sitting, ignore
-                if (FileData.getSitEntity(player) != null) return 1;
+                if (Data.getSitEntity(player) != null) return 1;
 
                 // try to make the player sit
                 Logic.sit(player, pos, null);
