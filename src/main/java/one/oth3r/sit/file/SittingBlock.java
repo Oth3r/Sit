@@ -9,11 +9,11 @@ public class SittingBlock extends CustomBlock {
     private Double sittingHeight = 0.5;
 
     /**
-     * gets the sitting height of a block, limiting the size from -1 - 2
+     * gets the sitting height of a block, limiting the size from 0 - 1
      * @return the sitting height, clamped
      */
     public Double getSittingHeight() {
-        return Math.max(-1.0f, Math.min(2.0f, sittingHeight));
+        return Math.max(0f, Math.min(1f, sittingHeight));
     }
 
     public SittingBlock() {}
