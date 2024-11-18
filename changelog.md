@@ -1,11 +1,6 @@
-### b1.2.0.9
-⚠️ **STILL finalizing the beta, report any bugs that are found, thank you!**
-\
+### b1.2.0.10
 Help localize the mod to have more languages on release! [Crowdin](https://crowdin.com/project/oth3r-sit)
 
-~~Sorry for the delays for the main release, been real busy with school and work...~~
-
-* disabled useable off hand filter by default
-* revamped the useable hand filter code, should way better now
-* added a `presets` section to hand filters
-* added an `invert-filter` option to hand filters
+* added Italian, Chinese Traditional, Brazilian Portuguese, & Turkish localizations - Crowdin
+* fixed being able to sit on the same block as another player
+* set the sitting block height min and max to `0-1`
