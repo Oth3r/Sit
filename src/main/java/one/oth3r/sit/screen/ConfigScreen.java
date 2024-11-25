@@ -5,10 +5,8 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.ColorHelper;
 import one.oth3r.sit.file.FileData;
 import one.oth3r.sit.utl.Data;
 
@@ -73,8 +71,8 @@ public class ConfigScreen extends Screen {
     private void renderBanner(DrawContext context, int x, int y, float alpha) {
         RenderSystem.enableBlend();
 
-        context.drawTexture(RenderLayer::getGuiTextured,Identifier.of(Data.MOD_ID, "textures/gui/banner.png"),
-                x, y, 0.0f, 0.0f, 128, 72, 128, 72, ColorHelper.getWhite(alpha));
+        context.drawTexture(Identifier.of(Data.MOD_ID, "textures/gui/banner.png"),
+                x, y, 0.0f, 0.0f, 128, 72, 128, 72);
 
         RenderSystem.disableBlend();
     }
