@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
-	"id": "oth3r-sit",
+	"id": "sit-oth3r",
 	"version": "${version}",
 	"name": "Sit!",
-	"description": "Adds sitting to minecraft! Endless customizability for hand restrictions and sittable blocks.",
+	"description": "Adds sitting to minecraft! Endless customizability for hand restrictions and sittable blocks.\n Players can have their own sitting settings when using the Sit! client on the server!",
 	"authors": [
 		"Oth3r"
 	],
@@ -12,7 +12,7 @@
 		"sources": "https://github.com/Oth3r/Sit"
 	},
 	"license": "LGPL-3.0-only",
-	"icon": "assets/sit/icon.png",
+	"icon": "assets/sit-oth3r/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
@@ -22,17 +22,19 @@
 			"one.oth3r.sit.SitClient"
 		],
 		"modmenu": [
-			"one.oth3r.sit.ModMenu"
+			"one.oth3r.sit.screen.ModMenu"
 		]
 	},
 	"depends": {
 		"fabricloader": ">=0.14.21",
-		"minecraft": "=${minecraft_version}",
-		"java": ">=17",
-		"fabric-api": "*"
+		"minecraft": ">=${min_minecraft_version} <=${minecraft_version}",
+		"fabric": "*"
 	},
 	"suggests": {
-		"yet-another-config-lib": "*",
 		"modmenu": "*"
-	}
+	},
+	"accessWidener": "sit!.accesswidener",
+	"mixins": [
+		"sit!.mixins.json"
+	]
 }

@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "one.oth3r.sit.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "ReloadCommandMixin",
+    "TextDisplayDismountMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

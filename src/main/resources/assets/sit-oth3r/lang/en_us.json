@@ -1,0 +1,107 @@
+{
+  "category.sit!": "Sit!",
+
+  "config.entry.exclusion": "Put a `!` in front of a entry to exclude it!",
+  "config.entry.example": "Entry example: %s",
+
+  "config.server": "Server Config",
+  "config.server.description": "Configures the server side settings.",
+
+  "config.server.lang": "Language",
+  "config.server.lang.description": "The language used for the Sit! mod.",
+
+  "config.server.keep-active": "Keep Active",
+  "config.server.keep-active.description": "Toggles if the Sit! entity should stay, even if the player / server is offline. \n When false, the player will not be sitting when logging back in.",
+
+  "config.server.sit-while-seated": "Sit While Seated",
+  "config.server.sit-while-seated.description": "Toggles the ability to sit on another Sit! block while already sitting.",
+
+  "config.server.preset-blocks": "Preset Blocks",
+  "config.server.preset-blocks.description": "Toggles for the default Sit! blocks.",
+  "config.server.preset-blocks.stairs": "Stairs",
+  "config.server.preset-blocks.slabs": "Slabs",
+  "config.server.preset-blocks.carpets": "Carpets",
+  "config.server.preset-blocks.full-blocks": "Full Blocks",
+
+  "config.server.custom-enabled": "Custom",
+  "config.server.custom-enabled.description": "Toggles the use of custom blocks for sitting.",
+
+  "config.server.custom-blocks": "Custom Blocks",
+  "config.server.custom-blocks.description": "The list of custom sitting blocks.",
+
+  "config.server.custom-block.block-ids": "Block IDs",
+  "config.server.custom-block.block-ids.description": "The block id(s) for the custom sitting block.",
+  "config.server.custom-block.block-tags": "Block Tags",
+  "config.server.custom-block.block-tags.description": "The block tag(s) for the custom sitting block.",
+  "config.server.custom-block.blockstates": "Blockstates",
+  "config.server.custom-block.blockstates.description": "The blockstates that the block must have to be a custom sitting block.",
+  "config.server.custom-block.sitting-height": "Sitting Height",
+  "config.server.custom-block.sitting-height.description": "The player sitting height of the custom block.",
+
+  "config.server.blacklisted-blocks": "Blacklisted Blocks",
+  "config.server.blacklisted-blocks.description": "The list of blocks that arent allowed to be sat on.",
+
+
+  "config.sitting": "Sitting Config",
+  "config.sitting.description": "Configures the sitting ability, on the server each player can have their own sitting config when they use the mod.",
+
+  "config.sitting.enabled": "Enabled",
+  "config.sitting.enabled.description": "Toggles the ability to sit.",
+
+  "config.sitting.hand-sitting": "Hand Sitting",
+  "config.sitting.hand-sitting.description": "Toggles the ability to sit using hand interactions.",
+
+  "config.sitting.hand.main": "Main Hand",
+  "config.sitting.hand.main.description": "main hand",
+  "config.sitting.hand.off": "Off Hand",
+  "config.sitting.hand.off.description": "off hand",
+  "config.sitting.hand.description": "Configures %s sitting settings.",
+
+  "config.sitting.hand.requirement": "Sitting Requirement",
+  "config.sitting.hand.requirement.description": "The hand requirement to sit. Eg, if EMPTY, the hand has to be empty",
+  "config.sitting.hand.requirement.description.none": "No requirement to sit.",
+  "config.sitting.hand.requirement.description.empty": "The hand has to be empty to sit.",
+  "config.sitting.hand.requirement.description.filter": "The hand can only sit if the item in the hand matches one of the filters.",
+
+  "config.sitting.hand.filter": "Filter",
+  "config.sitting.hand.filter.description": "The list of items for the filter hand requirement.",
+
+  "config.sitting.hand.filter.block": "Blocks",
+  "config.sitting.hand.filter.block.description": "The blocks default filter.",
+  "config.sitting.hand.filter.food": "Foods",
+  "config.sitting.hand.filter.food.description": "The foods default filter.",
+  "config.sitting.hand.filter.usable": "Usables",
+  "config.sitting.hand.filter.usable.description": "The usables default filter. (Tridents, Shields, Bows)",
+
+  "config.sitting.hand.filter.custom-items": "Custom Items",
+  "config.sitting.hand.filter.custom-items.description": "A list of custom items to add to the filter.",
+  "config.sitting.hand.filter.custom-tags": "Custom Tags",
+  "config.sitting.hand.filter.custom-tags.description": "A list of custom item tags to add to the filter.",
+
+  "sit!.chat.toggle_sit": "%s Sitting!",
+  "sit!.chat.toggle_sit.on": "Enabled",
+  "sit!.chat.toggle_sit.off": "Disabled",
+  "sit!.chat.unsupported": "Sit! is not available on this server.",
+  "sit!.chat.reloaded": "Reloaded the config!",
+  "sit!.chat.purged": "Purged all loaded Sit! entities! %s",
+  "sit!.chat.purged.total": "(%s removed)",
+
+  "key.sit!.toggle": "Toggle Sitting",
+  "key.sit!.sit": "Sit",
+  "key.sit!.config": "Open Config",
+
+  "sit!.screen.config": "Sit! Config",
+  "sit!.gui.button.file": "Open File",
+  "sit!.gui.button.folder": "Open Folder",
+  "sit!.gui.button.reset": "Reset",
+  "sit!.gui.button.issues": "Issues",
+  "sit!.gui.button.donate": "Donate",
+  "sit!.gui.button.revert": "Revert Changes",
+  "sit!.gui.button.save": "Save and Close",
+  "sit!.gui.button.website": "Website",
+
+  "sit!.console.connected": "Connected to Sit! server: %s",
+  "sit!.console.player_settings": "Received custom sitting settings from %s!",
+
+  "modmenu.descriptionTranslation.sit-oth3r": "Adds sitting to minecraft! Endless customizability for hand restrictions and sittable blocks.\n Players can have their own sitting settings when using the Sit! client on the server!"
+}
