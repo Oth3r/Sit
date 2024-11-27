@@ -29,7 +29,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
     protected void init() {
         int startY = this.height / 5-4;
         ButtonWidget foxPNG = this.addDrawableChild(new ClickableImageWidget(70,70,140,140, Tooltip.of(Text.of("Art by @bunnestbun")),
-                Identifier.of(Data.MOD_ID, "textures/gui/fox.png"), ConfirmLinkScreen.opening(this, URI.create("https://www.instagram.com/bunnestbun/"))));
+                Identifier.of(Data.MOD_ID, "textures/gui/fox.png"), ConfirmLinkScreen.opening(this, "https://www.instagram.com/bunnestbun/")));
         foxPNG.setPosition(this.width / 2 - (foxPNG.getWidth()/2), startY-35);
 
         ButtonWidget openFileButton = this.addDrawableChild(new ButtonWidget.Builder(Text.translatable("sit!.gui.button.file"),
@@ -38,7 +38,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
         openFileButton.setPosition(this.width / 2 - 70, startY+110);
 
         TextureButtonWidget folderButton = this.addDrawableChild(new TextureButtonWidget.Builder(Text.translatable("sit!.gui.button.folder"),
-                (button) -> Util.getOperatingSystem().open(Paths.get(this.file.getFile().getParent())), true)
+                (button) -> Util.getOperatingSystem().open(this.file.getFile().getParent()), true)
                 .dimensions(20,20).texture(Identifier.of(Data.MOD_ID, "folder"), 15, 15).build());
         folderButton.setPosition(this.width / 2 + 50, startY + 110);
 

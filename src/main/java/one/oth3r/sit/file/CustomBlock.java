@@ -89,7 +89,7 @@ public class CustomBlock {
         for (String tag : blockTags) {
             // substring to remove # and if needed, !
             // if there is a math for the NOT(!) tag, return false
-            if (tag.startsWith("!") && blockState.isIn(TagKey.of(Registries.BLOCK.getKey(), Identifier.of(tag.substring(2))))) return false;
+            if (tag.startsWith("!") && blockState.isIn(TagKey.of(Registries.BLOCK.getKey(), new Identifier(tag.substring(2))))) return false;
             // if there is a match, return true
             if (blockState.isIn(TagKey.of(Registries.BLOCK.getKey(), Identifier.tryParse(tag.substring(1))))) tagCheck = true;
         }

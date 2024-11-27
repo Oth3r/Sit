@@ -53,10 +53,10 @@ public class CustomItem {
             // if a NOT tag
             if (tag.startsWith("!")) {
                 // if there is a math for the NOT(!) tag, return false
-                if (itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), Identifier.of(tag.substring(2))))) return false;
+                if (itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), new Identifier(tag.substring(2))))) return false;
             }
             // else (normal tag), if there is a match, set tagCheck to true
-            else if (itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), Identifier.of(tag.substring(1))))) tagCheck = true;
+            else if (itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), new Identifier(tag.substring(1))))) tagCheck = true;
         }
 
         // not returning true in the loop because there might be a (!) not tag that the item might fall into, after the item was already in another tag

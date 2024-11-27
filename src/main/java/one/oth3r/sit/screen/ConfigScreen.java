@@ -10,8 +10,6 @@ import net.minecraft.util.Identifier;
 import one.oth3r.sit.file.FileData;
 import one.oth3r.sit.utl.Data;
 
-import java.net.URI;
-
 public class ConfigScreen extends Screen {
     protected final Screen parent;
 
@@ -36,13 +34,13 @@ public class ConfigScreen extends Screen {
 
 
         TextureButtonWidget issuesButton = this.addDrawableChild(new TextureButtonWidget.Builder(Text.translatable("sit!.gui.button.issues"),
-                        ConfirmLinkScreen.opening(this, URI.create("https://github.com/Oth3r/Sit/issues")), true)
+                        ConfirmLinkScreen.opening(this, "https://github.com/Oth3r/Sit/issues"), true)
                 .dimensions(20,20).texture(Identifier.of(Data.MOD_ID, "issues"), 15, 15).build());
         issuesButton.setPosition(this.width / 2 - 125, startY + 72 + 12);
 
 
         this.addDrawableChild(ButtonWidget.builder(Text.translatable("sit!.gui.button.website"),
-                ConfirmLinkScreen.opening(this, URI.create("https://modrinth.com/mod/sit!"))
+                ConfirmLinkScreen.opening(this, "https://modrinth.com/mod/sit!")
         ).dimensions(this.width / 2 - 100, startY + 72 + 12, 98, 20).build());
 
         this.addDrawableChild(ButtonWidget.builder(Text.translatable("gui.done"), (button) -> {
@@ -50,7 +48,7 @@ public class ConfigScreen extends Screen {
         }).dimensions(this.width / 2 + 2, startY + 72 + 12, 98, 20).build());
 
         TextureButtonWidget donateButton = this.addDrawableChild(new TextureButtonWidget.Builder(Text.translatable("sit!.gui.button.donate"),
-                ConfirmLinkScreen.opening(this, URI.create("https://Ko-fi.com/oth3r")), true)
+                ConfirmLinkScreen.opening(this, "https://Ko-fi.com/oth3r"), true)
                 .dimensions(20,20).texture(Identifier.of(Data.MOD_ID, "donate"), 15, 15).build());
         donateButton.setPosition(this.width / 2 + 105, startY + 72 + 12);
     }

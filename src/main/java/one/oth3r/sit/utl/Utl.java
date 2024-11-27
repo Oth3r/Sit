@@ -366,7 +366,7 @@ public class Utl {
                 player.sendMessage(messageTag().append(Utl.lang("sit!.chat.purged",Utl.lang("sit!.chat.purged.total",count).styled(
                         style -> style.withColor(Colors.LIGHT_GRAY).withItalic(true)
                 )).styled(
-                        style -> style.withColor(Colors.GREEN)
+                        style -> style.withColor(Formatting.GREEN)
                 )));
             }
         }
