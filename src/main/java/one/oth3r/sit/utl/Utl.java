@@ -5,7 +5,6 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.google.gson.stream.MalformedJsonException;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.SlabType;
@@ -29,7 +28,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import one.oth3r.sit.file.*;
-import one.oth3r.sit.packet.SitPayloads;
+import one.oth3r.sit.packet.PacketSender;
+import one.oth3r.sit.packet.PacketType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -414,7 +414,7 @@ public class Utl {
      */
     public static void sendSettingsPackets() {
         if (Data.isClient() && Data.isInGame()) {
-            ClientPlayNetworking.send(new SitPayloads.SettingsPayload(Utl.getGson().toJson(FileData.getSittingConfig())));
+            new PacketSender(PacketType.SETTINGS, Utl.getGson().toJson(FileData.getSittingConfig())).sendToServer();
         }
     }
 

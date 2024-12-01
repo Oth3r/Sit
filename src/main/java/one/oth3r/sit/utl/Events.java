@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
@@ -21,7 +20,8 @@ import one.oth3r.sit.command.SitCommand;
 import one.oth3r.sit.file.FileData;
 import one.oth3r.sit.file.LangReader;
 import one.oth3r.sit.file.SittingConfig;
-import one.oth3r.sit.packet.SitPayloads;
+import one.oth3r.sit.packet.PacketSender;
+import one.oth3r.sit.packet.PacketType;
 import one.oth3r.sit.screen.ConfigScreen;
 import org.lwjgl.glfw.GLFW;
 
@@ -83,35 +83,37 @@ public class Events {
 
     private static class Packet {
         private static void common() {
-            // register the data
-            PayloadTypeRegistry.playC2S().register(SitPayloads.SettingsPayload.ID, SitPayloads.SettingsPayload.CODEC);
-
-            PayloadTypeRegistry.playS2C().register(SitPayloads.ResponsePayload.ID, SitPayloads.ResponsePayload.CODEC);
-
             // server receiver is common
 
             /// receiving the sitting setting payload
-            ServerPlayNetworking.registerGlobalReceiver(SitPayloads.SettingsPayload.ID,((payload, context) -> Data.getServer().execute(() -> {
-                // save the setting on the server for that player
-                FileData.setPlayerSetting(context.player(),Utl.getGson().fromJson(payload.value(), SittingConfig.class));
+            ServerPlayNetworking.registerGlobalReceiver(PacketSender.getIdentifier(PacketType.SETTINGS),
+                    ((server, player, handler, buf, responseSender) -> {
+                        String packetData = PacketSender.getPacketData(buf);
+                        server.execute(() -> {
+                            // save the setting on the server for that player
+                            FileData.setPlayerSetting(player,Utl.getGson().fromJson(packetData, SittingConfig.class));
 
-                // send the player back a response packet for confirmation
-                ServerPlayNetworking.send(context.player(),new SitPayloads.ResponsePayload(SitPayloads.ResponsePayload.VERSION));
+                            // send the player back a response packet for confirmation
+                            new PacketSender(PacketType.RESPONSE,PacketType.RESPONSE.getId()).sendToPlayer(player);
 
-                // log the receiving of the packet from the player
-                Data.LOGGER.info(Utl.lang("sit!.console.player_settings",context.player().getName().getString()).getString());
-            })));
+                            // log the receiving of the packet from the player
+                            Data.LOGGER.info(Utl.lang("sit!.console.player_settings",player.getName().getString()).getString());
+                        });
+                    }));
         }
 
         private static void client() {
             /// receiving the response packet from the server
-            ClientPlayNetworking.registerGlobalReceiver(SitPayloads.ResponsePayload.ID, ((payload, context) -> {
-                // only update when needed
-                if (!Data.isSupportedServer()) {
-                    Data.setSupportedServer(true);
-                    Data.LOGGER.info(Utl.lang("sit!.console.connected",payload.value()).getString());
-                }
-            }));
+            ClientPlayNetworking.registerGlobalReceiver(PacketSender.getIdentifier(PacketType.RESPONSE),
+                    ((client, handler, buf, responseSender) -> {
+                        String packetData = PacketSender.getPacketData(buf);
+                        client.execute(() -> {
+                            if (!Data.isSupportedServer()) {
+                                Data.setSupportedServer(true);
+                                Data.LOGGER.info(Utl.lang("sit!.console.connected",packetData).getString());
+                            }
+                        });
+                    }));
         }
     }
 
