@@ -20,7 +20,7 @@ import java.util.Properties;
 public class ServerConfig implements CustomFile<ServerConfig> {
 
     @SerializedName("version")
-    private Double version = 2.0;
+    private Double version = 2.1;
     @SerializedName("lang")
     private String lang = "en_us";
     @SerializedName("lang-options")
@@ -37,6 +37,8 @@ public class ServerConfig implements CustomFile<ServerConfig> {
     private ArrayList<SittingBlock> sittingBlocks = FileData.Defaults.SITTING_BLOCKS;
     @SerializedName("blacklisted-blocks")
     private ArrayList<CustomBlock> blacklistedBlocks = FileData.Defaults.BLACKLISTED_BLOCKS;
+    @SerializedName("interaction-blocks")
+    private ArrayList<CustomBlock> interactionBlocks = FileData.Defaults.INTERACTION_BLOCKS;
 
     public ServerConfig() {}
 
@@ -49,11 +51,13 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         this.customEnabled = serverConfig.customEnabled;
         this.sittingBlocks = serverConfig.sittingBlocks;
         this.blacklistedBlocks = serverConfig.blacklistedBlocks;
+        this.interactionBlocks = serverConfig.interactionBlocks;
     }
 
     public ServerConfig(Double version, String lang, boolean keepActive, boolean sitWhileSeated,
                         PresetBlocks presetBlocks, boolean customEnabled,
-                        ArrayList<SittingBlock> sittingBlocks, ArrayList<CustomBlock> blacklistedBlocks) {
+                        ArrayList<SittingBlock> sittingBlocks, ArrayList<CustomBlock> blacklistedBlocks,
+                        ArrayList<CustomBlock> interactionBlocks) {
         this.version = version;
         this.lang = lang;
         this.keepActive = keepActive;
@@ -62,6 +66,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         this.customEnabled = customEnabled;
         this.sittingBlocks = sittingBlocks;
         this.blacklistedBlocks = blacklistedBlocks;
+        this.interactionBlocks = interactionBlocks;
     }
 
     public Double getVersion() {
@@ -94,6 +99,10 @@ public class ServerConfig implements CustomFile<ServerConfig> {
 
     public ArrayList<CustomBlock> getBlacklistedBlocks() {
         return blacklistedBlocks;
+    }
+
+    public ArrayList<CustomBlock> getInteractionBlocks() {
+        return interactionBlocks;
     }
 
     public static class PresetBlocks {
@@ -135,7 +144,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
 
     @Override
     public void reset() {
-        updateToNewFile(new ServerConfig());
+        loadFileData(new ServerConfig());
     }
 
     @Override
@@ -144,7 +153,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
     }
 
     @Override
-    public void updateToNewFile(ServerConfig newFile) {
+    public void loadFileData(ServerConfig newFile) {
         this.version = newFile.version;
         this.lang = newFile.lang;
         this.keepActive = newFile.keepActive;
@@ -153,6 +162,14 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         this.customEnabled = newFile.customEnabled;
         this.sittingBlocks = newFile.sittingBlocks;
         this.blacklistedBlocks = newFile.blacklistedBlocks;
+    }
+
+    @Override
+    public void update() {
+        /// update to 2.1, just a new list, nothing to change
+        if (version == 2.0) {
+            version = 2.1;
+        }
     }
 
     @Override
@@ -283,7 +300,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                         Boolean.parseBoolean((String) properties.computeIfAbsent("custom", a -> String.valueOf(defaultConfig.isCustomEnabled()))),
                         getCustomBlocks(new Gson().fromJson((String)
                                 properties.computeIfAbsent("custom-blocks", a -> "[]"), listType)),
-                        new ArrayList<>()
+                        new ArrayList<>(), FileData.Defaults.INTERACTION_BLOCKS
                 );
 
                 SittingConfig defaultSittingConfig = new SittingConfig();
