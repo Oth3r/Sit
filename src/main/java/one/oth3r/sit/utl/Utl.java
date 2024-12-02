@@ -13,7 +13,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.UseAction;
 import net.minecraft.registry.Registries;
@@ -35,7 +34,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -139,7 +137,7 @@ public class Utl {
         // try the default conditions
         if (presets.isBlock() && itemStack.getItem() instanceof BlockItem) return TRUE;
         if (presets.isFood() && food.contains(itemStack.getUseAction())) return TRUE;
-        if (presets.isUsable() && hasItemUse(itemStack)) return TRUE;
+        if (presets.isUsable() && !notUsable.contains(itemStack.getUseAction())) return TRUE;
 
         // if nothing else is met, the item is filtered out
         return FALSE;
@@ -166,14 +164,14 @@ public class Utl {
         Block block = blockState.getBlock();
 
         // make sure that the block that is being sit on has no interaction when hand sitting
-        if (hit != null && hasInteraction(blockState)) {
+        if (hit != null && blockIsInList(config.getInteractionBlocks(), blockState)) {
             return null;
         }
 
         // only if custom is enabled
         if (config.isCustomEnabled()) {
             // if the block is on the blacklist, false
-            if (config.getBlacklistedBlocks().stream().anyMatch(c -> c.isValid(blockState))) return null;
+            if (blockIsInList(config.getBlacklistedBlocks(),blockState)) return null;
 
             for (SittingBlock sittingBlock : config.getSittingBlocks()) {
                 // if the block is valid, true
