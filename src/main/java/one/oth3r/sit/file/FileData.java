@@ -69,6 +69,14 @@ public class FileData {
         }
     }
 
+    /**
+     * saves all config files
+     */
+    public static void saveFiles() {
+        getSittingConfig().save();
+        getServerConfig().save();
+    }
+
     public static class Defaults {
         public static final ArrayList<SittingBlock> SITTING_BLOCKS = new ArrayList<>(Arrays.asList(
                 new SittingBlock(new ArrayList<>(),new ArrayList<>(Arrays.asList("#minecraft:campfires")), new ArrayList<>(Arrays.asList("lit=false")),.437),
