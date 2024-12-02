@@ -147,6 +147,7 @@ public class Logic {
      */
     public static void reload() {
         FileData.loadFiles();
+        FileData.saveFiles();
     }
 
     /**
