@@ -51,6 +51,7 @@ public class CustomBlock {
         boolean blockType = checkBlockType(blockState);
         if (!blockType) return false;
 
+        /// BLOCK STATE CHECKER
         // now check if the state is one of the acceptable states
         for (String state : blockStates) {
             // if there is a NOT (!) blockstate

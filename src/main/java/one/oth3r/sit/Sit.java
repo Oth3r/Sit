@@ -10,6 +10,8 @@ public class Sit implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		FileData.loadFiles();
+		// save the files to populate all missing config options
+		FileData.saveFiles();
 		Events.registerCommon();
 	}
 }
