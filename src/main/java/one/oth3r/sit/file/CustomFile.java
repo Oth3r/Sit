@@ -56,13 +56,24 @@ public interface CustomFile <T extends CustomFile<T>> {
         if (file == null) throw new NullPointerException();
 
         // update the instance
-        updateToNewFile(file);
+        file.update();
+        // load the file to the current object
+        loadFileData(file);
     }
 
     @NotNull
     Class<T> getFileClass();
 
-    void updateToNewFile(T newFile);
+    /**
+     * loads the data from the file object into the current object
+     * @param newFile the file to take the properties from
+     */
+    void loadFileData(T newFile);
+
+    /**
+     * updates the file based on the version number of the current instance
+     */
+    void update();
 
     /**
      * logic for the file not existing when loading, defaults to saving

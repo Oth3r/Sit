@@ -13,7 +13,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -34,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -138,7 +136,7 @@ public class Utl {
         // try the default conditions
         if (presets.isBlock() && itemStack.getItem() instanceof BlockItem) return TRUE;
         if (presets.isFood() && food.contains(itemStack.getUseAction())) return TRUE;
-        if (presets.isUsable() && hasItemUse(itemStack)) return TRUE;
+        if (presets.isUsable() && !notUsable.contains(itemStack.getUseAction())) return TRUE;
 
         // if nothing else is met, the item is filtered out
         return FALSE;
@@ -165,14 +163,14 @@ public class Utl {
         Block block = blockState.getBlock();
 
         // make sure that the block that is being sit on has no interaction when hand sitting
-        if (hit != null && hasInteraction(blockState)) {
+        if (hit != null && blockIsInList(config.getInteractionBlocks(), blockState)) {
             return null;
         }
 
         // only if custom is enabled
         if (config.isCustomEnabled()) {
             // if the block is on the blacklist, false
-            if (config.getBlacklistedBlocks().stream().anyMatch(c -> c.isValid(blockState))) return null;
+            if (blockIsInList(config.getBlacklistedBlocks(),blockState)) return null;
 
             for (SittingBlock sittingBlock : config.getSittingBlocks()) {
                 // if the block is valid, true
@@ -198,62 +196,12 @@ public class Utl {
     }
 
     /**
-     * checks if a block has an interaction
-     * @param blockState the blockstate of the block to check
-     * @return if the block has an interaction or not
+     * checks if a blockstate is in the list provided
+     * @return
      */
-    public static boolean hasInteraction(BlockState blockState) {
-        return isMethodOverridden(AbstractBlock.class, blockState.getBlock().getClass(), "onUse", BlockState.class, World.class, BlockPos.class, PlayerEntity.class, BlockHitResult.class);
+    public static boolean blockIsInList(ArrayList<CustomBlock> blockList, BlockState blockState) {
+        return blockList.stream().anyMatch(c -> c.isValid(blockState));
     }
-
-    /**
-     * checks if an item has a use
-     * @param itemStack the itemstack to check
-     * @return if the item has a use or not
-     */
-    public static boolean hasItemUse(ItemStack itemStack) {
-        return isMethodOverridden(Item.class, itemStack.getItem().getClass(), "use", World.class, PlayerEntity.class, Hand.class);
-    }
-
-    /**
-     * checks if a method in the base class has been overridden in the subclass(es) by:
-     * checking the subclass and its supers till the original method is found or the original method is found
-     * @param baseClass the base class
-     * @param subclass the subclass to check
-     * @param methodName the method to check for
-     * @param parameterTypes the parameterTypes for the method, see {@link java.lang.Class#getDeclaredMethod(java.lang.String, java.lang.Class[])}
-     * @return if the method is overridden or not
-     */
-    public static boolean isMethodOverridden(Class<?> baseClass, Class<?> subclass, String methodName, Class<?>... parameterTypes) {
-        try {
-            // get the original method
-            Method superMethod = baseClass.getMethod(methodName, parameterTypes);
-
-            // the current class to check, starting with the subclass
-            Class<?> currentClass = subclass;
-            // while the class is null and the current class isn't the same as the baseclass.
-            while (currentClass != null && !currentClass.equals(baseClass)) {
-                try {
-                    // get the submethod
-                    Method subMethod = currentClass.getDeclaredMethod(methodName, parameterTypes);
-
-                    // check if the methods are different
-                    if (!superMethod.equals(subMethod)) {
-                        return true;
-                    }
-                } catch (NoSuchMethodException ignored) {
-                    // method isnt in this class, bump up a class and check that one
-                }
-                currentClass = currentClass.getSuperclass();
-            }
-        } catch (NoSuchMethodException e) {
-            // method doesn't exist in the base class
-            return false;
-        }
-        // an override wasn't found
-        return false;
-    }
-
 
     public static class Entity {
 
