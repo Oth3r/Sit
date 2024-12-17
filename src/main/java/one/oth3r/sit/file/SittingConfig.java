@@ -3,15 +3,7 @@ package one.oth3r.sit.file;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.util.Hand;
 import one.oth3r.sit.utl.Data;
-import one.oth3r.sit.utl.Utl;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.ArrayList;
 
 public class SittingConfig implements CustomFile<SittingConfig> {
 
@@ -37,7 +29,7 @@ public class SittingConfig implements CustomFile<SittingConfig> {
     }
 
     public SittingConfig(SittingConfig sittingConfig) {
-        updateToNewFile(sittingConfig);
+        loadFileData(sittingConfig);
     }
 
     public Double getVersion() {
@@ -74,7 +66,7 @@ public class SittingConfig implements CustomFile<SittingConfig> {
 
     @Override
     public void reset() {
-        updateToNewFile(new SittingConfig());
+        loadFileData(new SittingConfig());
     }
 
     @Override
@@ -83,13 +75,16 @@ public class SittingConfig implements CustomFile<SittingConfig> {
     }
 
     @Override
-    public void updateToNewFile(SittingConfig newFile) {
+    public void loadFileData(SittingConfig newFile) {
         this.version = newFile.version;
         this.enabled = newFile.enabled;
         this.handSitting = newFile.handSitting;
         this.mainHand = newFile.mainHand;
         this.offHand = newFile.offHand;
     }
+
+    @Override
+    public void update() {}
 
     @Override
     public String getFileName() {
