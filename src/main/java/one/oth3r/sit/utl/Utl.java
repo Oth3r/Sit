@@ -220,8 +220,13 @@ public class Utl {
          * gets the bound block pos of the sit entity
          */
         public static BlockPos getBlockPos(DisplayEntity.TextDisplayEntity entity) {
+            // adjustment, the opposite of the offset in Entity.create()
+            /// ADD .2 AS 1.20.1 is offset by .2
+            double adjustmentY = 0.2;
+
+            double entityY = entity.getY() + adjustmentY;
             // get the block pos
-            BlockPos pos = new BlockPos(entity.getBlockX(),entity.getBlockY(),entity.getBlockZ());
+            BlockPos pos = new BlockPos(entity.getBlockX(),(int)entityY,entity.getBlockZ());
             // if above the block, subtract 1
             if (isAboveBlockHeight(entity)) {
                 pos = pos.add(0,-1,0);
@@ -253,12 +258,10 @@ public class Utl {
             entity.setInvulnerable(true);
             entity.setInvisible(true);
 
-            /// make a double for adjusting the entity height if some versions change the player sit height on entities again
-            double adjustmentY = 0;
 
             // get the entities y level
             double entityY = blockPos.getY();
-            entityY += sitHeight + adjustmentY;
+            entityY += sitHeight;
 
             // set the entities position
             entity.updatePositionAndAngles(blockPos.getX()+.5, entityY, blockPos.getZ()+.5, 0, 0);
@@ -266,6 +269,12 @@ public class Utl {
             // change pitch based on if player is sitting below block height or not (full block height only)
             if (entity.getY() == blockPos.getY() + 1) entity.setPitch(90); // below
             else entity.setPitch(-90); // above
+
+
+            // make a double for adjusting the entity height if some versions change the player sit height on entities again
+            /// 1.20.1 SITTING OFF BY -0.2
+            double adjustmentY = -0.2;
+            entity.updatePosition(entity.getX(),entity.getY()+adjustmentY,entity.getZ());
 
             return entity;
         }
@@ -312,7 +321,7 @@ public class Utl {
             // send a message if needed
             if (message) {
                 player.sendMessage(messageTag().append(Utl.lang("sit!.chat.purged",Utl.lang("sit!.chat.purged.total",count).styled(
-                        style -> style.withColor(Colors.LIGHT_GRAY).withItalic(true)
+                        style -> style.withColor(Formatting.GRAY).withItalic(true)
                 )).styled(
                         style -> style.withColor(Formatting.GREEN)
                 )));
@@ -322,7 +331,7 @@ public class Utl {
 
     public static MutableText messageTag() {
         return Text.literal("[").append(Text.literal("Sit!").styled(
-                style -> style.withColor(TextColor.parse("#c400ff").result().orElse(TextColor.fromFormatting(Formatting.DARK_PURPLE))))
+                style -> style.withColor(TextColor.parse("#c400ff")))
         ).append("] ");
     }
 
@@ -458,7 +467,7 @@ public class Utl {
         // extend ray by the range
         Vec3d rayEnd = rayStart.add(player.getRotationVector().multiply(range));
 
-        BlockHitResult hitResult = world.raycast(new RaycastContext(rayStart, rayEnd, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, ShapeContext.absent()));
+        BlockHitResult hitResult = world.raycast(new RaycastContext(rayStart, rayEnd, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, player));
 
         if (hitResult.getType() == HitResult.Type.BLOCK) {
             return hitResult.getBlockPos();

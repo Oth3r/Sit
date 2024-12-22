@@ -25,11 +25,11 @@ public class TextureButtonWidget extends ButtonWidget {
     }
 
     @Override
-    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.renderWidget(context, mouseX, mouseY, delta);
+    protected void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderButton(context, mouseX, mouseY, delta);
         int x = this.getX() + this.getWidth() / 2 - this.textureWidth / 2;
         int y = this.getY() + this.getHeight() / 2 - this.textureHeight / 2;
-        context.drawGuiTexture(this.texture, x, y, this.textureWidth, this.textureHeight);
+        context.drawTexture(this.texture, x, y, 0, 0, this.textureWidth, this.textureHeight, this.textureWidth, this.textureHeight);
     }
 
     @Override

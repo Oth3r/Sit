@@ -1,5 +1,6 @@
 package one.oth3r.sit.screen;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -29,7 +30,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
     protected void init() {
         int startY = this.height / 5-4;
         ButtonWidget foxPNG = this.addDrawableChild(new ClickableImageWidget(70,70,140,140, Tooltip.of(Text.of("Art by @bunnestbun")),
-                Identifier.of(Data.MOD_ID, "textures/gui/fox.png"), ConfirmLinkScreen.opening(this, "https://www.instagram.com/bunnestbun/")));
+                Identifier.of(Data.MOD_ID, "textures/gui/fox.png"), ConfirmLinkScreen.opening("https://www.instagram.com/bunnestbun/",this, true)));
         foxPNG.setPosition(this.width / 2 - (foxPNG.getWidth()/2), startY-35);
 
         ButtonWidget openFileButton = this.addDrawableChild(new ButtonWidget.Builder(Text.translatable("sit!.gui.button.file"),
@@ -38,8 +39,8 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
         openFileButton.setPosition(this.width / 2 - 70, startY+110);
 
         TextureButtonWidget folderButton = this.addDrawableChild(new TextureButtonWidget.Builder(Text.translatable("sit!.gui.button.folder"),
-                (button) -> Util.getOperatingSystem().open(this.file.getFile().getParent()), true)
-                .dimensions(20,20).texture(Identifier.of(Data.MOD_ID, "folder"), 15, 15).build());
+                (button) -> Util.getOperatingSystem().open(this.file.getFile().getParentFile().toURI()), true)
+                .dimensions(20,20).texture(Identifier.of(Data.MOD_ID, "textures/gui/sprites/folder.png"), 15, 15).build());
         folderButton.setPosition(this.width / 2 + 50, startY + 110);
 
         TextureButtonWidget resetButton = this.addDrawableChild(new TextureButtonWidget.Builder(Text.translatable("sit!.gui.button.reset"),
@@ -47,7 +48,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
                     this.file.reset();
                     this.file.save();
                 }, true)
-                .dimensions(20,20).texture(Identifier.of(Data.MOD_ID, "reset_file"), 15, 15).build());
+                .dimensions(20,20).texture(Identifier.of(Data.MOD_ID, "textures/gui/sprites/reset_file.png"), 15, 15).build());
         resetButton.setPosition(this.width / 2 -70, startY + 135);
 
         ButtonWidget revertButton = this.addDrawableChild(new ButtonWidget.Builder(Text.translatable("sit!.gui.button.revert"),
@@ -70,6 +71,13 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
                 })
                 .dimensions(0, 0, 140,20).build());
         saveExitButton.setPosition(this.width / 2 - 70, startY+168);
+    }
+
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        // render the background because you have to in this version
+        this.renderBackground(context);
+        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override

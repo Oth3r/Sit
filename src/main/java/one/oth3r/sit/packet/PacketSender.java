@@ -12,13 +12,12 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class PacketSender {
-    private final PacketByteBuf data;
+    private final PacketByteBuf data = PacketByteBufs.create();
     private final PacketType type;
 
     public PacketSender(PacketType type, String data) {
         this.type = type;
-        this.data = PacketByteBufs.create()
-                .writeBytes(ByteBuffer.wrap(data.getBytes(StandardCharsets.UTF_8)));
+        this.data.writeBytes(ByteBuffer.wrap(data.getBytes(StandardCharsets.UTF_8)));
     }
 
     public void sendToPlayer(ServerPlayerEntity player) {
