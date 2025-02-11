@@ -43,15 +43,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
     public ServerConfig() {}
 
     public ServerConfig(ServerConfig serverConfig) {
-        this.version = serverConfig.version;
-        this.lang = serverConfig.lang;
-        this.keepActive = serverConfig.keepActive;
-        this.sitWhileSeated = serverConfig.sitWhileSeated;
-        this.presetBlocks = serverConfig.presetBlocks;
-        this.customEnabled = serverConfig.customEnabled;
-        this.sittingBlocks = serverConfig.sittingBlocks;
-        this.blacklistedBlocks = serverConfig.blacklistedBlocks;
-        this.interactionBlocks = serverConfig.interactionBlocks;
+        loadFileData(serverConfig);
     }
 
     public ServerConfig(Double version, String lang, boolean keepActive, boolean sitWhileSeated,

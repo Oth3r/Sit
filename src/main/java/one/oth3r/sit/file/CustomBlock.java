@@ -28,6 +28,12 @@ public class CustomBlock {
         this.blockStates = blockStates;
     }
 
+    public CustomBlock(CustomBlock customBlock) {
+        this.blockIds = new ArrayList<>(customBlock.blockIds);
+        this.blockTags = new ArrayList<>(customBlock.blockTags);
+        this.blockStates = new ArrayList<>(customBlock.blockStates);
+    }
+
     public ArrayList<String> getBlockIds() {
         return blockIds;
     }
