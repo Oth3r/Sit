@@ -16,25 +16,33 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class ServerConfig implements CustomFile<ServerConfig> {
 
     @SerializedName("version")
-    private Double version = 2.1;
+    private Double version = 2.2;
+
     @SerializedName("lang")
     private String lang = "en_us";
     @SerializedName("lang-options")
     private final String langOptions = "en_us, it_it, pt_br, tr_tr, zh_tw";
+
     @SerializedName("keep-active")
     private Boolean keepActive = true;
     @SerializedName("sit-while-seated")
     private Boolean sitWhileSeated = false;
     @SerializedName("preset-blocks")
     private PresetBlocks presetBlocks = new PresetBlocks();
+
+    @SerializedName("sitting-eye-y-bounds")
+    private YBounds yBounds = new YBounds();
+
     @SerializedName("custom-enabled")
     private Boolean customEnabled = false;
     @SerializedName("custom-blocks")
     private ArrayList<SittingBlock> sittingBlocks = FileData.Defaults.SITTING_BLOCKS;
+
     @SerializedName("blacklisted-blocks")
     private ArrayList<CustomBlock> blacklistedBlocks = FileData.Defaults.BLACKLISTED_BLOCKS;
     @SerializedName("interaction-blocks")
@@ -81,6 +89,10 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         return presetBlocks;
     }
 
+    public YBounds getYBounds() {
+        return yBounds;
+    }
+
     public Boolean isCustomEnabled() {
         return customEnabled;
     }
@@ -117,6 +129,13 @@ public class ServerConfig implements CustomFile<ServerConfig> {
             this.fullBlocks = fullBlocks;
         }
 
+        public PresetBlocks(PresetBlocks presetBlocks) {
+            this.stairs = presetBlocks.stairs;
+            this.slabs = presetBlocks.slabs;
+            this.carpets = presetBlocks.carpets;
+            this.fullBlocks = presetBlocks.fullBlocks;
+        }
+
         public boolean isStairs() {
             return stairs;
         }
@@ -131,6 +150,42 @@ public class ServerConfig implements CustomFile<ServerConfig> {
 
         public boolean isFullBlocks() {
             return fullBlocks;
+        }
+    }
+
+    public static class YBounds {
+        @SerializedName("above")
+        private Double above = 0.1;
+        @SerializedName("below")
+        private Double below = 3.0;
+
+        public YBounds() {
+        }
+
+        public YBounds(Double above, Double below) {
+            this.above = above;
+            this.below = below;
+        }
+
+        public YBounds(YBounds yBounds) {
+            this.above = yBounds.above;
+            this.below = yBounds.below;
+        }
+
+        public Double getAbove() {
+            return above;
+        }
+
+        public void setAbove(Double above) {
+            this.above = above;
+        }
+
+        public Double getBelow() {
+            return below;
+        }
+
+        public void setBelow(Double below) {
+            this.below = below;
         }
     }
 
@@ -150,17 +205,23 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         this.lang = newFile.lang;
         this.keepActive = newFile.keepActive;
         this.sitWhileSeated = newFile.sitWhileSeated;
-        this.presetBlocks = newFile.presetBlocks;
+
+        this.presetBlocks = new PresetBlocks(newFile.presetBlocks);
+
+        this.yBounds = new YBounds(newFile.yBounds);
+
         this.customEnabled = newFile.customEnabled;
-        this.sittingBlocks = newFile.sittingBlocks;
-        this.blacklistedBlocks = newFile.blacklistedBlocks;
+        this.sittingBlocks = newFile.sittingBlocks.stream().map(SittingBlock::new).collect(Collectors.toCollection(ArrayList::new));
+        this.blacklistedBlocks = newFile.blacklistedBlocks.stream().map(CustomBlock::new).collect(Collectors.toCollection(ArrayList::new));
+        this.interactionBlocks = newFile.interactionBlocks.stream().map(CustomBlock::new).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public void update() {
         /// update to 2.1, just a new list, nothing to change
-        if (version == 2.0) {
-            version = 2.1;
+        /// update to 2.2, new settings, no changes
+        if (version >= 2.0 && version <= 2.1) {
+            version = 2.2;
         }
     }
 

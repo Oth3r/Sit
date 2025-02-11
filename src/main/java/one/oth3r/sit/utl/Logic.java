@@ -10,6 +10,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import one.oth3r.sit.file.FileData;
+import one.oth3r.sit.file.ServerConfig;
 import one.oth3r.sit.file.SittingConfig;
 import one.oth3r.sit.file.HandSetting;
 import org.jetbrains.annotations.Nullable;
@@ -26,6 +27,9 @@ public class Logic {
         if (hitResult != null) {
             if (!checkHands(player)) return false;
         }
+
+        // check if the block is in the right y level limits from the config
+        if (!checkYLimits(player, blockPos)) return false;
 
         ServerWorld serverWorld = player.getServerWorld();
         BlockState blockState = serverWorld.getBlockState(blockPos);
@@ -72,6 +76,25 @@ public class Logic {
         }
         // return the output of the check
         return canSit;
+    }
+
+    /**
+     * check if the Y-level of the block is within the limits of the player, bounds are set in the {@link ServerConfig}
+     */
+    public static boolean checkYLimits(ServerPlayerEntity player, BlockPos blockPos) {
+        double playerEyeY = player.getEyeY();
+        double blockY = blockPos.getY();
+        // if the block is above the eye height
+        boolean isAbove = playerEyeY < blockY;
+        // get the height difference (positive)
+        double heightDifference = Math.abs(playerEyeY - blockY);
+        // get the config limits
+        ServerConfig.YBounds yBounds = FileData.getServerConfig().getYBounds();
+
+        // debug
+        Data.LOGGER.info("{} {} can sit? {}", heightDifference, isAbove ? "Above" : "Below", (isAbove? yBounds.getAbove(): yBounds.getBelow()) >= heightDifference);
+
+        return (isAbove? yBounds.getAbove(): yBounds.getBelow()) >= heightDifference;
     }
 
     /**
