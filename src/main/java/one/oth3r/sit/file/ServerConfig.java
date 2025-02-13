@@ -35,8 +35,8 @@ public class ServerConfig implements CustomFile<ServerConfig> {
     @SerializedName("preset-blocks")
     private PresetBlocks presetBlocks = new PresetBlocks();
 
-    @SerializedName("sitting-eye-y-bounds")
-    private YBounds yBounds = new YBounds();
+    @SerializedName("height-difference-limit")
+    private YDifferenceLimit yDifferenceLimit = new YDifferenceLimit();
 
     @SerializedName("custom-enabled")
     private Boolean customEnabled = false;
@@ -89,8 +89,8 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         return presetBlocks;
     }
 
-    public YBounds getYBounds() {
-        return yBounds;
+    public YDifferenceLimit getYDifferenceLimit() {
+        return yDifferenceLimit;
     }
 
     public Boolean isCustomEnabled() {
@@ -153,23 +153,23 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         }
     }
 
-    public static class YBounds {
+    public static class YDifferenceLimit {
         @SerializedName("above")
         private Double above = 0.1;
         @SerializedName("below")
         private Double below = 3.0;
 
-        public YBounds() {
+        public YDifferenceLimit() {
         }
 
-        public YBounds(Double above, Double below) {
+        public YDifferenceLimit(Double above, Double below) {
             this.above = above;
             this.below = below;
         }
 
-        public YBounds(YBounds yBounds) {
-            this.above = yBounds.above;
-            this.below = yBounds.below;
+        public YDifferenceLimit(YDifferenceLimit yDifferenceLimit) {
+            this.above = yDifferenceLimit.above;
+            this.below = yDifferenceLimit.below;
         }
 
         public Double getAbove() {
@@ -208,7 +208,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
 
         this.presetBlocks = new PresetBlocks(newFile.presetBlocks);
 
-        this.yBounds = new YBounds(newFile.yBounds);
+        this.yDifferenceLimit = new YDifferenceLimit(newFile.yDifferenceLimit);
 
         this.customEnabled = newFile.customEnabled;
         this.sittingBlocks = newFile.sittingBlocks.stream().map(SittingBlock::new).collect(Collectors.toCollection(ArrayList::new));

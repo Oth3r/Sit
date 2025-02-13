@@ -89,12 +89,12 @@ public class Logic {
         // get the height difference (positive)
         double heightDifference = Math.abs(playerEyeY - blockY);
         // get the config limits
-        ServerConfig.YBounds yBounds = FileData.getServerConfig().getYBounds();
+        ServerConfig.YDifferenceLimit yDifferenceLimit = FileData.getServerConfig().getYDifferenceLimit();
 
         // debug
-        Data.LOGGER.info("{} {} can sit? {}", heightDifference, isAbove ? "Above" : "Below", (isAbove? yBounds.getAbove(): yBounds.getBelow()) >= heightDifference);
+        Data.LOGGER.info("{} {} can sit? {}", heightDifference, isAbove ? "Above" : "Below", (isAbove? yDifferenceLimit.getAbove(): yDifferenceLimit.getBelow()) >= heightDifference);
 
-        return (isAbove? yBounds.getAbove(): yBounds.getBelow()) >= heightDifference;
+        return (isAbove? yDifferenceLimit.getAbove(): yDifferenceLimit.getBelow()) >= heightDifference;
     }
 
     /**
