@@ -82,19 +82,20 @@ public class Logic {
      * check if the Y-level of the block is within the limits of the player, bounds are set in the {@link ServerConfig}
      */
     public static boolean checkYLimits(ServerPlayerEntity player, BlockPos blockPos) {
-        double playerEyeY = player.getEyeY();
+        double playerY = player.getBlockY();
         double blockY = blockPos.getY();
         // if the block is above the eye height
-        boolean isAbove = playerEyeY < blockY;
+        boolean isAbove = playerY < blockY;
+
+        // return true if equal
+        if (playerY == blockY) return true;
+
         // get the height difference (positive)
-        double heightDifference = Math.abs(playerEyeY - blockY);
+        double heightDifference = Math.abs(playerY - blockY);
         // get the config limits
         ServerConfig.YDifferenceLimit yDifferenceLimit = FileData.getServerConfig().getYDifferenceLimit();
 
-        // debug
-        Data.LOGGER.info("{} {} can sit? {}", heightDifference, isAbove ? "Above" : "Below", (isAbove? yDifferenceLimit.getAbove(): yDifferenceLimit.getBelow()) >= heightDifference);
-
-        return (isAbove? yDifferenceLimit.getAbove(): yDifferenceLimit.getBelow()) >= heightDifference;
+        return (isAbove? yDifferenceLimit.getAbove() : yDifferenceLimit.getBelow()) >= heightDifference;
     }
 
     /**

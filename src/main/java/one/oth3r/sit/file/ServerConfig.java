@@ -155,9 +155,9 @@ public class ServerConfig implements CustomFile<ServerConfig> {
 
     public static class YDifferenceLimit {
         @SerializedName("above")
-        private Double above = 0.1;
+        private Double above = 1.0;
         @SerializedName("below")
-        private Double below = 3.0;
+        private Double below = 1.0;
 
         public YDifferenceLimit() {
         }
