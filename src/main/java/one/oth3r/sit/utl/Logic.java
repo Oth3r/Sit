@@ -194,11 +194,11 @@ public class Logic {
 
 
             // get the message settings
-            String messageKey = "sit!.chat.sit_toggle."+(config.getEnabled()?"on":"off");
+            String messageKey = "sit!.chat.toggle_sit."+(config.getEnabled()?"on":"off");
             Formatting messageColor = config.getEnabled()?Formatting.GREEN:Formatting.RED;
 
             // send the player the actionbar message
-            return Utl.lang("sit!.chat.sit_toggle",
+            return Utl.lang("sit!.chat.toggle_sit",
                     Utl.lang(messageKey).formatted(messageColor));
         } else {
             // unsupported server message if not in a Sit! server
