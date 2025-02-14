@@ -26,7 +26,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
     @SerializedName("lang")
     private String lang = "en_us";
     @SerializedName("lang-options")
-    private final String langOptions = "en_us, it_it, pt_br, tr_tr, zh_tw";
+    private final String langOptions = "en_us, it_it, pt_br, tr_tr, zh_tw, zh_ch, de_de";
 
     @SerializedName("keep-active")
     private Boolean keepActive = true;
