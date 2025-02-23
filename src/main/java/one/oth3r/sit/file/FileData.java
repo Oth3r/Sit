@@ -89,9 +89,12 @@ public class FileData {
         ));
 
         public static final ArrayList<CustomBlock> INTERACTION_BLOCKS = new ArrayList<>(Arrays.asList(
-                new CustomBlock(new ArrayList<>(Arrays.asList("minecraft:crafter")),new ArrayList<>(Arrays.asList(
+                new CustomBlock(new ArrayList<>(Arrays.asList(
+                        "minecraft:crafter","minecraft:repeating_command_block","minecraft:chain_command_block","minecraft:command_block")),
+                        new ArrayList<>(Arrays.asList(
                         "#minecraft:shulker_boxes","#c:player_workstations/furnaces","#c:player_workstations/crafting_tables",
-                        "#c:villager_job_sites","#minecraft:trapdoors","#c:chests")),new ArrayList<>())
+                        "#c:villager_job_sites","#minecraft:trapdoors","#c:chests")),
+                        new ArrayList<>())
         ));
 
         public static final HandSetting MAIN_HAND = new HandSetting(HandSetting.SittingRequirement.EMPTY, new HandSetting.Filter(

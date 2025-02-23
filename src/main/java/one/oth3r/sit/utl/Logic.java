@@ -10,6 +10,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import one.oth3r.sit.file.FileData;
+import one.oth3r.sit.file.ServerConfig;
 import one.oth3r.sit.file.SittingConfig;
 import one.oth3r.sit.file.HandSetting;
 import org.jetbrains.annotations.Nullable;
@@ -26,6 +27,9 @@ public class Logic {
         if (hitResult != null) {
             if (!checkHands(player)) return false;
         }
+
+        // check if the block is in the right y level limits from the config
+        if (!checkYLimits(player, blockPos)) return false;
 
         ServerWorld serverWorld = player.getServerWorld();
         BlockState blockState = serverWorld.getBlockState(blockPos);
@@ -72,6 +76,26 @@ public class Logic {
         }
         // return the output of the check
         return canSit;
+    }
+
+    /**
+     * check if the Y-level of the block is within the limits of the player, bounds are set in the {@link ServerConfig}
+     */
+    public static boolean checkYLimits(ServerPlayerEntity player, BlockPos blockPos) {
+        double playerY = player.getBlockY();
+        double blockY = blockPos.getY();
+        // if the block is above the eye height
+        boolean isAbove = playerY < blockY;
+
+        // return true if equal
+        if (playerY == blockY) return true;
+
+        // get the height difference (positive)
+        double heightDifference = Math.abs(playerY - blockY);
+        // get the config limits
+        ServerConfig.YDifferenceLimit yDifferenceLimit = FileData.getServerConfig().getYDifferenceLimit();
+
+        return (isAbove? yDifferenceLimit.getAbove() : yDifferenceLimit.getBelow()) >= heightDifference;
     }
 
     /**
@@ -170,11 +194,11 @@ public class Logic {
 
 
             // get the message settings
-            String messageKey = "sit!.chat.sit_toggle."+(config.getEnabled()?"on":"off");
+            String messageKey = "sit!.chat.toggle_sit."+(config.getEnabled()?"on":"off");
             Formatting messageColor = config.getEnabled()?Formatting.GREEN:Formatting.RED;
 
             // send the player the actionbar message
-            return Utl.lang("sit!.chat.sit_toggle",
+            return Utl.lang("sit!.chat.toggle_sit",
                     Utl.lang(messageKey).formatted(messageColor));
         } else {
             // unsupported server message if not in a Sit! server
