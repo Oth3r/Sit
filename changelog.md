@@ -1,9 +1,15 @@
-# v1.2.1
-Quick bugfix update. :)
-### block interaction checker
-now it actually works (based on config sadly)
-* added `interaction-blocks` to the server config, any block added to this list will block sitting with the hand
-### other changes
-* added refreshes to the config files on startup and reload to write missing parts to disk
-* bumped the `server-config.json` version
-* fixed `usable` hand filter not working
+# v1.2.2
+more configuration!
+### height-difference-limit
+new server config for y difference limit for sitting
+
+limit how far above or below a block can compared to a player be to sit!
+
+**default**: 1 block above and below the player's y
+
+### fixes / changelog:
+* fixed interaction-blocks not getting copied correctly when updating the file
+* fixed actionbar text for toggling sitting ablity not displaying correctly
+* added `height-difference-limit` `server-config` option
+* added German localization (de_de)
+* added Simplified Chinese localization (zh_ch)
