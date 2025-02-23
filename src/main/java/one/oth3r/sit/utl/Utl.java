@@ -204,6 +204,10 @@ public class Utl {
     }
 
     public static class Entity {
+        /**
+         * the customizable y height of the entity, as some versions have different sitting heights on the entity
+         */
+        private static final double Y_ADJUSTMENT = 0.2;
 
         /**
          * checks if the entity's block is still there, & is valid
@@ -220,11 +224,10 @@ public class Utl {
          * gets the bound block pos of the sit entity
          */
         public static BlockPos getBlockPos(DisplayEntity.TextDisplayEntity entity) {
-            // adjustment, the opposite of the offset in Entity.create()
-            /// ADD .2 AS 1.20.1 is offset by .2
-            double adjustmentY = 0.2;
+            // the entity Y level, adjusted
+            // the adjustment - is the opposite of the offset applied in Entity.create()
+            double entityY = entity.getY() + (Y_ADJUSTMENT*-1);
 
-            double entityY = entity.getY() + adjustmentY;
             // get the block pos
             BlockPos pos = new BlockPos(entity.getBlockX(),(int)entityY,entity.getBlockZ());
             // if above the block, subtract 1
@@ -258,23 +261,19 @@ public class Utl {
             entity.setInvulnerable(true);
             entity.setInvisible(true);
 
-
             // get the entities y level
             double entityY = blockPos.getY();
             entityY += sitHeight;
 
             // set the entities position
-            entity.updatePositionAndAngles(blockPos.getX()+.5, entityY, blockPos.getZ()+.5, 0, 0);
+            entity.updatePosition(blockPos.getX()+.5, entityY, blockPos.getZ()+.5);
 
             // change pitch based on if player is sitting below block height or not (full block height only)
             if (entity.getY() == blockPos.getY() + 1) entity.setPitch(90); // below
             else entity.setPitch(-90); // above
 
-
-            // make a double for adjusting the entity height if some versions change the player sit height on entities again
-            /// 1.20.1 SITTING OFF BY -0.2
-            double adjustmentY = -0.2;
-            entity.updatePosition(entity.getX(),entity.getY()+adjustmentY,entity.getZ());
+            // adjusting the entity height after doing the main calculations, for correct player visuals
+            entity.updatePosition(entity.getX(),entityY+Y_ADJUSTMENT,entity.getZ());
 
             return entity;
         }

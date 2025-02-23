@@ -22,4 +22,9 @@ public class SittingBlock extends CustomBlock {
         super(blockIds, blockTags, blockStates);
         this.sittingHeight = sittingHeight;
     }
+
+    public SittingBlock(SittingBlock sittingBlock) {
+        super(sittingBlock);
+        this.sittingHeight = sittingBlock.sittingHeight;
+    }
 }
