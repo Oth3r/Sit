@@ -153,14 +153,15 @@ public class Utl {
 
     /**
      * gets the sitting height for the provided blockstate, via memory loaded config from Data
-     * @param blockState the state of the block
      * @param player the player to
      * @param blockPos the pos of the block
      * @param hit nullable, for the player interaction check
      * @return null if not a valid block
      */
-    public static Double getSittingHeight(BlockState blockState, ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hit) {
+    public static Double getSittingHeight(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hit) {
+        ServerWorld serverWorld = player.getServerWorld();
         ServerConfig config = FileData.getServerConfig();
+        BlockState blockState = serverWorld.getBlockState(blockPos);
         Block block = blockState.getBlock();
 
         // make sure that the block that is being sit on has no interaction when hand sitting
@@ -218,7 +219,7 @@ public class Utl {
             // get the blockstate
             BlockState blockState = player.getWorld().getBlockState(blockPos);
             // check if the block is still there & the block is a valid sit block (by checking if there is a sit height for the block)
-            return !blockState.isAir() && getSittingHeight(blockState,player,blockPos,null) != null;
+            return !blockState.isAir() && getSittingHeight(player,blockPos,null) != null;
         }
 
         /**
