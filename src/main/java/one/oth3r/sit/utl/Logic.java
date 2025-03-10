@@ -1,6 +1,5 @@
 package one.oth3r.sit.utl;
 
-import net.minecraft.block.*;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -16,7 +15,8 @@ import one.oth3r.sit.file.HandSetting;
 import org.jetbrains.annotations.Nullable;
 
 public class Logic {
-    public static boolean sit(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hitResult) {
+
+    public static boolean canSit(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hitResult) {
         // cant sit if crouching
         if (player.isSneaking()) return false;
 
@@ -32,18 +32,29 @@ public class Logic {
         if (!checkYLimits(player, blockPos)) return false;
 
         ServerWorld serverWorld = player.getServerWorld();
-        BlockState blockState = serverWorld.getBlockState(blockPos);
 
-        Double sitHeight = Utl.getSittingHeight(blockState,player,blockPos,hitResult);
+        Double sitHeight = Utl.getSittingHeight(player,blockPos,hitResult);
 
-        // if the sit height is null, its not a sittable block
+        // if the sit height is null, it's not a sittable block
         if (sitHeight == null) return false;
 
         DisplayEntity.TextDisplayEntity entity = Utl.Entity.create(serverWorld,blockPos,sitHeight);
 
-        if (!checkPlayerSitAbility(entity)) return false;
+        // checks if the player can sit
+        return checkPlayerSitAbility(entity);
+    }
 
-        Utl.Entity.spawnSit(player, entity);
+    @SuppressWarnings("nullability")
+    public static boolean sit(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hitResult) {
+        if (!canSit(player, blockPos, hitResult)) return false;
+        // assets
+        ServerWorld serverWorld = player.getServerWorld();
+        Double sitHeight = Utl.getSittingHeight(player,blockPos,hitResult);
+        // shouldn't be null because we already checked, but do another check to clear IDE errors
+        if (sitHeight == null) return false;
+
+        // spawn the entity and make the player sit
+        Utl.Entity.spawnSit(player, Utl.Entity.create(serverWorld,blockPos,sitHeight));
 
         return true;
     }
