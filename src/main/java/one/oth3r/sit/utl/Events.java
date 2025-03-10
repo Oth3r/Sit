@@ -1,5 +1,8 @@
 package one.oth3r.sit.utl;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.ParseResults;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -14,6 +17,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -179,7 +183,19 @@ public class Events {
                 if (player == null || player.isSpectator()) return ActionResult.PASS;
 
                 // consume if sitting, if not pass
-                return Logic.sit(player,hitResult.getBlockPos(),hitResult) ? ActionResult.CONSUME : ActionResult.PASS;
+                ActionResult result = Logic.canSit(player,hitResult.getBlockPos(),hitResult) ? ActionResult.CONSUME : ActionResult.PASS;
+                // todo test
+                if (result.equals(ActionResult.CONSUME)) {
+                    try {
+                        CommandDispatcher<ServerCommandSource> dispatcher = Data.getServer().getCommandSource().getDispatcher();
+                        ParseResults<ServerCommandSource> parse = dispatcher.parse("/sit", player.getCommandSource());
+                        dispatcher.execute(parse);
+                    } catch (CommandSyntaxException e) {
+                        Data.LOGGER.error("Error executing sit command for player {}", player.getName().getString());
+                    }
+                }
+
+                return result;
             });
 
         });
