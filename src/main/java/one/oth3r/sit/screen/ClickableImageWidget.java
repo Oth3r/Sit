@@ -21,8 +21,6 @@ public class ClickableImageWidget extends ButtonWidget {
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        RenderSystem.enableBlend();
-        RenderSystem.enableDepthTest();
         context.drawTexture(RenderLayer::getGuiTextured, image,
                 this.getX(), this.getY(), 0.0f, 0.0f, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight());
     }
