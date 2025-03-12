@@ -188,7 +188,7 @@ public class Events {
                 if (result.equals(ActionResult.CONSUME)) {
                     try {
                         CommandDispatcher<ServerCommandSource> dispatcher = Data.getServer().getCommandSource().getDispatcher();
-                        ParseResults<ServerCommandSource> parse = dispatcher.parse("/sit", player.getCommandSource());
+                        ParseResults<ServerCommandSource> parse = dispatcher.parse("sit", player.getCommandSource());
                         dispatcher.execute(parse);
                     } catch (CommandSyntaxException e) {
                         Data.LOGGER.error("Error executing sit command for player {}", player.getName().getString());
