@@ -16,6 +16,13 @@ import org.jetbrains.annotations.Nullable;
 
 public class Logic {
 
+    /**
+     * checks if the player can sit at the block specified
+     * @param player the player that's going to sit
+     * @param blockPos the position that the player is going to sit at
+     * @param hitResult nullable, not null if the player is sitting with their hand
+     * @return true if the player can sit with the conditions provided
+     */
     public static boolean canSit(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hitResult) {
         // cant sit if crouching
         if (player.isSneaking()) return false;
@@ -44,14 +51,20 @@ public class Logic {
         return checkPlayerSitAbility(entity);
     }
 
-    @SuppressWarnings("nullability")
+    /**
+     * makes the player attempt to sit at the position provided (checks if the player can sit before)
+     * @param player the player that is sitting
+     * @param blockPos the pos the player is going to sit at
+     * @param hitResult nullable, not null if the player is sitting with their hand
+     * @return true if sitting was successful
+     */
     public static boolean sit(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hitResult) {
         if (!canSit(player, blockPos, hitResult)) return false;
         // assets
         ServerWorld serverWorld = player.getServerWorld();
         Double sitHeight = Utl.getSittingHeight(player,blockPos,hitResult);
         // shouldn't be null because we already checked, but do another check to clear IDE errors
-        if (sitHeight == null) return false;
+        assert sitHeight != null;
 
         // spawn the entity and make the player sit
         Utl.Entity.spawnSit(player, Utl.Entity.create(serverWorld,blockPos,sitHeight));
@@ -59,6 +72,11 @@ public class Logic {
         return true;
     }
 
+    /**
+     * makes the player attempt to sit at the block they are looking at (range of 5)
+     * @param player the player who is trying to sit
+     * @return true if sitting was successful
+     */
     public static boolean sitLooking(ServerPlayerEntity player) {
         return sit(player, Utl.getBlockPosPlayerIsLookingAt(player.getServerWorld(),player,5),null);
     }
