@@ -226,9 +226,9 @@ public class Utl {
         public static BlockPos getBlockPos(DisplayEntity.TextDisplayEntity entity) {
             // the entity Y level, adjusted
             // the adjustment - is the opposite of the offset applied in Entity.create()
-            double entityY = entity.getBlockY() + (Y_ADJUSTMENT*-1);
+            int entityBlockY = (int) (Math.floor(entity.getY() + (Y_ADJUSTMENT*-1)));
             // get the block pos
-            BlockPos pos = new BlockPos(entity.getBlockX(),(int)entityY,entity.getBlockZ());
+            BlockPos pos = new BlockPos(entity.getBlockX(),entityBlockY,entity.getBlockZ());
             // if above the block, subtract 1
             if (isAboveBlockHeight(entity)) {
                 pos = pos.add(0,-1,0);
