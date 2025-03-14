@@ -207,7 +207,7 @@ public class Utl {
         /**
          * the customizable y height of the entity, as some versions have different sitting heights on the entity
          */
-        private static final double Y_ADJUSTMENT = -0.2;
+        public static final double Y_ADJUSTMENT = -0.2;
 
         /**
          * checks if the entity's block is still there, & is valid
