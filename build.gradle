@@ -95,7 +95,7 @@ modrinth {
 	versionName = "v${project.mod_version} [Fabric]"
 	versionType = "release"
 	uploadFile = remapJar
-	gameVersions = [project.minecraft_version]
+	gameVersions = project.minecraft_versions.split(",").toList()
 	loaders = ['fabric', 'quilt']
 	dependencies = [
 			new ModDependency('P7dR8mSH', 'required'),
