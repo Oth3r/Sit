@@ -1,3 +1,5 @@
+# v1.2.3.2
+* added an extra check before sending packets to the server from the client
 # v1.2.3.1
 * added a version position for quick patches
 * fixed sitting height being off by .2
