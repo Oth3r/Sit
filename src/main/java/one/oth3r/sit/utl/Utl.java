@@ -369,7 +369,8 @@ public class Utl {
      * sends the settings packets to the server, if client & in game
      */
     public static void sendSettingsPackets() {
-        if (Data.isClient() && Data.isInGame()) {
+        if (Data.isClient() && Data.isInGame() &&
+                ClientPlayNetworking.canSend(SitPayloads.SettingsPayload.ID)) {
             ClientPlayNetworking.send(new SitPayloads.SettingsPayload(Utl.getGson().toJson(FileData.getSittingConfig())));
         }
     }
