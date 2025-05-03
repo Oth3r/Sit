@@ -9,10 +9,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import one.oth3r.sit.file.FileData;
-import one.oth3r.sit.file.ServerConfig;
-import one.oth3r.sit.file.SittingConfig;
-import one.oth3r.sit.file.HandSetting;
+import one.oth3r.sit.file.*;
 import org.jetbrains.annotations.Nullable;
 
 public class Logic {
@@ -172,6 +169,7 @@ public class Logic {
     public static void reload() {
         FileData.loadFiles();
         FileData.saveFiles();
+        LangReader.loadLanguageFile();
     }
 
     /**
