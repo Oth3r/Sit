@@ -14,6 +14,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.awt.*;
+
 @Mixin(ReloadCommand.class)
 public class ReloadCommandMixin {
     @Inject(at = @At("TAIL"), method = "register")
@@ -27,7 +29,7 @@ public class ReloadCommandMixin {
         // send a reloaded message to all players with permissions
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
              if (player.isCreativeLevelTwoOp()) {
-                 player.sendMessage(Utl.messageTag().append(Utl.lang("sit!.chat.reloaded").formatted(Formatting.GREEN)));
+                 player.sendMessage(Utl.messageTag().append(Utl.lang("sit!.chat.reloaded").color(Color.GREEN)).b());
              }
         }
     }

@@ -11,6 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import one.oth3r.sit.file.*;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
+
 public class Logic {
 
     /**
@@ -226,11 +228,11 @@ public class Logic {
 
             // send the player the actionbar message
             return Utl.lang("sit!.chat.toggle_sit",
-                    Utl.lang(messageKey).formatted(messageColor));
+                    Utl.lang(messageKey).color(config.getEnabled()? Color.GREEN : Color.RED)).b();
         } else {
             // unsupported server message if not in a Sit! server
             return Utl.lang("sit!.chat.unsupported")
-                    .formatted(Formatting.RED);
+                    .color(Color.RED).b();
         }
     }
 

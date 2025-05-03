@@ -18,9 +18,7 @@ import net.minecraft.item.consume.UseAction;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -28,11 +26,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import one.oth3r.otterlib.chat.CTxT;
 import one.oth3r.sit.file.*;
 import one.oth3r.sit.packet.SitPayloads;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -320,26 +320,32 @@ public class Utl {
 
             // send a message if needed
             if (message) {
-                player.sendMessage(messageTag().append(Utl.lang("sit!.chat.purged",Utl.lang("sit!.chat.purged.total",count).styled(
-                        style -> style.withColor(Colors.LIGHT_GRAY).withItalic(true)
-                )).styled(
-                        style -> style.withColor(Colors.GREEN)
-                )));
+                player.sendMessage(messageTag()
+                        .append(lang("sit!.chat.purged",lang("sit!.chat.purged.total",count).color(Color.gray).b()).color(Color.GREEN)).b());
             }
         }
     }
 
-    public static MutableText messageTag() {
-        return Text.literal("[").append(Text.literal("Sit!").styled(
-                style -> style.withColor(TextColor.parse("#c400ff").result().orElse(TextColor.fromFormatting(Formatting.DARK_PURPLE))))
-        ).append("] ");
+    public static CTxT messageTag() {
+        return new CTxT("Sit!").btn(true).color(Color.decode("#c400ff")).append(" ");
     }
 
     /**
      * gets a MutableText using the language key, if on server, using the custom lang reader
      */
-    public static MutableText lang(String key, Object... args) {
-        if (Data.isClient()) return Text.translatable(key, args);
+    public static CTxT lang(String key, Object... args) {
+        if (Data.isClient()) {
+            // we have to first convert all the CTxT's to the built version because minecraft lang reader doesn't know how to process it
+            // make a array with the same size of the args
+            Object[] fixedArgs = new Object[args.length];
+            // for every arg, build & add if CTxT or just add if not
+            for (var i = 0; i < args.length; i++) {
+                if (args[i] instanceof CTxT) fixedArgs[i] = ((CTxT) args[i]).b();
+                else fixedArgs[i] = args[i];
+            }
+            // return the translated text
+            return new CTxT(Text.translatable(key,fixedArgs));
+        }
         else return LangReader.of(key, args).getTxT();
     }
 

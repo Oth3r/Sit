@@ -29,6 +29,8 @@ import one.oth3r.sit.packet.SitPayloads;
 import one.oth3r.sit.screen.ConfigScreen;
 import org.lwjgl.glfw.GLFW;
 
+import java.awt.*;
+
 public class Events {
 
     private static class Keybindings {
@@ -78,7 +80,7 @@ public class Events {
                     } else {
                         // unsupported server message if not in a Sit! server
                         player.sendMessage(Utl.lang("sit!.chat.unsupported")
-                                .formatted(Formatting.RED), true);
+                                .color(Color.RED).b(), true);
                     }
                 }
             }
@@ -103,7 +105,7 @@ public class Events {
                 ServerPlayNetworking.send(context.player(),new SitPayloads.ResponsePayload(SitPayloads.ResponsePayload.VERSION));
 
                 // log the receiving of the packet from the player
-                Data.LOGGER.info(Utl.lang("sit!.console.player_settings",context.player().getName().getString()).getString());
+                Data.LOGGER.info(Utl.lang("sit!.console.player_settings",context.player().getName().getString()).toString());
             })));
         }
 
@@ -113,7 +115,7 @@ public class Events {
                 // only update when needed
                 if (!Data.isSupportedServer()) {
                     Data.setSupportedServer(true);
-                    Data.LOGGER.info(Utl.lang("sit!.console.connected",payload.value()).getString());
+                    Data.LOGGER.info(Utl.lang("sit!.console.connected",payload.value()).toString());
                 }
             }));
         }
