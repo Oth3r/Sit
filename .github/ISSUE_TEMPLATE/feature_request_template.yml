@@ -1,0 +1,26 @@
+name: Feature Request
+description: Suggest a new feature for Sit!
+title: '[Feature Request]: '
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A description of the problem or missing capability
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe a solution
+      description: If you have a solution in mind, please describe it.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives
+      description: Have you considered any alternative solutions or workarounds?
+  - type: markdown
+    attributes:
+      value: >-
+        This template was generated with [Issue Forms
+        Creator](https://issue-forms-creator.netlify.app)
