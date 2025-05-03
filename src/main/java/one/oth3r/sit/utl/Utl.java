@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.google.gson.stream.MalformedJsonException;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.SlabType;
@@ -368,7 +369,8 @@ public class Utl {
      * sends the settings packets to the server, if client & in game
      */
     public static void sendSettingsPackets() {
-        if (Data.isClient() && Data.isInGame()) {
+        if (Data.isClient() && Data.isInGame() &&
+                ClientPlayNetworking.canSend(PacketSender.getIdentifier(PacketType.SETTINGS))) {
             new PacketSender(PacketType.SETTINGS, Utl.getGson().toJson(FileData.getSittingConfig())).sendToServer();
         }
     }
