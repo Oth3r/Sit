@@ -1,5 +1,4 @@
 {
-  "category.sit!": "Sit!",
   "config.entry.exclusion": "在條目前方加上 `!` 以排除它！",
   "config.entry.example": "條目範例： %s",
   "config.server": "伺服器設定",
