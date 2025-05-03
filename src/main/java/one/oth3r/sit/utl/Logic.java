@@ -8,10 +8,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import one.oth3r.sit.file.FileData;
-import one.oth3r.sit.file.ServerConfig;
-import one.oth3r.sit.file.SittingConfig;
-import one.oth3r.sit.file.HandSetting;
+import one.oth3r.sit.file.*;
 import org.jetbrains.annotations.Nullable;
 
 public class Logic {
@@ -184,7 +181,7 @@ public class Logic {
         // get the poses to check above the block
         BlockPos pos1 = new BlockPos(pos).add(0,1,0), pos2 = new BlockPos(pos).add(0,2,0), posBelow = new BlockPos(pos);
         // doesn't check 2 blocks above if not sitting above .80 of the block
-        if (pos.getY() > entity.getY() - .80) {
+        if (pos.getY() > (entity.getY()-Utl.Entity.Y_ADJUSTMENT) - .80) {
             pos2 = pos2.add(0,-1,0);
             posBelow = posBelow.add(0,-1,0);
         }
@@ -201,6 +198,7 @@ public class Logic {
     public static void reload() {
         FileData.loadFiles();
         FileData.saveFiles();
+        LangReader.loadLanguageFile();
     }
 
     /**

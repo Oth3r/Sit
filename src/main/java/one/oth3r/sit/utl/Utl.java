@@ -209,7 +209,7 @@ public class Utl {
         /**
          * the customizable y height of the entity, as some versions have different sitting heights on the entity
          */
-        private static final double Y_ADJUSTMENT = 0;
+        public static final double Y_ADJUSTMENT = 0;
 
         /**
          * checks if the entity's block is still there, & is valid
@@ -228,9 +228,9 @@ public class Utl {
         public static BlockPos getBlockPos(DisplayEntity.TextDisplayEntity entity) {
             // the entity Y level, adjusted
             // the adjustment - is the opposite of the offset applied in Entity.create()
-            double entityY = entity.getBlockY() + (Y_ADJUSTMENT*-1);
+            int entityBlockY = (int) (Math.floor(entity.getY() + (Y_ADJUSTMENT*-1)));
             // get the block pos
-            BlockPos pos = new BlockPos(entity.getBlockX(),(int)entityY,entity.getBlockZ());
+            BlockPos pos = new BlockPos(entity.getBlockX(),entityBlockY,entity.getBlockZ());
             // if above the block, subtract 1
             if (isAboveBlockHeight(entity)) {
                 pos = pos.add(0,-1,0);
@@ -370,7 +370,8 @@ public class Utl {
      * sends the settings packets to the server, if client & in game
      */
     public static void sendSettingsPackets() {
-        if (Data.isClient() && Data.isInGame()) {
+        if (Data.isClient() && Data.isInGame() &&
+                ClientPlayNetworking.canSend(SitPayloads.SettingsPayload.ID)) {
             ClientPlayNetworking.send(new SitPayloads.SettingsPayload(Utl.getGson().toJson(FileData.getSittingConfig())));
         }
     }

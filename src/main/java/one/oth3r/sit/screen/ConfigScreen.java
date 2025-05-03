@@ -71,11 +71,7 @@ public class ConfigScreen extends Screen {
     }
 
     private void renderBanner(DrawContext context, int x, int y, float alpha) {
-        RenderSystem.enableBlend();
-
         context.drawTexture(RenderLayer::getGuiTextured,Identifier.of(Data.MOD_ID, "textures/gui/banner.png"),
                 x, y, 0.0f, 0.0f, 128, 72, 128, 72, ColorHelper.getWhite(alpha));
-
-        RenderSystem.disableBlend();
     }
 }
