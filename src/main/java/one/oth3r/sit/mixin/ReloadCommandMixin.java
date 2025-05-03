@@ -6,8 +6,8 @@ import net.minecraft.server.command.ReloadCommand;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Formatting;
-import one.oth3r.sit.file.FileData;
 import one.oth3r.sit.utl.Data;
+import one.oth3r.sit.utl.Logic;
 import one.oth3r.sit.utl.Utl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ReloadCommandMixin {
     @Inject(at = @At("TAIL"), method = "register")
     private static void register(CommandDispatcher<ServerCommandSource> dispatcher, CallbackInfo ci) {
-        FileData.loadFiles();
+        Logic.reload();
 
         // make sure the server isn't null
         MinecraftServer server = Data.getServer();
