@@ -1,5 +1,4 @@
 {
-  "category.sit!": "Sit!",
   "config.entry.exclusion": "在条目前加上“!”以排除。",
   "config.entry.example": "条目示例：%s",
   "config.server": "服务端配置",
