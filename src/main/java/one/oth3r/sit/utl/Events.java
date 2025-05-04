@@ -20,13 +20,12 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
+import one.oth3r.sit.SitClient;
 import one.oth3r.sit.command.SitCommand;
 import one.oth3r.sit.file.FileData;
 import one.oth3r.sit.file.LangReader;
 import one.oth3r.sit.file.SittingConfig;
 import one.oth3r.sit.packet.SitPayloads;
-import one.oth3r.sit.screen.ConfigScreen;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
@@ -60,7 +59,7 @@ public class Events {
             ClientPlayerEntity player = client.player;
 
             while (config__key.wasPressed()) {
-                client.setScreen(new ConfigScreen(client.currentScreen));
+                client.setScreen(SitClient.getConfigScreen(client.currentScreen));
             }
 
             /// anything below uses the player object, make sure it's not null
