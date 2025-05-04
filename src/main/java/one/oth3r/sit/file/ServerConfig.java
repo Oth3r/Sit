@@ -1,10 +1,13 @@
 package one.oth3r.sit.file;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.util.Hand;
+import one.oth3r.otterlib.file.CustomFile;
+import one.oth3r.otterlib.file.FileSettings;
 import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Utl;
 import org.jetbrains.annotations.NotNull;
@@ -13,8 +16,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -51,7 +57,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
     public ServerConfig() {}
 
     public ServerConfig(ServerConfig serverConfig) {
-        loadFileData(serverConfig);
+        copyFileData(serverConfig);
     }
 
     public ServerConfig(Double version, String lang, boolean keepActive, boolean sitWhileSeated,
@@ -151,6 +157,18 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         public boolean isFullBlocks() {
             return fullBlocks;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass()) return false;
+            PresetBlocks that = (PresetBlocks) o;
+            return stairs == that.stairs && slabs == that.slabs && carpets == that.carpets && fullBlocks == that.fullBlocks;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(stairs, slabs, carpets, fullBlocks);
+        }
     }
 
     public static class YDifferenceLimit {
@@ -187,11 +205,36 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         public void setBelow(Double below) {
             this.below = below;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass()) return false;
+            YDifferenceLimit that = (YDifferenceLimit) o;
+            return Objects.equals(above, that.above) && Objects.equals(below, that.below);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(above, below);
+        }
+    }
+
+    @Override
+    public FileSettings getFileSettings() {
+        return new FileSettings();
+    }
+
+    /**
+     * the path to the file - including the extension ex. usr/config/custom-file.json
+     */
+    @Override
+    public Path getFilePath() {
+        return Paths.get(Data.CONFIG_DIR, "server-config.json");
     }
 
     @Override
     public void reset() {
-        loadFileData(new ServerConfig());
+        copyFileData(new ServerConfig());
     }
 
     @Override
@@ -199,8 +242,13 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         return ServerConfig.class;
     }
 
+    /**
+     * loads the data from the file object into the current object - DEEP COPY
+     *
+     * @param newFile the file to take the properties from
+     */
     @Override
-    public void loadFileData(ServerConfig newFile) {
+    public void copyFileData(ServerConfig newFile) {
         this.version = newFile.version;
         this.lang = newFile.lang;
         this.keepActive = newFile.keepActive;
@@ -216,23 +264,18 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         this.interactionBlocks = newFile.interactionBlocks.stream().map(CustomBlock::new).collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * updates the file based on the version number of the current instance
+     *
+     * @param json
+     */
     @Override
-    public void update() {
+    public void update(JsonElement json) {
         /// update to 2.1, just a new list, nothing to change
         /// update to 2.2, new settings, no changes
         if (version >= 2.0 && version <= 2.1) {
             version = 2.2;
         }
-    }
-
-    @Override
-    public String getFileName() {
-        return "server-config.json";
-    }
-
-    @Override
-    public String getDirectory() {
-        return Data.CONFIG_DIR;
     }
 
     @Override
@@ -243,6 +286,25 @@ public class ServerConfig implements CustomFile<ServerConfig> {
             Data.LOGGER.info("Updating Sit!.properties to sit!/config.json");
             Legacy.run();
         }
+    }
+
+    @Override
+    public ServerConfig clone() {
+        ServerConfig clone = new ServerConfig();
+        clone.copyFileData(this);
+        return clone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ServerConfig that = (ServerConfig) o;
+        return Objects.equals(version, that.version) && Objects.equals(lang, that.lang) && Objects.equals(keepActive, that.keepActive) && Objects.equals(sitWhileSeated, that.sitWhileSeated) && Objects.equals(presetBlocks, that.presetBlocks) && Objects.equals(yDifferenceLimit, that.yDifferenceLimit) && Objects.equals(customEnabled, that.customEnabled) && Objects.equals(sittingBlocks, that.sittingBlocks) && Objects.equals(blacklistedBlocks, that.blacklistedBlocks) && Objects.equals(interactionBlocks, that.interactionBlocks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(version, lang, langOptions, keepActive, sitWhileSeated, presetBlocks, yDifferenceLimit, customEnabled, sittingBlocks, blacklistedBlocks, interactionBlocks);
     }
 
     protected static class Legacy {

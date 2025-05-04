@@ -1,9 +1,16 @@
 package one.oth3r.sit.file;
 
+import com.google.common.base.Objects;
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.util.Hand;
+import one.oth3r.otterlib.file.CustomFile;
+import one.oth3r.otterlib.file.FileSettings;
 import one.oth3r.sit.utl.Data;
 import org.jetbrains.annotations.NotNull;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class SittingConfig implements CustomFile<SittingConfig> {
 
@@ -29,7 +36,7 @@ public class SittingConfig implements CustomFile<SittingConfig> {
     }
 
     public SittingConfig(SittingConfig sittingConfig) {
-        loadFileData(sittingConfig);
+         copyFileData(sittingConfig);
     }
 
     public Double getVersion() {
@@ -65,8 +72,18 @@ public class SittingConfig implements CustomFile<SittingConfig> {
     }
 
     @Override
+    public FileSettings getFileSettings() {
+        return new FileSettings();
+    }
+
+    @Override
+    public Path getFilePath() {
+        return Paths.get(Data.CONFIG_DIR, "sitting-config.json");
+    }
+
+    @Override
     public void reset() {
-        loadFileData(new SittingConfig());
+        copyFileData(new SittingConfig());
     }
 
     @Override
@@ -75,24 +92,35 @@ public class SittingConfig implements CustomFile<SittingConfig> {
     }
 
     @Override
-    public void loadFileData(SittingConfig newFile) {
-        this.version = newFile.version;
-        this.enabled = newFile.enabled;
-        this.handSitting = newFile.handSitting;
-        this.mainHand = newFile.mainHand;
-        this.offHand = newFile.offHand;
+    public void copyFileData(SittingConfig sittingConfig) {
+        this.version = sittingConfig.version;
+        this.enabled = sittingConfig.enabled;
+        this.handSitting = sittingConfig.handSitting;
+        this.mainHand = new HandSetting(sittingConfig.mainHand);
+        this.offHand = new HandSetting(sittingConfig.offHand);
     }
 
     @Override
-    public void update() {}
+    public void update(JsonElement jsonElement) {
 
-    @Override
-    public String getFileName() {
-        return "sitting-config.json";
     }
 
     @Override
-    public String getDirectory() {
-        return Data.CONFIG_DIR;
+    public SittingConfig clone() {
+        SittingConfig clone = new SittingConfig();
+        clone.copyFileData(this);
+        return clone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        SittingConfig that = (SittingConfig) o;
+        return Objects.equal(version, that.version) && Objects.equal(enabled, that.enabled) && Objects.equal(handSitting, that.handSitting) && Objects.equal(mainHand, that.mainHand) && Objects.equal(offHand, that.offHand);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(version, enabled, handSitting, mainHand, offHand);
     }
 }
