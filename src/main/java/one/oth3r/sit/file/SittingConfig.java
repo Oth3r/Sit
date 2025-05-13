@@ -73,7 +73,7 @@ public class SittingConfig implements CustomFile<SittingConfig> {
 
     @Override
     public FileSettings getFileSettings() {
-        return new FileSettings();
+        return new FileSettings(Data.LOGGER);
     }
 
     @Override

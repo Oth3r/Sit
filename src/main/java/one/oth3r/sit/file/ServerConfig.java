@@ -221,7 +221,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
 
     @Override
     public FileSettings getFileSettings() {
-        return new FileSettings();
+        return new FileSettings(Data.LOGGER);
     }
 
     /**
