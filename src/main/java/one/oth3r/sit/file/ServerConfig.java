@@ -279,8 +279,8 @@ public class ServerConfig implements CustomFile<ServerConfig> {
     }
 
     @Override
-    public void fileNotExist() {
-        CustomFile.super.fileNotExist();
+    public void createDirectory() {
+        CustomFile.super.createDirectory();
         // try checking the old/legacy config directory for the file
         if (Legacy.getLegacyFile().exists()) {
             Data.LOGGER.info("Updating Sit!.properties to sit!/config.json");
