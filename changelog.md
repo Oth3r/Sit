@@ -1,4 +1,8 @@
-# v1.2.4
+# v1.2.4.1
+* removed unused assets
+* enabled file logging for easier debugging
+
+# v1.2.4.0
 Small changelog but big update!
 \
 Switching to OtterLib will allow for a simplified main mod and lead to more unified mod development across my projects! Download OtterLib today: [Link](https://modrinth.com/mod/otterlib)

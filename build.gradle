@@ -98,7 +98,7 @@ publishMods {
 	modLoaders.add("quilt")
 
 	version = mod_version
-	displayName = mod_version+" [Fabric]"
+	displayName = "v${mod_version} [Fabric]"
 
 	curseforge {
 		accessToken = env.fetchOrNull('CURSEFORGE')
