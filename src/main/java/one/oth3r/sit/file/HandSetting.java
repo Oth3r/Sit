@@ -3,6 +3,7 @@ package one.oth3r.sit.file;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class HandSetting {
@@ -19,6 +20,11 @@ public class HandSetting {
     public HandSetting(SittingRequirement sittingRequirement, Filter filter) {
         this.sittingRequirement = sittingRequirement;
         this.filter = filter;
+    }
+
+    public HandSetting(HandSetting handSetting) {
+        this.sittingRequirement = handSetting.sittingRequirement;
+        this.filter = new Filter(handSetting.filter);
     }
 
     public SittingRequirement getSittingRequirement() {
@@ -52,6 +58,12 @@ public class HandSetting {
             this.customItems = customItems;
         }
 
+        public Filter(Filter filter) {
+            this.invert = filter.invert;
+            this.presets = new Presets(filter.presets);
+            this.customItems = new CustomItem(filter.customItems);
+        }
+
         public Boolean isInverted() {
             return invert;
         }
@@ -80,6 +92,12 @@ public class HandSetting {
                 this.usable = usable;
             }
 
+            public Presets(Presets presets) {
+                this.block = presets.block;
+                this.food = presets.food;
+                this.usable = presets.usable;
+            }
+
             public boolean isBlock() {
                 return block;
             }
@@ -91,6 +109,42 @@ public class HandSetting {
             public boolean isUsable() {
                 return usable;
             }
+
+            @Override
+            public boolean equals(Object o) {
+                if (o == null || getClass() != o.getClass()) return false;
+                Presets presets = (Presets) o;
+                return block == presets.block && food == presets.food && usable == presets.usable;
+            }
+
+            @Override
+            public int hashCode() {
+                return Objects.hash(block, food, usable);
+            }
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass()) return false;
+            Filter filter = (Filter) o;
+            return Objects.equals(invert, filter.invert) && Objects.equals(presets, filter.presets) && Objects.equals(customItems, filter.customItems);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(invert, presets, customItems);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        HandSetting that = (HandSetting) o;
+        return sittingRequirement == that.sittingRequirement && Objects.equals(sittingRequirementOptions, that.sittingRequirementOptions) && Objects.equals(filter, that.filter);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sittingRequirement, sittingRequirementOptions, filter);
     }
 }

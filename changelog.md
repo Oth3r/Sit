@@ -1,7 +1,10 @@
-# v1.2.3.2
-* added an extra check before sending packets to the server from the client
-# v1.2.3.1
-* added a version position for quick patches
-* fixed sitting height being off by .2
-# v1.2.3
-* fixed not being able to sit when the Y level was below 0
+# v1.2.4.1
+* removed unused assets
+* enabled file logging for easier debugging
+
+# v1.2.4.0
+Small changelog but big update!
+\
+Switching to OtterLib will allow for a simplified main mod and lead to more unified mod development across my projects! Download OtterLib today: [Link](https://modrinth.com/mod/otterlib)
+* make sitting via hand execute the `/sit` command, to allow for universal sitting permission control
+* switch to using OtterLib for file management, config screen management, and more to come
