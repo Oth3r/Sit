@@ -26,8 +26,8 @@ public class SitClient implements ClientModInitializer {
         return new ConfigScreen(parent, Utl.lang("sit!.screen.config"),
                 new CustomImage(Identifier.of(Data.MOD_ID, "textures/gui/banner.png"),128, 72),
                 List.of(
-                        SimpleButton.Templates.fileEditor(Utl.lang("config.server"), FileData.getServerConfig(), new CustomImage(Identifier.of(Data.MOD_ID, "server_button"),246,26)).build(),
-                        SimpleButton.Templates.fileEditor(Utl.lang("config.sitting"), FileData.getSittingConfig(), new CustomImage(Identifier.of(Data.MOD_ID, "sitting_button"), 246, 26)).build()
+                        SimpleButton.Templates.fileEditor(Utl.lang("config.server"), FileData.getServerConfig(), new CustomImage(Identifier.of(Data.MOD_ID, "textures/gui/sprites/server_button.png"),246,26)).build(),
+                        SimpleButton.Templates.fileEditor(Utl.lang("config.sitting"), FileData.getSittingConfig(), new CustomImage(Identifier.of(Data.MOD_ID, "textures/gui/sprites/sitting_button.png"), 246, 26)).build()
                 ),
                 List.of(
                         SimpleButton.Templates.warning(Utl.lang("sit!.gui.button.issues")).openLink("https://github.com/Oth3r/Sit/issues").build(),
