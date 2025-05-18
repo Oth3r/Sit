@@ -3,6 +3,7 @@ package one.oth3r.sit.file;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SittingBlock extends CustomBlock {
     @SerializedName("sitting-height")
@@ -26,5 +27,18 @@ public class SittingBlock extends CustomBlock {
     public SittingBlock(SittingBlock sittingBlock) {
         super(sittingBlock);
         this.sittingHeight = sittingBlock.sittingHeight;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        SittingBlock that = (SittingBlock) o;
+        return Objects.equals(sittingHeight, that.sittingHeight);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), sittingHeight);
     }
 }

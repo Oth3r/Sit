@@ -1,5 +1,4 @@
 {
-  "category.sit!": "Sit!",
   "config.entry.exclusion": "Bir girdiyi hariç tutmak için önüne '!' koyun!",
   "config.entry.example": "Girdi örneği: %s",
   "config.server": "Sunucu Ayarları",
