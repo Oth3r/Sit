@@ -91,13 +91,8 @@
   "key.sit!.config": "Open Config",
 
   "sit!.screen.config": "Sit! Config",
-  "sit!.gui.button.file": "Open File",
-  "sit!.gui.button.folder": "Open Folder",
-  "sit!.gui.button.reset": "Reset",
   "sit!.gui.button.issues": "Issues",
   "sit!.gui.button.donate": "Donate",
-  "sit!.gui.button.revert": "Revert Changes",
-  "sit!.gui.button.save": "Save and Close",
   "sit!.gui.button.website": "Website",
 
   "sit!.console.connected": "Connected to Sit! server: %s",

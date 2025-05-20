@@ -1,6 +1,5 @@
 package one.oth3r.sit.utl;
 
-import net.minecraft.block.*;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -9,14 +8,21 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import one.oth3r.sit.file.FileData;
-import one.oth3r.sit.file.ServerConfig;
-import one.oth3r.sit.file.SittingConfig;
-import one.oth3r.sit.file.HandSetting;
+import one.oth3r.sit.file.*;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
+
 public class Logic {
-    public static boolean sit(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hitResult) {
+
+    /**
+     * checks if the player can sit at the block specified
+     * @param player the player that's going to sit
+     * @param blockPos the position that the player is going to sit at
+     * @param hitResult nullable, not null if the player is sitting with their hand
+     * @return true if the player can sit with the conditions provided
+     */
+    public static boolean canSit(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hitResult) {
         // cant sit if crouching
         if (player.isSneaking()) return false;
 
@@ -32,22 +38,44 @@ public class Logic {
         if (!checkYLimits(player, blockPos)) return false;
 
         ServerWorld serverWorld = player.getServerWorld();
-        BlockState blockState = serverWorld.getBlockState(blockPos);
 
-        Double sitHeight = Utl.getSittingHeight(blockState,player,blockPos,hitResult);
+        Double sitHeight = Utl.getSittingHeight(player,blockPos,hitResult);
 
-        // if the sit height is null, its not a sittable block
+        // if the sit height is null, it's not a sittable block
         if (sitHeight == null) return false;
 
         DisplayEntity.TextDisplayEntity entity = Utl.Entity.create(serverWorld,blockPos,sitHeight);
 
-        if (!checkPlayerSitAbility(entity)) return false;
+        // checks if the player can sit
+        return checkPlayerSitAbility(entity);
+    }
 
-        Utl.Entity.spawnSit(player, entity);
+    /**
+     * makes the player attempt to sit at the position provided (checks if the player can sit before)
+     * @param player the player that is sitting
+     * @param blockPos the pos the player is going to sit at
+     * @param hitResult nullable, not null if the player is sitting with their hand
+     * @return true if sitting was successful
+     */
+    public static boolean sit(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hitResult) {
+        if (!canSit(player, blockPos, hitResult)) return false;
+        // assets
+        ServerWorld serverWorld = player.getServerWorld();
+        Double sitHeight = Utl.getSittingHeight(player,blockPos,hitResult);
+        // shouldn't be null because we already checked, but do another check to clear IDE errors
+        assert sitHeight != null;
+
+        // spawn the entity and make the player sit
+        Utl.Entity.spawnSit(player, Utl.Entity.create(serverWorld,blockPos,sitHeight));
 
         return true;
     }
 
+    /**
+     * makes the player attempt to sit at the block they are looking at (range of 5)
+     * @param player the player who is trying to sit
+     * @return true if sitting was successful
+     */
     public static boolean sitLooking(ServerPlayerEntity player) {
         return sit(player, Utl.getBlockPosPlayerIsLookingAt(player.getServerWorld(),player,5),null);
     }
@@ -172,6 +200,7 @@ public class Logic {
     public static void reload() {
         FileData.loadFiles();
         FileData.saveFiles();
+        LangReader.loadLanguageFile();
     }
 
     /**
@@ -199,11 +228,11 @@ public class Logic {
 
             // send the player the actionbar message
             return Utl.lang("sit!.chat.toggle_sit",
-                    Utl.lang(messageKey).formatted(messageColor));
+                    Utl.lang(messageKey).color(config.getEnabled()? Color.GREEN : Color.RED)).b();
         } else {
             // unsupported server message if not in a Sit! server
             return Utl.lang("sit!.chat.unsupported")
-                    .formatted(Formatting.RED);
+                    .color(Color.RED).b();
         }
     }
 

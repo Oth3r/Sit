@@ -7,6 +7,7 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class CustomItem {
     @SerializedName("item-ids")
@@ -19,6 +20,11 @@ public class CustomItem {
     public CustomItem(ArrayList<String> itemIDs, ArrayList<String> itemTags) {
         this.itemIDs = itemIDs;
         this.itemTags = itemTags;
+    }
+
+    public CustomItem(CustomItem customItem) {
+        this.itemIDs = new ArrayList<>(customItem.itemIDs);
+        this.itemTags = new ArrayList<>(customItem.itemTags);
     }
 
     public ArrayList<String> getItemIDs() {
@@ -61,5 +67,17 @@ public class CustomItem {
 
         // not returning true in the loop because there might be a (!) not tag that the item might fall into, after the item was already in another tag
         return tagCheck;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CustomItem that = (CustomItem) o;
+        return Objects.equals(itemIDs, that.itemIDs) && Objects.equals(itemTags, that.itemTags);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemIDs, itemTags);
     }
 }

@@ -9,6 +9,7 @@ import net.minecraft.util.Identifier;
 import one.oth3r.sit.utl.Utl;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class CustomBlock {
 
@@ -103,5 +104,17 @@ public class CustomBlock {
 
         // not returning true in the loop because there might be a (!) not tag that the block might fall into, after the block was already in another tag
         return tagCheck;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CustomBlock that = (CustomBlock) o;
+        return Objects.equals(blockIds, that.blockIds) && Objects.equals(blockTags, that.blockTags) && Objects.equals(blockStates, that.blockStates);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(blockIds, blockTags, blockStates);
     }
 }
