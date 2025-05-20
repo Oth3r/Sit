@@ -1,5 +1,4 @@
 {
-  "category.sit!": "Sit!",
   "config.entry.exclusion": "Metti un `!` davanti a un campo per escluderlo!",
   "config.entry.example": "Esempio campo: %s",
   "config.server": "Configura Server",

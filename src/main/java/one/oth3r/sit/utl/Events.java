@@ -54,7 +54,7 @@ public class Events {
             ClientPlayerEntity player = client.player;
 
             while (config__key.wasPressed()) {
-                client.setScreen(new ConfigScreen(client.currentScreen));
+                client.setScreen(SitClient.getConfigScreen(client.currentScreen));
             }
 
             /// anything below uses the player object, make sure it's not null
@@ -181,7 +181,19 @@ public class Events {
                 if (player == null || player.isSpectator()) return ActionResult.PASS;
 
                 // consume if sitting, if not pass
-                return Logic.sit(player,hitResult.getBlockPos(),hitResult) ? ActionResult.CONSUME : ActionResult.PASS;
+                ActionResult result = Logic.canSit(player,hitResult.getBlockPos(),hitResult) ? ActionResult.CONSUME : ActionResult.PASS;
+                // todo test
+                if (result.equals(ActionResult.CONSUME)) {
+                    try {
+                        CommandDispatcher<ServerCommandSource> dispatcher = Data.getServer().getCommandSource().getDispatcher();
+                        ParseResults<ServerCommandSource> parse = dispatcher.parse("sit", player.getCommandSource());
+                        dispatcher.execute(parse);
+                    } catch (CommandSyntaxException e) {
+                        Data.LOGGER.error("Error executing sit command for player {}", player.getName().getString());
+                    }
+                }
+
+                return result;
             });
 
         });
