@@ -1,5 +1,8 @@
 package one.oth3r.sit.utl;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.ParseResults;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -13,17 +16,20 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
+import one.oth3r.sit.SitClient;
 import one.oth3r.sit.command.SitCommand;
 import one.oth3r.sit.file.FileData;
 import one.oth3r.sit.file.LangReader;
 import one.oth3r.sit.file.SittingConfig;
 import one.oth3r.sit.packet.PacketSender;
 import one.oth3r.sit.packet.PacketType;
-import one.oth3r.sit.screen.ConfigScreen;
 import org.lwjgl.glfw.GLFW;
+
+import java.awt.*;
 
 public class Events {
 
@@ -54,7 +60,7 @@ public class Events {
             ClientPlayerEntity player = client.player;
 
             while (config__key.wasPressed()) {
-                client.setScreen(new ConfigScreen(client.currentScreen));
+                client.setScreen(SitClient.getConfigScreen(client.currentScreen));
             }
 
             /// anything below uses the player object, make sure it's not null
@@ -74,7 +80,7 @@ public class Events {
                     } else {
                         // unsupported server message if not in a Sit! server
                         player.sendMessage(Utl.lang("sit!.chat.unsupported")
-                                .formatted(Formatting.RED), true);
+                                .color(Color.RED).b(), true);
                     }
                 }
             }
@@ -97,7 +103,7 @@ public class Events {
                             new PacketSender(PacketType.RESPONSE,PacketType.RESPONSE.getId()).sendToPlayer(player);
 
                             // log the receiving of the packet from the player
-                            Data.LOGGER.info(Utl.lang("sit!.console.player_settings",player.getName().getString()).getString());
+                            Data.LOGGER.info(Utl.lang("sit!.console.player_settings",player.getName().getString()).toString());
                         });
                     }));
         }
@@ -110,7 +116,7 @@ public class Events {
                         client.execute(() -> {
                             if (!Data.isSupportedServer()) {
                                 Data.setSupportedServer(true);
-                                Data.LOGGER.info(Utl.lang("sit!.console.connected",packetData).getString());
+                                Data.LOGGER.info(Utl.lang("sit!.console.connected",packetData).toString());
                             }
                         });
                     }));
@@ -181,7 +187,19 @@ public class Events {
                 if (player == null || player.isSpectator()) return ActionResult.PASS;
 
                 // consume if sitting, if not pass
-                return Logic.sit(player,hitResult.getBlockPos(),hitResult) ? ActionResult.CONSUME : ActionResult.PASS;
+                ActionResult result = Logic.canSit(player,hitResult.getBlockPos(),hitResult) ? ActionResult.CONSUME : ActionResult.PASS;
+
+                if (result.equals(ActionResult.CONSUME)) {
+                    try {
+                        CommandDispatcher<ServerCommandSource> dispatcher = Data.getServer().getCommandSource().getDispatcher();
+                        ParseResults<ServerCommandSource> parse = dispatcher.parse("sit", player.getCommandSource());
+                        dispatcher.execute(parse);
+                    } catch (CommandSyntaxException e) {
+                        Data.LOGGER.error("Error executing sit command for player {}", player.getName().getString());
+                    }
+                }
+
+                return result;
             });
 
         });

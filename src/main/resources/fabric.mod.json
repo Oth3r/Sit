@@ -28,7 +28,8 @@
 	"depends": {
 		"fabricloader": ">=0.14.21",
 		"minecraft": ">=${min_minecraft_version} <=${max_minecraft_version}",
-		"fabric": "*"
+		"fabric": "*",
+		"otterlib": ">=${otterlib_version}"
 	},
 	"suggests": {
 		"modmenu": "*"

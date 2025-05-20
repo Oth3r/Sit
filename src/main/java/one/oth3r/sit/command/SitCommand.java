@@ -14,6 +14,7 @@ import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Logic;
 import one.oth3r.sit.utl.Utl;
 
+import java.awt.*;
 import java.util.concurrent.CompletableFuture;
 
 public class SitCommand {
@@ -49,7 +50,7 @@ public class SitCommand {
         if (player == null) {
             if (args[0].equalsIgnoreCase("reload")) {
                 Logic.reload();
-                Data.LOGGER.info(Utl.lang("sit!.chat.reloaded").getString());
+                Data.LOGGER.info(Utl.lang("sit!.chat.reloaded").toString());
             }
             return 1;
         }
@@ -75,7 +76,7 @@ public class SitCommand {
 
         if (args[0].equalsIgnoreCase("reload")) {
             Logic.reload();
-            player.sendMessage(Utl.messageTag().append(Utl.lang("sit!.chat.reloaded").formatted(Formatting.GREEN)));
+            player.sendMessage(Utl.messageTag().append(Utl.lang("sit!.chat.reloaded").color(Color.GREEN)).b());
         }
 
         if (args[0].equalsIgnoreCase("purgeChairEntities")) Utl.Entity.purge(player,true);

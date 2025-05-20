@@ -1,5 +1,4 @@
 {
-  "category.sit!": "Sit!",
   "config.entry.exclusion": "Coloque um `!` antes de uma entrada para excluí-la!",
   "config.entry.example": "Exemplo de entrada: %s",
   "config.server": "Configuração do Servidor",
