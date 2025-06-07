@@ -10,6 +10,8 @@ The mod also has full Geyser support! Enjoy sitting with everyone, weather they 
 
 ### Where to install?
 **Sit!** works on the server (singleplayer included), also with support for clients that join in to use their own settings to sit.
+\
+[Farbric API](https://modrinth.com/mod/fabric-api) and [OtterLib](https://modrinth.com/mod/otterlib) is required to for the mod to load.
 
 ## Help localize Sit! on [Crowdin](https://crowdin.com/project/oth3r-sit)!
 ![overview](https://github.com/Oth3r/Sit/blob/master/media/overview.gif?raw=true)
