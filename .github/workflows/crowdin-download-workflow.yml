@@ -60,7 +60,7 @@ jobs:
 
       - name: Rename JSON Files to Lowercase
         env:
-          TARGET_DIR: "common/src/main/resources/assets/directionhud/lang/"
+          TARGET_DIR: "src/main/resources/assets/sit-oth3r/lang/"
         run: |
           echo "Starting renaming process for JSON files within $TARGET_DIR..."
           if [ ! -d "$TARGET_DIR" ]; then
