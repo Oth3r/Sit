@@ -2,7 +2,7 @@ name: Crowdin Upload Action
 
 on:
   push:
-    paths: [ "src/main/resources/assets/sit-oth3r/lang/en_US.json"]
+    paths: [ "src/main/resources/assets/sit-oth3r/lang/en_us.json"]
     branches: [ dev ]
   workflow_dispatch:
 
