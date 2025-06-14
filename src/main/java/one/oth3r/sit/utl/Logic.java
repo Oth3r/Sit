@@ -77,7 +77,8 @@ public class Logic {
      * @return true if sitting was successful
      */
     public static boolean sitLooking(ServerPlayerEntity player) {
-        return sit(player, Utl.getBlockPosPlayerIsLookingAt(player.getServerWorld(),player,5),null);
+        return sit(player, Utl.getBlockPosPlayerIsLookingAt(player.getServerWorld(),player,
+                Utl.getPlayerReach(player)),null);
     }
 
     /**
