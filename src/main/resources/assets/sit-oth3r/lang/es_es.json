@@ -68,13 +68,8 @@
   "key.sit!.sit": "Sentarse",
   "key.sit!.config": "Abrir configuración",
   "sit!.screen.config": "Configuracion de Sit!",
-  "sit!.gui.button.file": "Abrir Archivo",
-  "sit!.gui.button.folder": "Abrir Carpeta",
-  "sit!.gui.button.reset": "Reiniciar",
   "sit!.gui.button.issues": "Problemas",
   "sit!.gui.button.donate": "Donar",
-  "sit!.gui.button.revert": "Revertir cambios",
-  "sit!.gui.button.save": "Guardar y salir",
   "sit!.gui.button.website": "Sitio web ",
   "sit!.console.player_settings": "¡Se recibió configuraciones personalizadas dé %s!",
   "modmenu.descriptionTranslation.sit-oth3r": "¡Añade la capacidad de sentarse a Minecraft! Configuración extensa para restricciones de mano y bloques sentables.\n ¡Los jugadores pueden tener su propia configuración cuando usan Sit! del lado del cliente en un servidor!"
