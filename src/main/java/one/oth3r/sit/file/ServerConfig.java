@@ -27,12 +27,12 @@ import java.util.stream.Collectors;
 public class ServerConfig implements CustomFile<ServerConfig> {
 
     @SerializedName("version")
-    private Double version = 2.2;
+    private Double version = 2.3;
 
     @SerializedName("lang")
-    private String lang = "en_US";
+    private String lang = "en_us";
     @SerializedName("lang-options")
-    private final String langOptions = "en_US, it_IT, pt_BR, tr_TR, zh_TW, zh_CH, de_DE";
+    private final String langOptions = "en_us, it_it, pt_br, tr_tr, zh_tw, zh_ch, de_de";
 
     @SerializedName("keep-active")
     private Boolean keepActive = true;
@@ -275,6 +275,11 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         /// update to 2.2, new settings, no changes
         if (version >= 2.0 && version <= 2.1) {
             version = 2.2;
+        }
+        if (version == 2.2) {
+            // make sure that the lang is all lowercase
+            version = 2.3;
+            this.lang = this.lang.substring(0,3)+this.lang.substring(3).toLowerCase();
         }
     }
 
