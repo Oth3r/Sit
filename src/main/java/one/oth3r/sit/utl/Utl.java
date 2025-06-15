@@ -485,11 +485,8 @@ public class Utl {
     }
 
     public static double getPlayerReach(PlayerEntity player) {
-        // use the BLOCK_INTERACTION_RANGE attribute if available
-        if (player.getAttributeInstance(EntityAttributes.PLAYER_BLOCK_INTERACTION_RANGE) != null) {
-            return player.getAttributeValue(EntityAttributes.PLAYER_BLOCK_INTERACTION_RANGE);
-        }
         // fallback to 5
+        // 1.20.4 and below doesn't have the range
         return 5;
     }
 }
