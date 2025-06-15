@@ -10,6 +10,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -481,5 +482,11 @@ public class Utl {
         }
 
         return new BlockPos(player.getBlockPos());
+    }
+
+    public static double getPlayerReach(PlayerEntity player) {
+        // fallback to 5
+        // 1.20.4 and below doesn't have the range
+        return 5;
     }
 }

@@ -51,22 +51,27 @@ public class CustomItem {
         }
 
         // a boolean to check if one of the items are in a filtered tag
-        boolean tagCheck = false;
+        // & a switch for if there is only not(!) tags
+        boolean tagCheck = false, hasPositiveTags = false;
 
-        // check the custom item tags
         for (String tag : itemTags) {
             // substring to remove # and if needed, "!"
-            // if a NOT tag
             if (tag.startsWith("!")) {
                 // if there is a math for the NOT(!) tag, return false
-                if (itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), new Identifier(tag.substring(2))))) return false;
+                Identifier id = Identifier.tryParse(tag.substring(2));
+                if (id != null && itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), id))) return false;
+            } else {
+                // flip the hasPositiveTags boolean
+                hasPositiveTags = true;
+                // else (normal tag), if there is a match, set tagCheck to true
+                Identifier id = Identifier.tryParse(tag.substring(1));
+                if (id != null && itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), id))) tagCheck = true;
             }
-            // else (normal tag), if there is a match, set tagCheck to true
-            else if (itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), new Identifier(tag.substring(1))))) tagCheck = true;
         }
 
-        // not returning true in the loop because there might be a (!) not tag that the item might fall into, after the item was already in another tag
-        return tagCheck;
+        // if there were any required tags, return whether we matched one
+        // if there were only not(!) tags, and we didn't violate any, return true
+        return hasPositiveTags? tagCheck : true;
     }
 
     @Override
