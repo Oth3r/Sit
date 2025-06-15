@@ -6,7 +6,7 @@
 
 files: [
     {
-        "source": "src/main/resources/assets/sit-oth3r/lang/en_US.json",
+        "source": "src/main/resources/assets/sit-oth3r/lang/en_us.json",
         "translation": "src/main/resources/assets/sit-oth3r/lang/%locale_with_underscore%.json",
     }
 ]

@@ -91,19 +91,27 @@ public class CustomBlock {
         }
 
         // a boolean to check if one of the blocks are in a filtered tag
-        boolean tagCheck = false;
+        // & a switch for if there is only not(!) tags
+        boolean tagCheck = false, hasPositiveTags = false;
 
-        // for all the entered tags
         for (String tag : blockTags) {
             // substring to remove # and if needed, !
-            // if there is a math for the NOT(!) tag, return false
-            if (tag.startsWith("!") && blockState.isIn(TagKey.of(Registries.BLOCK.getKey(), new Identifier(tag.substring(2))))) return false;
-            // if there is a match, return true
-            if (blockState.isIn(TagKey.of(Registries.BLOCK.getKey(), Identifier.tryParse(tag.substring(1))))) tagCheck = true;
+            if (tag.startsWith("!")) {
+                // if there is a match for the NOT(!) tag, return false
+                Identifier id = Identifier.tryParse(tag.substring(2));
+                if (id != null && blockState.isIn(TagKey.of(Registries.BLOCK.getKey(), id))) return false;
+            } else {
+                // flip the hasPositiveTags boolean
+                hasPositiveTags = true;
+                // if there is a match, return true
+                Identifier id = Identifier.tryParse(tag.substring(1));
+                if (id != null && blockState.isIn(TagKey.of(Registries.BLOCK.getKey(), id))) tagCheck = true;
+            }
         }
 
-        // not returning true in the loop because there might be a (!) not tag that the block might fall into, after the block was already in another tag
-        return tagCheck;
+        // if there were any required tags, return whether we matched one
+        // if there were only not(!) tags, and we didn't violate any, return true
+        return hasPositiveTags? tagCheck : true;
     }
 
     @Override

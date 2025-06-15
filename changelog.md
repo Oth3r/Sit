@@ -1,3 +1,11 @@
+# v1.2.4.3
+* added a max OtterLib version as the beta will have breaking changes between major versions
+
+# v1.2.4.2
+* fixed language file not loading (reverted uppercase locales)
+* fixed block checking having a hardcoded player reach - now uses player reach
+* fixed block and item tag check logic for cases with only not(!) tags
+
 # v1.2.4.1
 * removed unused assets
 * enabled file logging for easier debugging
