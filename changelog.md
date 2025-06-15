@@ -3,7 +3,7 @@
 
 # v1.2.4.2
 * fixed language file not loading (reverted uppercase locales)
-* fixed block checking having a hardcoded player reach - now uses player reach
+* fixed block checking having a hardcoded player reach - now uses player reach (1.20.6+)
 * fixed block and item tag check logic for cases with only not(!) tags
 
 # v1.2.4.1
