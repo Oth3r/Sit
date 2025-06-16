@@ -192,7 +192,7 @@ public class Events {
                         ParseResults<ServerCommandSource> parse = dispatcher.parse("sit", player.getCommandSource());
                         dispatcher.execute(parse);
                     } catch (CommandSyntaxException e) {
-                        Data.LOGGER.error("Error executing sit command for player {}", player.getName().getString());
+                        Data.LOGGER.error("Error executing sit command for player %s", player.getName().getString());
                     }
                 }
 

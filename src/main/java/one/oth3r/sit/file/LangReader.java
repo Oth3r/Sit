@@ -99,8 +99,8 @@ public class LangReader {
             Reader defaultReader = new InputStreamReader(getInputStream(true), StandardCharsets.UTF_8);
             defaultLangMap.putAll(new Gson().fromJson(defaultReader, tToken));
         } catch (Exception e) {
-            Data.LOGGER.info("ERROR WITH LANGUAGE FILE - PLEASE REPORT WITH THE ERROR LOG");
-            Data.LOGGER.info(e.getMessage());
+            Data.LOGGER.error("ERROR WITH LANGUAGE FILE - PLEASE REPORT WITH THE ERROR LOG");
+            Data.LOGGER.error(e.getMessage());
         }
     }
 
