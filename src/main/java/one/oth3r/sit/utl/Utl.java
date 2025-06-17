@@ -310,29 +310,6 @@ public class Utl {
         else return LangReader.of(key, args).getTxT();
     }
 
-    public static class Enum {
-
-        public static <T extends java.lang.Enum<T>> T get(Object enumString, Class<T> enumType) {
-            return get(enumString,enumType,enumType.getEnumConstants()[0]);
-        }
-        /**
-         * gets an enum from a string without returning null
-         * @param enumString the string of the enum
-         * @param enumType the class of enums
-         * @param defaultEnum the enum to return if a match isn't found
-         * @return an enum, if there isn't a match, it returns the first enum
-         */
-        public static <T extends java.lang.Enum<T>> T get(Object enumString, Class<T> enumType, T defaultEnum) {
-            T[] values = enumType.getEnumConstants();
-            for (T all : values) {
-                // check if there is a match for any of the enum names
-                if (enumString.toString().equals(all.name())) return all;
-            }
-            // if there's no match return the first entry
-            return defaultEnum;
-        }
-    }
-
     /**
      * sends the settings packets to the server, if client & in game
      */
