@@ -5,10 +5,10 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.util.Hand;
+import one.oth3r.otterlib.base.Num;
 import one.oth3r.otterlib.file.CustomFile;
 import one.oth3r.otterlib.file.FileSettings;
 import one.oth3r.sit.utl.Data;
-import one.oth3r.sit.utl.Utl;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -370,7 +370,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                 // skip if not the right size
                 if (split.length < 3 || split.length > 4) continue;
                 // if the other entries aren't correct, skip
-                if (!Utl.Num.isNum(split[2])) continue;
+                if (!Num.isNum(split[2])) continue;
 
                 // make the block states list if possible
                 ArrayList<String> blockstates = new ArrayList<>();

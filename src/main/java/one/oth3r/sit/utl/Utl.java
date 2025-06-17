@@ -60,46 +60,6 @@ public class Utl {
         return Data.getSitEntities().values().stream().noneMatch(entity -> entity.getBlockPos().equals(pos));
     }
 
-    public static class Num {
-
-        public static boolean isInt(String string) {
-            try {
-                Integer.parseInt(string);
-            } catch (NumberFormatException nfe) {
-                return false;
-            }
-            return true;
-        }
-
-        public static Integer toInt(String s) {
-            // return an int no matter what
-            try {
-                return Integer.parseInt(s);
-            } catch (NumberFormatException e) {
-                try {
-                    return (int) Double.parseDouble(s);
-                } catch (NumberFormatException e2) {
-                    return 0;
-                }
-            }
-        }
-
-        public static boolean isNum(String s) {
-            // checks if int or a double
-            try {
-                Integer.parseInt(s);
-                return true;
-            } catch (NumberFormatException e1) {
-                try {
-                    Double.parseDouble(s);
-                    return true;
-                } catch (NumberFormatException e2) {
-                    return false;
-                }
-            }
-        }
-    }
-
     public static final double HALF_BLOCK = 0.5;
     public static final double CARPET = 0.062;
 
