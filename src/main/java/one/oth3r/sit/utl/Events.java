@@ -75,7 +75,7 @@ public class Events {
                 // just send the sit command
                 if (Data.isInGame()) {
                     if (Data.isSupportedServer()) {
-                        player.networkHandler.sendCommand("sit");
+                        player.networkHandler.sendChatCommand("sit");
                     } else {
                         // unsupported server message if not in a Sit! server
                         player.sendMessage(Utl.lang("sit!.chat.unsupported")
