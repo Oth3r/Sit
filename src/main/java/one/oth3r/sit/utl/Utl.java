@@ -281,33 +281,12 @@ public class Utl {
 
             // send a message if needed
             if (message) {
-                player.sendMessage(messageTag()
-                        .append(lang("sit!.chat.purged",lang("sit!.chat.purged.total",count).color(Color.gray).b()).color(Color.GREEN)).b());
+                player.sendMessage(Chat.tag()
+                        .append(Chat.lang("sit!.chat.purged",
+                                Chat.lang("sit!.chat.purged.total",count).color(Color.gray).b()
+                        ).color(Color.GREEN)).b());
             }
         }
-    }
-
-    public static CTxT messageTag() {
-        return new CTxT("Sit!").btn(true).color(Color.decode("#c400ff")).append(" ");
-    }
-
-    /**
-     * gets a MutableText using the language key, if on server, using the custom lang reader
-     */
-    public static CTxT lang(String key, Object... args) {
-        if (Data.isClient()) {
-            // we have to first convert all the CTxT's to the built version because minecraft lang reader doesn't know how to process it
-            // make a array with the same size of the args
-            Object[] fixedArgs = new Object[args.length];
-            // for every arg, build & add if CTxT or just add if not
-            for (var i = 0; i < args.length; i++) {
-                if (args[i] instanceof CTxT) fixedArgs[i] = ((CTxT) args[i]).b();
-                else fixedArgs[i] = args[i];
-            }
-            // return the translated text
-            return new CTxT(Text.translatable(key,fixedArgs));
-        }
-        else return LangReader.of(key, args).getTxT();
     }
 
     /**
