@@ -15,7 +15,10 @@ base {
 repositories {
 	mavenLocal()
 	maven { url = "https://maven.terraformersmc.com/releases/" }
-	maven { url = "https://maven.isxander.dev/releases" }
+	maven {
+		name "oth3rMavenSnapshots"
+		url "https://maven.oth3r.one/snapshots"
+	}
 }
 
 loom {
