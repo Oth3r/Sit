@@ -1,3 +1,7 @@
+# v1.2.4.4
+* bumped OtterLib version to `0.2.0.0`
+  * now relies on OtterLib Language Reader
+
 # v1.2.4.3
 * added a max OtterLib version as the beta will have breaking changes between major versions
 
