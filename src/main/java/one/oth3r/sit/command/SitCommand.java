@@ -8,8 +8,8 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
+import one.oth3r.sit.utl.Chat;
 import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Logic;
 import one.oth3r.sit.utl.Utl;
@@ -50,7 +50,7 @@ public class SitCommand {
         if (player == null) {
             if (args[0].equalsIgnoreCase("reload")) {
                 Logic.reload();
-                Data.LOGGER.info(Utl.lang("sit!.chat.reloaded").toString());
+                Data.LOGGER.info(Chat.lang("sit!.chat.reloaded").toString());
             }
             return 1;
         }
@@ -76,7 +76,7 @@ public class SitCommand {
 
         if (args[0].equalsIgnoreCase("reload")) {
             Logic.reload();
-            player.sendMessage(Utl.messageTag().append(Utl.lang("sit!.chat.reloaded").color(Color.GREEN)).b());
+            player.sendMessage(Chat.tag().append(Chat.lang("sit!.chat.reloaded").color(Color.GREEN)).b());
         }
 
         if (args[0].equalsIgnoreCase("purgeChairEntities")) Utl.Entity.purge(player,true);
