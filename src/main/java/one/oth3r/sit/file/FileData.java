@@ -2,14 +2,11 @@ package one.oth3r.sit.file;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import one.oth3r.otterlib.file.LanguageReader;
+import one.oth3r.otterlib.file.ResourceReader;
 import one.oth3r.sit.Sit;
 import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Utl;
 
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -64,7 +61,8 @@ public class FileData {
 
     /// the language / text system for the mod
     private static final LanguageReader langReader = new LanguageReader(
-            getLangPath(),Path.of(Data.CONFIG_DIR),"en_us","en_us");
+            new ResourceReader("assets/sit-oth3r/lang/",Sit.class.getClassLoader()),
+            new ResourceReader(Data.CONFIG_DIR),"en_us","en_us");
 
     public static LanguageReader getLangReader() {
         return langReader;
@@ -91,20 +89,6 @@ public class FileData {
     public static void saveFiles() {
         getSittingConfig().save();
         getServerConfig().save();
-    }
-
-    private static Path getLangPath() {
-        ClassLoader classLoader = Sit.class.getClassLoader();
-        URL resource = classLoader.getResource("assets/sit-oth3r/lang/");
-        if (resource == null) {
-            throw new RuntimeException("Language file not found.");
-        }
-
-        try {
-            return Paths.get(resource.toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public static class Defaults {
