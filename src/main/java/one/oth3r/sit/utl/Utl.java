@@ -120,7 +120,7 @@ public class Utl {
      * @return null if not a valid block
      */
     public static Double getSittingHeight(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hit) {
-        ServerWorld serverWorld = player.getWorld();
+        ServerWorld serverWorld = player.getServerWorld();
         ServerConfig config = FileData.getServerConfig();
         BlockState blockState = serverWorld.getBlockState(blockPos);
         Block block = blockState.getBlock();
@@ -266,7 +266,7 @@ public class Utl {
             /// FYI it cant purge an entity from a disconnected player or unloaded chunks
 
             // get a list of sit entities
-            List<? extends DisplayEntity.TextDisplayEntity> list = player.getWorld()
+            List<? extends DisplayEntity.TextDisplayEntity> list = player.getServerWorld()
                     .getEntitiesByType(TypeFilter.instanceOf(DisplayEntity.TextDisplayEntity.class),
                             entity -> entity.getName().getString().equals(Data.ENTITY_NAME));
 

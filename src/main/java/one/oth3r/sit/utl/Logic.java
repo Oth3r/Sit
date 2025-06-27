@@ -37,7 +37,7 @@ public class Logic {
         // check if the block is in the right y level limits from the config
         if (!checkYLimits(player, blockPos)) return false;
 
-        ServerWorld serverWorld = player.getWorld();
+        ServerWorld serverWorld = player.getServerWorld();
 
         Double sitHeight = Utl.getSittingHeight(player,blockPos,hitResult);
 
@@ -60,7 +60,7 @@ public class Logic {
     public static boolean sit(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hitResult) {
         if (!canSit(player, blockPos, hitResult)) return false;
         // assets
-        ServerWorld serverWorld = player.getWorld();
+        ServerWorld serverWorld = player.getServerWorld();
         Double sitHeight = Utl.getSittingHeight(player,blockPos,hitResult);
         // shouldn't be null because we already checked, but do another check to clear IDE errors
         assert sitHeight != null;
@@ -77,7 +77,7 @@ public class Logic {
      * @return true if sitting was successful
      */
     public static boolean sitLooking(ServerPlayerEntity player) {
-        return sit(player, Utl.getBlockPosPlayerIsLookingAt(player.getWorld(),player,
+        return sit(player, Utl.getBlockPosPlayerIsLookingAt(player.getServerWorld(),player,
                 Utl.getPlayerReach(player)),null);
     }
 
@@ -151,7 +151,7 @@ public class Logic {
         // get the new entity
         DisplayEntity.TextDisplayEntity sitEntity = Data.getSpawnList().get(player);
         // spawn and ride the entity
-        player.getWorld().spawnEntity(sitEntity);
+        player.getServerWorld().spawnEntity(sitEntity);
         player.startRiding(sitEntity);
         // add the entity to the list
         Data.addSitEntity(player, sitEntity);
