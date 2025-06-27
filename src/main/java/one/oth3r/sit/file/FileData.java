@@ -1,6 +1,9 @@
 package one.oth3r.sit.file;
 
 import net.minecraft.server.network.ServerPlayerEntity;
+import one.oth3r.otterlib.file.LanguageReader;
+import one.oth3r.otterlib.file.ResourceReader;
+import one.oth3r.sit.Sit;
 import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Utl;
 
@@ -56,11 +59,22 @@ public class FileData {
         return playerSettings.getOrDefault(player, sittingConfig);
     }
 
+    /// the language / text system for the mod
+    private static final LanguageReader langReader = new LanguageReader(
+            new ResourceReader("assets/sit-oth3r/lang/",Sit.class.getClassLoader()),
+            new ResourceReader(Data.CONFIG_DIR),"en_us","en_us");
+
+    public static LanguageReader getLangReader() {
+        return langReader;
+    }
+
     /**
      * loads all config files to memory
      */
     public static void loadFiles() {
         getServerConfig().load();
+        // load the language reader
+        langReader.updateLanguage(getServerConfig().getLang());
 
         getSittingConfig().load();
         // if loading file and is on supported server on client, send the new settings over
