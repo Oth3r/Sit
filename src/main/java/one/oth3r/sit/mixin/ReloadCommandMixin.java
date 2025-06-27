@@ -5,10 +5,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ReloadCommand;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Formatting;
+import one.oth3r.sit.utl.Chat;
 import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Logic;
-import one.oth3r.sit.utl.Utl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,7 +28,7 @@ public class ReloadCommandMixin {
         // send a reloaded message to all players with permissions
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
              if (player.isCreativeLevelTwoOp()) {
-                 player.sendMessage(Utl.messageTag().append(Utl.lang("sit!.chat.reloaded").color(Color.GREEN)).b());
+                 player.sendMessage(Chat.tag().append(Chat.lang("sit!.chat.reloaded").color(Color.GREEN)).b());
              }
         }
     }
