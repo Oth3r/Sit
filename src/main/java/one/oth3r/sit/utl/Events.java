@@ -23,7 +23,6 @@ import net.minecraft.util.Formatting;
 import one.oth3r.sit.SitClient;
 import one.oth3r.sit.command.SitCommand;
 import one.oth3r.sit.file.FileData;
-import one.oth3r.sit.file.LangReader;
 import one.oth3r.sit.file.SittingConfig;
 import one.oth3r.sit.packet.PacketSender;
 import one.oth3r.sit.packet.PacketType;
@@ -79,7 +78,7 @@ public class Events {
                         player.networkHandler.sendCommand("sit");
                     } else {
                         // unsupported server message if not in a Sit! server
-                        player.sendMessage(Utl.lang("sit!.chat.unsupported")
+                        player.sendMessage(Chat.lang("sit!.chat.unsupported")
                                 .color(Color.RED).b(), true);
                     }
                 }
@@ -103,7 +102,7 @@ public class Events {
                             new PacketSender(PacketType.RESPONSE,PacketType.RESPONSE.getId()).sendToPlayer(player);
 
                             // log the receiving of the packet from the player
-                            Data.LOGGER.info(Utl.lang("sit!.console.player_settings",player.getName().getString()).toString());
+                            Data.LOGGER.info(Chat.lang("sit!.console.player_settings",player.getName().getString()).toString());
                         });
                     }));
         }
@@ -116,7 +115,7 @@ public class Events {
                         client.execute(() -> {
                             if (!Data.isSupportedServer()) {
                                 Data.setSupportedServer(true);
-                                Data.LOGGER.info(Utl.lang("sit!.console.connected",packetData).toString());
+                                Data.LOGGER.info(Chat.lang("sit!.console.connected",packetData).toString());
                             }
                         });
                     }));
@@ -175,7 +174,6 @@ public class Events {
     private static void serverLifecycle() {
         ServerLifecycleEvents.SERVER_STARTED.register(s -> {
             Data.setServer(s);
-            LangReader.loadLanguageFile();
 
             // right click on block event
             UseBlockCallback.EVENT.register((pl, world, hand, hitResult) -> {
@@ -195,7 +193,7 @@ public class Events {
                         ParseResults<ServerCommandSource> parse = dispatcher.parse("sit", player.getCommandSource());
                         dispatcher.execute(parse);
                     } catch (CommandSyntaxException e) {
-                        Data.LOGGER.error("Error executing sit command for player {}", player.getName().getString());
+                        Data.LOGGER.error("Error executing sit command for player %s", player.getName().getString());
                     }
                 }
 

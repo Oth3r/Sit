@@ -4,14 +4,13 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import one.oth3r.otterlib.base.OtterLogger;
 
 import java.util.HashMap;
 
 public class Data {
     public static final String MOD_ID = "sit-oth3r";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static final OtterLogger LOGGER = new OtterLogger(MOD_ID);
 
     public static final String CONFIG_DIR = FabricLoader.getInstance().getConfigDir().toFile()+"/sit!/";
 

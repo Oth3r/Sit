@@ -201,7 +201,6 @@ public class Logic {
     public static void reload() {
         FileData.loadFiles();
         FileData.saveFiles();
-        LangReader.loadLanguageFile();
     }
 
     /**
@@ -228,11 +227,11 @@ public class Logic {
             Formatting messageColor = config.getEnabled()?Formatting.GREEN:Formatting.RED;
 
             // send the player the actionbar message
-            return Utl.lang("sit!.chat.toggle_sit",
-                    Utl.lang(messageKey).color(config.getEnabled()? Color.GREEN : Color.RED)).b();
+            return Chat.lang("sit!.chat.toggle_sit",
+                    Chat.lang(messageKey).color(config.getEnabled()? Color.GREEN : Color.RED)).b();
         } else {
             // unsupported server message if not in a Sit! server
-            return Utl.lang("sit!.chat.unsupported")
+            return Chat.lang("sit!.chat.unsupported")
                     .color(Color.RED).b();
         }
     }

@@ -101,7 +101,7 @@ public class SittingConfig implements CustomFile<SittingConfig> {
     }
 
     @Override
-    public void update(JsonElement jsonElement) {
+    public void updateInstance() {
 
     }
 
