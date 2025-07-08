@@ -59,46 +59,6 @@ public class Utl {
         return Data.getSitEntities().values().stream().noneMatch(entity -> entity.getBlockPos().equals(pos));
     }
 
-    public static class Num {
-
-        public static boolean isInt(String string) {
-            try {
-                Integer.parseInt(string);
-            } catch (NumberFormatException nfe) {
-                return false;
-            }
-            return true;
-        }
-
-        public static Integer toInt(String s) {
-            // return an int no matter what
-            try {
-                return Integer.parseInt(s);
-            } catch (NumberFormatException e) {
-                try {
-                    return (int) Double.parseDouble(s);
-                } catch (NumberFormatException e2) {
-                    return 0;
-                }
-            }
-        }
-
-        public static boolean isNum(String s) {
-            // checks if int or a double
-            try {
-                Integer.parseInt(s);
-                return true;
-            } catch (NumberFormatException e1) {
-                try {
-                    Double.parseDouble(s);
-                    return true;
-                } catch (NumberFormatException e2) {
-                    return false;
-                }
-            }
-        }
-    }
-
     public static final double HALF_BLOCK = 0.5;
     public static final double CARPET = 0.062;
 
@@ -320,55 +280,11 @@ public class Utl {
 
             // send a message if needed
             if (message) {
-                player.sendMessage(messageTag()
-                        .append(lang("sit!.chat.purged",lang("sit!.chat.purged.total",count).color(Color.gray).b()).color(Color.GREEN)).b());
+                player.sendMessage(Chat.tag()
+                        .append(Chat.lang("sit!.chat.purged",
+                                Chat.lang("sit!.chat.purged.total",count).color(Color.gray).b()
+                        ).color(Color.GREEN)).b());
             }
-        }
-    }
-
-    public static CTxT messageTag() {
-        return new CTxT("Sit!").btn(true).color(Color.decode("#c400ff")).append(" ");
-    }
-
-    /**
-     * gets a MutableText using the language key, if on server, using the custom lang reader
-     */
-    public static CTxT lang(String key, Object... args) {
-        if (Data.isClient()) {
-            // we have to first convert all the CTxT's to the built version because minecraft lang reader doesn't know how to process it
-            // make a array with the same size of the args
-            Object[] fixedArgs = new Object[args.length];
-            // for every arg, build & add if CTxT or just add if not
-            for (var i = 0; i < args.length; i++) {
-                if (args[i] instanceof CTxT) fixedArgs[i] = ((CTxT) args[i]).b();
-                else fixedArgs[i] = args[i];
-            }
-            // return the translated text
-            return new CTxT(Text.translatable(key,fixedArgs));
-        }
-        else return LangReader.of(key, args).getTxT();
-    }
-
-    public static class Enum {
-
-        public static <T extends java.lang.Enum<T>> T get(Object enumString, Class<T> enumType) {
-            return get(enumString,enumType,enumType.getEnumConstants()[0]);
-        }
-        /**
-         * gets an enum from a string without returning null
-         * @param enumString the string of the enum
-         * @param enumType the class of enums
-         * @param defaultEnum the enum to return if a match isn't found
-         * @return an enum, if there isn't a match, it returns the first enum
-         */
-        public static <T extends java.lang.Enum<T>> T get(Object enumString, Class<T> enumType, T defaultEnum) {
-            T[] values = enumType.getEnumConstants();
-            for (T all : values) {
-                // check if there is a match for any of the enum names
-                if (enumString.toString().equals(all.name())) return all;
-            }
-            // if there's no match return the first entry
-            return defaultEnum;
         }
     }
 

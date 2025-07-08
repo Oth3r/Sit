@@ -1,15 +1,14 @@
 package one.oth3r.sit.file;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.util.Hand;
+import one.oth3r.otterlib.base.Num;
 import one.oth3r.otterlib.file.CustomFile;
 import one.oth3r.otterlib.file.FileSettings;
 import one.oth3r.sit.utl.Data;
-import one.oth3r.sit.utl.Utl;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -264,13 +263,8 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         this.interactionBlocks = newFile.interactionBlocks.stream().map(CustomBlock::new).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    /**
-     * updates the file based on the version number of the current instance
-     *
-     * @param json
-     */
     @Override
-    public void update(JsonElement json) {
+    public void updateInstance() {
         /// update to 2.1, just a new list, nothing to change
         /// update to 2.2, new settings, no changes
         if (version >= 2.0 && version <= 2.1) {
@@ -341,7 +335,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                 loadVersion(properties,Double.parseDouble(ver));
 
             } catch (Exception e) {
-                Data.LOGGER.error("Error loading legacy config file: {}", e.getMessage());
+                Data.LOGGER.error("Error loading legacy config file: %s", e.getMessage());
             }
 
             // delete the old file
@@ -376,7 +370,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                 // skip if not the right size
                 if (split.length < 3 || split.length > 4) continue;
                 // if the other entries aren't correct, skip
-                if (!Utl.Num.isNum(split[2])) continue;
+                if (!Num.isNum(split[2])) continue;
 
                 // make the block states list if possible
                 ArrayList<String> blockstates = new ArrayList<>();
@@ -503,7 +497,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                 serverConfig.save();
                 sittingConfig.save();
             } catch (Exception e) {
-                Data.LOGGER.error("Error loading legacy config: {}", e.getMessage());
+                Data.LOGGER.error("Error loading legacy config: %s", e.getMessage());
             }
         }
     }
