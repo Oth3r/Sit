@@ -345,6 +345,11 @@ public class ServerConfig implements CustomFile<ServerConfig> {
             } catch (Exception e) {
                 Data.LOGGER.error("Failed to delete the old Sit! config.");
             }
+
+            // save the updated configs
+            FileData.saveFiles();
+
+            // continue loading as normal...
         }
 
         /**
@@ -494,8 +499,6 @@ public class ServerConfig implements CustomFile<ServerConfig> {
 
                 FileData.setServerConfig(serverConfig);
                 FileData.setSittingConfig(sittingConfig);
-                serverConfig.save();
-                sittingConfig.save();
             } catch (Exception e) {
                 Data.LOGGER.error("Error loading legacy config: %s", e.getMessage());
             }
