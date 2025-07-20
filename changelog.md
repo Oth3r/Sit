@@ -1,3 +1,6 @@
+# v1.2.4.7
+* fixed legacy file updater causing a stack overflow crash
+
 # v1.2.4.6
 * fixed max otterlib version (1.21.8)
 
