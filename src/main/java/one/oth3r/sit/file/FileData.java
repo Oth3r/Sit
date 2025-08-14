@@ -10,6 +10,7 @@ import one.oth3r.sit.utl.Utl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class FileData {
     /**
@@ -108,6 +109,13 @@ public class FileData {
                         new ArrayList<>(Arrays.asList(
                         "#minecraft:shulker_boxes","#c:player_workstations/furnaces","#c:player_workstations/crafting_tables",
                         "#c:villager_job_sites","#minecraft:trapdoors","#c:chests")),
+                        new ArrayList<>())
+        ));
+
+        public static final ArrayList<CustomBlock> ALLOWED_ABOVE_SEAT = new ArrayList<>(List.of(
+                new CustomBlock(
+                        new ArrayList<>(),
+                        new ArrayList<>(List.of("#minecraft:trapdoors")),
                         new ArrayList<>())
         ));
 

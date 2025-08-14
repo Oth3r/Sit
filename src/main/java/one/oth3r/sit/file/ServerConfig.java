@@ -52,6 +52,8 @@ public class ServerConfig implements CustomFile<ServerConfig> {
     private ArrayList<CustomBlock> blacklistedBlocks = FileData.Defaults.BLACKLISTED_BLOCKS;
     @SerializedName("interaction-blocks")
     private ArrayList<CustomBlock> interactionBlocks = FileData.Defaults.INTERACTION_BLOCKS;
+    @SerializedName("allowed-above-seat")
+    private ArrayList<CustomBlock> allowedAboveSeat = FileData.Defaults.ALLOWED_ABOVE_SEAT;
 
     public ServerConfig() {}
 
@@ -62,7 +64,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
     public ServerConfig(Double version, String lang, boolean keepActive, boolean sitWhileSeated,
                         PresetBlocks presetBlocks, boolean customEnabled,
                         ArrayList<SittingBlock> sittingBlocks, ArrayList<CustomBlock> blacklistedBlocks,
-                        ArrayList<CustomBlock> interactionBlocks) {
+                        ArrayList<CustomBlock> interactionBlocks, ArrayList<CustomBlock> allowedAboveSeat) {
         this.version = version;
         this.lang = lang;
         this.keepActive = keepActive;
@@ -72,6 +74,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         this.sittingBlocks = sittingBlocks;
         this.blacklistedBlocks = blacklistedBlocks;
         this.interactionBlocks = interactionBlocks;
+        this.allowedAboveSeat = allowedAboveSeat;
     }
 
     public Double getVersion() {
@@ -112,6 +115,10 @@ public class ServerConfig implements CustomFile<ServerConfig> {
 
     public ArrayList<CustomBlock> getInteractionBlocks() {
         return interactionBlocks;
+    }
+
+    public ArrayList<CustomBlock> getAllowedAboveSeat() {
+        return allowedAboveSeat;
     }
 
     public static class PresetBlocks {
@@ -261,6 +268,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         this.sittingBlocks = newFile.sittingBlocks.stream().map(SittingBlock::new).collect(Collectors.toCollection(ArrayList::new));
         this.blacklistedBlocks = newFile.blacklistedBlocks.stream().map(CustomBlock::new).collect(Collectors.toCollection(ArrayList::new));
         this.interactionBlocks = newFile.interactionBlocks.stream().map(CustomBlock::new).collect(Collectors.toCollection(ArrayList::new));
+        this.allowedAboveSeat = newFile.allowedAboveSeat.stream().map(CustomBlock::new).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -298,12 +306,12 @@ public class ServerConfig implements CustomFile<ServerConfig> {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ServerConfig that = (ServerConfig) o;
-        return Objects.equals(version, that.version) && Objects.equals(lang, that.lang) && Objects.equals(keepActive, that.keepActive) && Objects.equals(sitWhileSeated, that.sitWhileSeated) && Objects.equals(presetBlocks, that.presetBlocks) && Objects.equals(yDifferenceLimit, that.yDifferenceLimit) && Objects.equals(customEnabled, that.customEnabled) && Objects.equals(sittingBlocks, that.sittingBlocks) && Objects.equals(blacklistedBlocks, that.blacklistedBlocks) && Objects.equals(interactionBlocks, that.interactionBlocks);
+        return Objects.equals(version, that.version) && Objects.equals(lang, that.lang) && Objects.equals(keepActive, that.keepActive) && Objects.equals(sitWhileSeated, that.sitWhileSeated) && Objects.equals(presetBlocks, that.presetBlocks) && Objects.equals(yDifferenceLimit, that.yDifferenceLimit) && Objects.equals(customEnabled, that.customEnabled) && Objects.equals(sittingBlocks, that.sittingBlocks) && Objects.equals(blacklistedBlocks, that.blacklistedBlocks) && Objects.equals(interactionBlocks, that.interactionBlocks) && Objects.equals(allowedAboveSeat, that.allowedAboveSeat);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(version, lang, langOptions, keepActive, sitWhileSeated, presetBlocks, yDifferenceLimit, customEnabled, sittingBlocks, blacklistedBlocks, interactionBlocks);
+        return Objects.hash(version, lang, langOptions, keepActive, sitWhileSeated, presetBlocks, yDifferenceLimit, customEnabled, sittingBlocks, blacklistedBlocks, interactionBlocks, allowedAboveSeat);
     }
 
     protected static class Legacy {
@@ -419,7 +427,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                         Boolean.parseBoolean((String) properties.computeIfAbsent("custom", a -> String.valueOf(defaultConfig.isCustomEnabled()))),
                         getCustomBlocks(new Gson().fromJson((String)
                                 properties.computeIfAbsent("custom-blocks", a -> "[]"), listType)),
-                        new ArrayList<>(), FileData.Defaults.INTERACTION_BLOCKS
+                        new ArrayList<>(), FileData.Defaults.INTERACTION_BLOCKS, FileData.Defaults.ALLOWED_ABOVE_SEAT
                 );
 
                 SittingConfig defaultSittingConfig = new SittingConfig();
