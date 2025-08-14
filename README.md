@@ -52,7 +52,7 @@ With the new config system, block tags and custom blockstates can be used to mas
 ![players sitting on a vast range of blocks](https://github.com/Oth3r/oth3r.github.io/blob/main/mod_data/Sit!/media/desc/custom_blocks.gif?raw=true)
 
 ### ⌨️ Keybinds
-Don't want to sit with the **just** the hand? Use a keybind or type a command to sit instead!
+Don't want to sit with **just** the hand? Use a keybind or type a command to sit instead!
 
 ![setting keybinds for the sit mod, and sitting by using them](https://github.com/Oth3r/oth3r.github.io/blob/main/mod_data/Sit!/media/desc/keybinds.gif?raw=true)
 
