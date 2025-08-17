@@ -96,19 +96,19 @@ public class FileData {
         public static final ArrayList<SittingBlock> SITTING_BLOCKS = new ArrayList<>(Arrays.asList(
                 new SittingBlock(new ArrayList<>(),new ArrayList<>(Arrays.asList("#minecraft:campfires")), new ArrayList<>(Arrays.asList("lit=false")),.437),
                 new SittingBlock(new ArrayList<>(Arrays.asList("!minecraft:crimson_stem","!minecraft:warped_stem","minecraft:polished_basalt")), new ArrayList<>(Arrays.asList("#minecraft:logs","!#minecraft:oak_logs")), new ArrayList<>(Arrays.asList("!axis=y")),1.0),
-                new SittingBlock(new ArrayList<>(Arrays.asList()), new ArrayList<>(Arrays.asList("#minecraft:beds")), new ArrayList<>(Arrays.asList("part=foot","occupied=false")),.5625)
+                new SittingBlock(new ArrayList<>(), new ArrayList<>(Arrays.asList("#minecraft:beds")), new ArrayList<>(Arrays.asList("part=foot","occupied=false")),.5625)
         ));
 
-        public static final ArrayList<CustomBlock> BLACKLISTED_BLOCKS = new ArrayList<>(Arrays.asList(
-                new CustomBlock(new ArrayList<>(),new ArrayList<>(Arrays.asList("#minecraft:shulker_boxes")),new ArrayList<>())
+        public static final ArrayList<CustomBlock> BLACKLISTED_BLOCKS = new ArrayList<>(List.of(
+                new CustomBlock(new ArrayList<>(), new ArrayList<>(List.of("#minecraft:shulker_boxes")), new ArrayList<>())
         ));
 
-        public static final ArrayList<CustomBlock> INTERACTION_BLOCKS = new ArrayList<>(Arrays.asList(
+        public static final ArrayList<CustomBlock> INTERACTION_BLOCKS = new ArrayList<>(List.of(
                 new CustomBlock(new ArrayList<>(Arrays.asList(
-                        "minecraft:crafter","minecraft:repeating_command_block","minecraft:chain_command_block","minecraft:command_block")),
+                        "minecraft:crafter", "minecraft:repeating_command_block", "minecraft:chain_command_block", "minecraft:command_block")),
                         new ArrayList<>(Arrays.asList(
-                        "#minecraft:shulker_boxes","#c:player_workstations/furnaces","#c:player_workstations/crafting_tables",
-                        "#c:villager_job_sites","#minecraft:trapdoors","#c:chests")),
+                                "#minecraft:shulker_boxes", "#c:player_workstations/furnaces", "#c:player_workstations/crafting_tables",
+                                "#c:villager_job_sites", "#minecraft:trapdoors", "#c:chests")),
                         new ArrayList<>())
         ));
 

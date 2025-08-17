@@ -314,6 +314,9 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         return Objects.hash(version, lang, langOptions, keepActive, sitWhileSeated, presetBlocks, yDifferenceLimit, customEnabled, sittingBlocks, blacklistedBlocks, interactionBlocks, allowedAboveSeat);
     }
 
+    /**
+     * legacy updater
+     */
     protected static class Legacy {
         /**
          * gets the legacy file, from the old directory for fabric, and the same one for spigot
