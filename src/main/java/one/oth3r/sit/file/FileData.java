@@ -85,7 +85,12 @@ public class FileData {
                 new CustomBlock(
                         new ArrayList<>(),
                         new ArrayList<>(List.of("#minecraft:trapdoors")),
-                        new ArrayList<>(List.of("open=true")))
+                        new ArrayList<>(List.of("open=true"))),
+                new CustomBlock(
+                        new ArrayList<>(),
+                        new ArrayList<>(List.of("#minecraft:doors")),
+                        new ArrayList<>()
+                )
         ));
 
         public static final HandSetting MAIN_HAND = new HandSetting(HandSetting.SittingRequirement.EMPTY, new HandSetting.Filter(
