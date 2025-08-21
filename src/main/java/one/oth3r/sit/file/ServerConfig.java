@@ -283,6 +283,9 @@ public class ServerConfig implements CustomFile<ServerConfig> {
             version = 2.3;
             this.lang = this.lang.substring(0,3)+this.lang.substring(3).toLowerCase();
         }
+
+        // update the language reader
+        LanguageReg.getLang(Data.MOD_ID).updateLanguage(lang);
     }
 
     @Override
