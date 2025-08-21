@@ -204,7 +204,7 @@ public class Logic {
     }
 
     /**
-     * toggles the sit ablity config option
+     * toggles the sit ability config option
      * @return returns a message, that can be sent to the player
      */
     public static MutableText toggleSiting() {
@@ -213,9 +213,6 @@ public class Logic {
             SittingConfig config = FileData.getSittingConfig();
             // toggle the setting
             config.setEnabled(!config.getEnabled());
-
-            // set the sitting config to the new value
-            FileData.setSittingConfig(config);
             // save the changes to the file
             config.save();
             // send the changes to the server

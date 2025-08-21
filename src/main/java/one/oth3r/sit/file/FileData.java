@@ -1,9 +1,7 @@
 package one.oth3r.sit.file;
 
 import net.minecraft.server.network.ServerPlayerEntity;
-import one.oth3r.otterlib.file.LanguageReader;
-import one.oth3r.otterlib.file.ResourceReader;
-import one.oth3r.sit.Sit;
+import one.oth3r.otterlib.registry.CustomFileReg;
 import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Utl;
 
@@ -13,30 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FileData {
-    /**
-     * Sit! config file
-     */
-    private static ServerConfig serverConfig = new ServerConfig();
-
+    /// getters for Sit! config files
     public static ServerConfig getServerConfig() {
-        return serverConfig;
+        return (ServerConfig) CustomFileReg.getFile(Data.MOD_ID,ServerConfig.ID);
     }
-
-    public static void setServerConfig(ServerConfig newServerConfig) {
-        serverConfig = new ServerConfig(newServerConfig);
-    }
-
-    /**
-     * The default sitting config for all new players
-     */
-    private static SittingConfig sittingConfig = new SittingConfig();
 
     public static SittingConfig getSittingConfig() {
-        return sittingConfig;
-    }
-
-    public static void setSittingConfig(SittingConfig newSittingConfig) {
-        sittingConfig = new SittingConfig(newSittingConfig);
+        return (SittingConfig) CustomFileReg.getFile(Data.MOD_ID,SittingConfig.ID);
     }
 
     /**
@@ -57,7 +38,7 @@ public class FileData {
     }
 
     public static SittingConfig getPlayerSetting(ServerPlayerEntity player) {
-        return playerSettings.getOrDefault(player, sittingConfig);
+        return playerSettings.getOrDefault(player, getSittingConfig());
     }
 
     /**

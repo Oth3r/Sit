@@ -8,6 +8,7 @@ import net.minecraft.util.Hand;
 import one.oth3r.otterlib.base.Num;
 import one.oth3r.otterlib.file.CustomFile;
 import one.oth3r.otterlib.file.FileSettings;
+import one.oth3r.otterlib.registry.LanguageReg;
 import one.oth3r.sit.utl.Data;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,6 +25,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class ServerConfig implements CustomFile<ServerConfig> {
+    public static final String ID = "server-config";
 
     @SerializedName("version")
     private Double version = 2.3;
@@ -360,9 +362,6 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                 Data.LOGGER.error("Failed to delete the old Sit! config.");
             }
 
-            // save the updated configs
-            FileData.saveFiles();
-
             // continue loading as normal...
         }
 
@@ -511,8 +510,12 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                     } catch (JsonSyntaxException ignored) {}
                 }
 
-                FileData.setServerConfig(serverConfig);
-                FileData.setSittingConfig(sittingConfig);
+                // update and save the new files
+                FileData.getServerConfig().copyFileData(serverConfig);
+                FileData.getServerConfig().save();
+
+                FileData.getSittingConfig().copyFileData(sittingConfig);
+                FileData.getSittingConfig().save();
             } catch (Exception e) {
                 Data.LOGGER.error("Error loading legacy config: %s", e.getMessage());
             }
