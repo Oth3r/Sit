@@ -86,6 +86,7 @@
   "sit!.chat.purged": "Purged all loaded Sit! entities! %s",
   "sit!.chat.purged.total": "(%s removed)",
 
+  "key.category.sit-oth3r.main": "Sit!",
   "key.sit!.toggle": "Toggle Sitting",
   "key.sit!.sit": "Sit",
   "key.sit!.config": "Open Config",
