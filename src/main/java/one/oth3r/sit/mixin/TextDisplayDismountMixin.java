@@ -55,12 +55,12 @@ public abstract class TextDisplayDismountMixin extends DisplayEntity {
             BlockPos.Mutable mutable = new BlockPos.Mutable();
             mutable.set(blockPos.getX() + offset[0], blockPos.getY(), blockPos.getZ() + offset[1]);
 
-            double dismountHeight = this.getWorld().getDismountHeight(mutable);
+            double dismountHeight = this.getEntityWorld().getDismountHeight(mutable);
             if (Dismounting.canDismountInBlock(dismountHeight)) {
                 Vec3d vec3d = Vec3d.ofCenter(mutable, dismountHeight);
 
                 Box boundingBox = passenger.getBoundingBox(entityPose);
-                if (Dismounting.canPlaceEntityAt(this.getWorld(), passenger, boundingBox.offset(vec3d))) {
+                if (Dismounting.canPlaceEntityAt(this.getEntityWorld(), passenger, boundingBox.offset(vec3d))) {
                     passenger.setPose(entityPose);
                     return vec3d;
                 }

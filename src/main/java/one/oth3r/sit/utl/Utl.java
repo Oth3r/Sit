@@ -122,7 +122,7 @@ public class Utl {
      * @return null if not a valid block
      */
     public static Double getSittingHeight(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hit) {
-        ServerWorld serverWorld = player.getWorld();
+        ServerWorld serverWorld = player.getEntityWorld();
         ServerConfig config = FileData.getServerConfig();
         BlockState blockState = serverWorld.getBlockState(blockPos);
         Block block = blockState.getBlock();
@@ -154,7 +154,7 @@ public class Utl {
             && block instanceof CarpetBlock) return CARPET;
         if (config.getPresetBlocks().isFullBlocks()
                 // make sure the block is a full cube
-                && blockState.isFullCube(player.getWorld(),blockPos)) return 1.0;
+                && blockState.isFullCube(player.getEntityWorld(),blockPos)) return 1.0;
 
         // at the end, return false
         return null;
@@ -180,7 +180,7 @@ public class Utl {
         public static boolean isValid(ServerPlayerEntity player, @NotNull DisplayEntity.TextDisplayEntity entity) {
             BlockPos blockPos = getBlockPos(entity);
             // get the blockstate
-            BlockState blockState = player.getWorld().getBlockState(blockPos);
+            BlockState blockState = player.getEntityWorld().getBlockState(blockPos);
             // check if the block is still there & the block is a valid sit block (by checking if there is a sit height for the block)
             return !blockState.isAir() && getSittingHeight(player,blockPos,null) != null;
         }
@@ -268,7 +268,7 @@ public class Utl {
             /// FYI it cant purge an entity from a disconnected player or unloaded chunks
 
             // get a list of sit entities
-            List<? extends DisplayEntity.TextDisplayEntity> list = player.getWorld()
+            List<? extends DisplayEntity.TextDisplayEntity> list = player.getEntityWorld()
                     .getEntitiesByType(TypeFilter.instanceOf(DisplayEntity.TextDisplayEntity.class),
                             entity -> entity.getName().getString().equals(Data.ENTITY_NAME));
 
@@ -389,7 +389,7 @@ public class Utl {
 
     public static BlockPos getBlockPosPlayerIsLookingAt(ServerWorld world, PlayerEntity player, double range) {
         // pos, adjusted to player eye level
-        Vec3d rayStart = player.getPos().add(0, player.getEyeHeight(player.getPose()), 0);
+        Vec3d rayStart = player.getEntityPos().add(0, player.getEyeHeight(player.getPose()), 0);
         // extend ray by the range
         Vec3d rayEnd = rayStart.add(player.getRotationVector().multiply(range));
 
