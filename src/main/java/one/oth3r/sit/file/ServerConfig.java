@@ -348,12 +348,17 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                 // if the old version system (v1.0) remove "v"
                 if (ver.contains("v")) ver = ver.substring(1);
 
-                loadVersion(properties,Double.parseDouble(ver));
+                loadAndUpdateVersion(properties,Double.parseDouble(ver));
 
             } catch (Exception e) {
                 Data.LOGGER.error("Error loading legacy config file: %s", e.getMessage());
             }
 
+            // continue loading as normal...
+        }
+
+        private static void deleteLegacyFile() {
+            File file = getLegacyFile();
             // delete the old file
             try {
                 Files.delete(file.toPath());
@@ -361,8 +366,6 @@ public class ServerConfig implements CustomFile<ServerConfig> {
             } catch (Exception e) {
                 Data.LOGGER.error("Failed to delete the old Sit! config.");
             }
-
-            // continue loading as normal...
         }
 
         /**
@@ -412,7 +415,7 @@ public class ServerConfig implements CustomFile<ServerConfig> {
             return out;
         }
 
-        public static void loadVersion(Properties properties, double version) {
+        public static void loadAndUpdateVersion(Properties properties, double version) {
             try {
                 Type listType = new TypeToken<ArrayList<String>>() {}.getType();
                 ServerConfig defaultConfig = new ServerConfig();
@@ -509,6 +512,9 @@ public class ServerConfig implements CustomFile<ServerConfig> {
                         );
                     } catch (JsonSyntaxException ignored) {}
                 }
+
+                // delete the old file
+                deleteLegacyFile();
 
                 // update and save the new files
                 FileData.getServerConfig().copyFileData(serverConfig);
