@@ -1,3 +1,6 @@
+## v1.2.5.1
+* fixed a StackOverFlow crash when converting a legacy config file to the new format
+
 # v1.2.5.0
 New allowed-above-seat config option!
 
