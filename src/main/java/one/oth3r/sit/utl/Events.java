@@ -20,7 +20,6 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Identifier;
 import one.oth3r.sit.SitClient;
 import one.oth3r.sit.command.SitCommand;
 import one.oth3r.sit.file.FileData;
@@ -38,29 +37,21 @@ public class Events {
         private static KeyBinding config__key;
 
         private static void register() {
-            KeyBinding.Category sitCategory = KeyBinding.Category.create(Identifier.of(Data.MOD_ID, "main"));
-
             toggle_key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                     "key.sit!.toggle",
                     GLFW.GLFW_KEY_UNKNOWN,
-                    sitCategory
+                    "category.sit!"
             ));
             sit_key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                     "key.sit!.sit",
                     GLFW.GLFW_KEY_UNKNOWN,
-                    sitCategory
+                    "category.sit!"
             ));
             config__key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                     "key.sit!.config",
                     GLFW.GLFW_KEY_UNKNOWN,
-                    sitCategory
+                    "category.sit!"
             ));
-
-            // client tick loop
-            ClientTickEvents.END_CLIENT_TICK.register(client -> {
-                assert client.player != null;
-                Keybindings.loopLogic(client);
-            });
         }
 
         private static void loopLogic(MinecraftClient client) {
@@ -126,6 +117,14 @@ public class Events {
                 }
             }));
         }
+    }
+
+    private static void clientMisc() {
+        // client tick loop
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            assert client.player != null;
+            Keybindings.loopLogic(client);
+        });
     }
 
     /**
@@ -225,6 +224,7 @@ public class Events {
     public static void registerClient() {
         Keybindings.register();
         clientConnections();
+        clientMisc();
         Packet.client();
     }
 }
