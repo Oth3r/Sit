@@ -1,7 +1,6 @@
 package one.oth3r.sit.file;
 
 import com.google.common.base.Objects;
-import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.util.Hand;
 import one.oth3r.otterlib.file.CustomFile;
@@ -13,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class SittingConfig implements CustomFile<SittingConfig> {
+    public static final String ID = "sitting-config";
 
     @SerializedName("version")
     private Double version = 1.0;
