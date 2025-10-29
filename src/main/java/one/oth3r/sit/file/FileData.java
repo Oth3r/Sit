@@ -1,41 +1,23 @@
 package one.oth3r.sit.file;
 
 import net.minecraft.server.network.ServerPlayerEntity;
-import one.oth3r.otterlib.file.LanguageReader;
-import one.oth3r.otterlib.file.ResourceReader;
-import one.oth3r.sit.Sit;
+import one.oth3r.otterlib.registry.CustomFileReg;
 import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Utl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class FileData {
-    /**
-     * Sit! config file
-     */
-    private static ServerConfig serverConfig = new ServerConfig();
-
+    /// getters for Sit! config files
     public static ServerConfig getServerConfig() {
-        return serverConfig;
+        return (ServerConfig) CustomFileReg.getFile(Data.MOD_ID,ServerConfig.ID);
     }
-
-    public static void setServerConfig(ServerConfig newServerConfig) {
-        serverConfig = new ServerConfig(newServerConfig);
-    }
-
-    /**
-     * The default sitting config for all new players
-     */
-    private static SittingConfig sittingConfig = new SittingConfig();
 
     public static SittingConfig getSittingConfig() {
-        return sittingConfig;
-    }
-
-    public static void setSittingConfig(SittingConfig newSittingConfig) {
-        sittingConfig = new SittingConfig(newSittingConfig);
+        return (SittingConfig) CustomFileReg.getFile(Data.MOD_ID,SittingConfig.ID);
     }
 
     /**
@@ -56,16 +38,7 @@ public class FileData {
     }
 
     public static SittingConfig getPlayerSetting(ServerPlayerEntity player) {
-        return playerSettings.getOrDefault(player, sittingConfig);
-    }
-
-    /// the language / text system for the mod
-    private static final LanguageReader langReader = new LanguageReader(
-            new ResourceReader("assets/sit-oth3r/lang/",Sit.class.getClassLoader()),
-            new ResourceReader(Data.CONFIG_DIR),"en_us","en_us");
-
-    public static LanguageReader getLangReader() {
-        return langReader;
+        return playerSettings.getOrDefault(player, getSittingConfig());
     }
 
     /**
@@ -73,9 +46,6 @@ public class FileData {
      */
     public static void loadFiles() {
         getServerConfig().load();
-        // load the language reader
-        langReader.updateLanguage(getServerConfig().getLang());
-
         getSittingConfig().load();
         // if loading file and is on supported server on client, send the new settings over
         if (Data.isClient() && Data.isSupportedServer()) {
@@ -95,20 +65,32 @@ public class FileData {
         public static final ArrayList<SittingBlock> SITTING_BLOCKS = new ArrayList<>(Arrays.asList(
                 new SittingBlock(new ArrayList<>(),new ArrayList<>(Arrays.asList("#minecraft:campfires")), new ArrayList<>(Arrays.asList("lit=false")),.437),
                 new SittingBlock(new ArrayList<>(Arrays.asList("!minecraft:crimson_stem","!minecraft:warped_stem","minecraft:polished_basalt")), new ArrayList<>(Arrays.asList("#minecraft:logs","!#minecraft:oak_logs")), new ArrayList<>(Arrays.asList("!axis=y")),1.0),
-                new SittingBlock(new ArrayList<>(Arrays.asList()), new ArrayList<>(Arrays.asList("#minecraft:beds")), new ArrayList<>(Arrays.asList("part=foot","occupied=false")),.5625)
+                new SittingBlock(new ArrayList<>(), new ArrayList<>(Arrays.asList("#minecraft:beds")), new ArrayList<>(Arrays.asList("part=foot","occupied=false")),.5625)
         ));
 
-        public static final ArrayList<CustomBlock> BLACKLISTED_BLOCKS = new ArrayList<>(Arrays.asList(
-                new CustomBlock(new ArrayList<>(),new ArrayList<>(Arrays.asList("#minecraft:shulker_boxes")),new ArrayList<>())
+        public static final ArrayList<CustomBlock> BLACKLISTED_BLOCKS = new ArrayList<>(List.of(
+                new CustomBlock(new ArrayList<>(), new ArrayList<>(List.of("#minecraft:shulker_boxes")), new ArrayList<>())
         ));
 
-        public static final ArrayList<CustomBlock> INTERACTION_BLOCKS = new ArrayList<>(Arrays.asList(
+        public static final ArrayList<CustomBlock> INTERACTION_BLOCKS = new ArrayList<>(List.of(
                 new CustomBlock(new ArrayList<>(Arrays.asList(
-                        "minecraft:crafter","minecraft:repeating_command_block","minecraft:chain_command_block","minecraft:command_block")),
+                        "minecraft:crafter", "minecraft:repeating_command_block", "minecraft:chain_command_block", "minecraft:command_block")),
                         new ArrayList<>(Arrays.asList(
-                        "#minecraft:shulker_boxes","#c:player_workstations/furnaces","#c:player_workstations/crafting_tables",
-                        "#c:villager_job_sites","#minecraft:trapdoors","#c:chests")),
+                                "#minecraft:shulker_boxes", "#c:player_workstations/furnaces", "#c:player_workstations/crafting_tables",
+                                "#c:villager_job_sites", "#minecraft:trapdoors", "#c:chests")),
                         new ArrayList<>())
+        ));
+
+        public static final ArrayList<CustomBlock> ALLOWED_ABOVE_SEAT = new ArrayList<>(List.of(
+                new CustomBlock(
+                        new ArrayList<>(),
+                        new ArrayList<>(List.of("#minecraft:trapdoors")),
+                        new ArrayList<>(List.of("open=true"))),
+                new CustomBlock(
+                        new ArrayList<>(),
+                        new ArrayList<>(List.of("#minecraft:doors")),
+                        new ArrayList<>()
+                )
         ));
 
         public static final HandSetting MAIN_HAND = new HandSetting(HandSetting.SittingRequirement.EMPTY, new HandSetting.Filter(

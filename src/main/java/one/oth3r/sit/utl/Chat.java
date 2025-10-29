@@ -1,7 +1,7 @@
 package one.oth3r.sit.utl;
 
 import one.oth3r.otterlib.chat.CTxT;
-import one.oth3r.sit.file.FileData;
+import one.oth3r.otterlib.registry.LanguageReg;
 
 import java.awt.*;
 
@@ -11,6 +11,6 @@ public class Chat {
     }
 
     public static CTxT lang(String key, Object... args) {
-        return FileData.getLangReader().dynamicTranslatable(key, args);
+        return LanguageReg.getLang(Data.MOD_ID).dynamicTranslatable(key, args);
     }
 }

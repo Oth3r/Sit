@@ -48,6 +48,8 @@ public class Utl {
     public static boolean isNotObstructed(World world, BlockPos blockPos) {
         // get the block state at the blockPos
         BlockState state = world.getBlockState(blockPos);
+        // if block is allowed to be above seat, return true
+        if (blockIsInList(FileData.getServerConfig().getAllowedAboveSeat(), state)) return true;
         // make sure it doesn't have a collision
         return state.getCollisionShape(world,blockPos).isEmpty();
     }
