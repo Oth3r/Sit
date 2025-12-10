@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import net.minecraft.command.DefaultPermissions;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -20,10 +21,10 @@ import java.util.concurrent.CompletableFuture;
 public class SitCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(CommandManager.literal("sit")
-                .requires((commandSource) -> commandSource.hasPermissionLevel(0))
+                .requires((commandSource) -> true)
                 .executes((context2) -> command(context2.getSource(), context2.getInput()))
                 .then(CommandManager.argument("args", StringArgumentType.string())
-                        .requires((commandSource) -> commandSource.hasPermissionLevel(2))
+                        .requires((commandSource) -> commandSource.getPermissions().hasPermission(DefaultPermissions.ADMINS))
                         .suggests(SitCommand::getSuggestions)
                         .executes((context2) -> command(context2.getSource(), context2.getInput()))));
     }
