@@ -1,3 +1,6 @@
+## v1.2.5.2
+* fixed event registration issue that caused crashes on client
+
 ## v1.2.5.1
 * fixed a StackOverFlow crash when converting a legacy config file to the new format
 * updated to the latest localization files from crowdin
