@@ -172,32 +172,31 @@ public class Events {
     private static void serverLifecycle() {
         ServerLifecycleEvents.SERVER_STARTED.register(s -> {
             Data.setServer(s);
+        });
 
-            // right click on block event
-            UseBlockCallback.EVENT.register((pl, world, hand, hitResult) -> {
-                if (Data.isClient() && !Data.isSingleplayer()) return ActionResult.PASS;
-                // get the server player
-                ServerPlayerEntity player = Data.getServer().getPlayerManager().getPlayer(pl.getUuid());
+        // right click on block event
+        UseBlockCallback.EVENT.register((pl, world, hand, hitResult) -> {
+            if (world.isClient()) return ActionResult.PASS;
+            // get the server player
+            ServerPlayerEntity player = Data.getServer().getPlayerManager().getPlayer(pl.getUuid());
 
-                // make sure the player isn't null, and make sure they aren't in spectator
-                if (player == null || player.isSpectator()) return ActionResult.PASS;
+            // make sure the player isn't null, and make sure they aren't in spectator
+            if (player == null || player.isSpectator()) return ActionResult.PASS;
 
-                // consume if sitting, if not pass
-                ActionResult result = Logic.canSit(player,hitResult.getBlockPos(),hitResult) ? ActionResult.CONSUME : ActionResult.PASS;
-                // todo test
-                if (result.equals(ActionResult.CONSUME)) {
-                    try {
-                        CommandDispatcher<ServerCommandSource> dispatcher = Data.getServer().getCommandSource().getDispatcher();
-                        ParseResults<ServerCommandSource> parse = dispatcher.parse("sit", player.getCommandSource());
-                        dispatcher.execute(parse);
-                    } catch (CommandSyntaxException e) {
-                        Data.LOGGER.error("Error executing sit command for player %s", player.getName().getString());
-                    }
+            // consume if sitting, if not pass
+            ActionResult result = Logic.canSit(player,hitResult.getBlockPos(),hitResult) ? ActionResult.CONSUME : ActionResult.PASS;
+            // todo test
+            if (result.equals(ActionResult.CONSUME)) {
+                try {
+                    CommandDispatcher<ServerCommandSource> dispatcher = Data.getServer().getCommandSource().getDispatcher();
+                    ParseResults<ServerCommandSource> parse = dispatcher.parse("sit", player.getCommandSource());
+                    dispatcher.execute(parse);
+                } catch (CommandSyntaxException e) {
+                    Data.LOGGER.error("Error executing sit command for player %s", player.getName().getString());
                 }
+            }
 
-                return result;
-            });
-
+            return result;
         });
 
         ServerLifecycleEvents.SERVER_STOPPED.register(s -> {
