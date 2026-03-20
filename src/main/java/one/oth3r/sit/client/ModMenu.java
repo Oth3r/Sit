@@ -1,4 +1,4 @@
-package one.oth3r.sit.screen;
+package one.oth3r.sit.client;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

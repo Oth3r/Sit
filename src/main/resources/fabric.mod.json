@@ -22,7 +22,7 @@
 			"one.oth3r.sit.SitClient"
 		],
 		"modmenu": [
-			"one.oth3r.sit.screen.ModMenu"
+			"one.oth3r.sit.client.ModMenu"
 		]
 	},
 	"depends": {
