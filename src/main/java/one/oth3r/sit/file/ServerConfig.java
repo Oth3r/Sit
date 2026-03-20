@@ -87,40 +87,80 @@ public class ServerConfig implements CustomFile<ServerConfig> {
         return lang;
     }
 
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
     public boolean isKeepActive() {
         return keepActive;
+    }
+
+    public void setKeepActive(Boolean keepActive) {
+        this.keepActive = keepActive;
     }
 
     public boolean canSitWhileSeated() {
         return sitWhileSeated;
     }
 
+    public void setSitWhileSeated(Boolean sitWhileSeated) {
+        this.sitWhileSeated = sitWhileSeated;
+    }
+
     public PresetBlocks getPresetBlocks() {
         return presetBlocks;
+    }
+
+    public void setPresetBlocks(PresetBlocks presetBlocks) {
+        this.presetBlocks = presetBlocks;
     }
 
     public YDifferenceLimit getYDifferenceLimit() {
         return yDifferenceLimit;
     }
 
+    public void setyDifferenceLimit(YDifferenceLimit yDifferenceLimit) {
+        this.yDifferenceLimit = yDifferenceLimit;
+    }
+
     public Boolean isCustomEnabled() {
         return customEnabled;
+    }
+
+    public void setCustomEnabled(Boolean customEnabled) {
+        this.customEnabled = customEnabled;
     }
 
     public ArrayList<SittingBlock> getSittingBlocks() {
         return sittingBlocks;
     }
 
+    public void setSittingBlocks(ArrayList<SittingBlock> sittingBlocks) {
+        this.sittingBlocks = sittingBlocks;
+    }
+
     public ArrayList<CustomBlock> getBlacklistedBlocks() {
         return blacklistedBlocks;
+    }
+
+    public void setBlacklistedBlocks(ArrayList<CustomBlock> blacklistedBlocks) {
+        this.blacklistedBlocks = blacklistedBlocks;
     }
 
     public ArrayList<CustomBlock> getInteractionBlocks() {
         return interactionBlocks;
     }
 
+    public void setInteractionBlocks(ArrayList<CustomBlock> interactionBlocks) {
+        this.interactionBlocks = interactionBlocks;
+    }
+
     public ArrayList<CustomBlock> getAllowedAboveSeat() {
         return allowedAboveSeat;
+    }
+
+    public void setAllowedAboveSeat(ArrayList<CustomBlock> allowedAboveSeat) {
+        this.allowedAboveSeat = allowedAboveSeat;
     }
 
     public static class PresetBlocks {
