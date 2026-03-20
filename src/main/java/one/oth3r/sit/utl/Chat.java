@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class Chat {
     public static CTxT tag() {
-        return new CTxT("Sit!").btn(true).color(Color.decode("#c400ff")).append(" ");
+        return new CTxT("Sit!").wrapper().color(Color.decode("#c400ff")).append(" ");
     }
 
     public static CTxT lang(String key, Object... args) {
