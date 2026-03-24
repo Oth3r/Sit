@@ -1,6 +1,6 @@
 package one.oth3r.sit.file;
 
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import one.oth3r.otterlib.registry.CustomFileReg;
 import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Utl;
@@ -23,21 +23,21 @@ public class FileData {
     /**
      * the sitting config stored per player on the server
      */
-    private static final HashMap<ServerPlayerEntity, SittingConfig> playerSettings = new HashMap<>();
+    private static final HashMap<ServerPlayer, SittingConfig> playerSettings = new HashMap<>();
 
     public static void clearPlayerSettings() {
         playerSettings.clear();
     }
 
-    public static void setPlayerSetting(ServerPlayerEntity player, SittingConfig config) {
+    public static void setPlayerSetting(ServerPlayer player, SittingConfig config) {
         playerSettings.put(player, config);
     }
 
-    public static void removePlayerSetting(ServerPlayerEntity player) {
+    public static void removePlayerSetting(ServerPlayer player) {
         playerSettings.remove(player);
     }
 
-    public static SittingConfig getPlayerSetting(ServerPlayerEntity player) {
+    public static SittingConfig getPlayerSetting(ServerPlayer player) {
         return playerSettings.getOrDefault(player, getSittingConfig());
     }
 

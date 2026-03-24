@@ -1,8 +1,8 @@
 package one.oth3r.sit;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.Identifier;
 import one.oth3r.otterlib.client.screen.ConfigScreen;
 import one.oth3r.otterlib.client.screen.utl.CustomImage;
 import one.oth3r.otterlib.client.screen.utl.SimpleButton;
@@ -24,10 +24,10 @@ public class SitClient implements ClientModInitializer {
 
     public static Screen getConfigScreen(Screen parent) {
         return new ConfigScreen(parent, Chat.lang("sit!.screen.config"),
-                new CustomImage(Identifier.of(Data.MOD_ID, "textures/gui/banner.png"),128, 72),
+                new CustomImage(Identifier.fromNamespaceAndPath(Data.MOD_ID, "textures/gui/banner.png"),128, 72),
                 List.of(
-                        SimpleButton.Templates.fileEditor(Chat.lang("config.server"), FileData.getServerConfig(), new CustomImage(Identifier.of(Data.MOD_ID, "server_button"),246,26)).build(),
-                        SimpleButton.Templates.fileEditor(Chat.lang("config.sitting"), FileData.getSittingConfig(), new CustomImage(Identifier.of(Data.MOD_ID, "sitting_button"), 246, 26)).build()
+                        SimpleButton.Templates.fileEditor(Chat.lang("config.server"), FileData.getServerConfig(), new CustomImage(Identifier.fromNamespaceAndPath(Data.MOD_ID, "server_button"),246,26)).build(),
+                        SimpleButton.Templates.fileEditor(Chat.lang("config.sitting"), FileData.getSittingConfig(), new CustomImage(Identifier.fromNamespaceAndPath(Data.MOD_ID, "sitting_button"), 246, 26)).build()
                 ),
                 List.of(
                         SimpleButton.Templates.warning(Chat.lang("sit!.gui.button.issues")).openLink("https://github.com/Oth3r/Sit/issues").build(),

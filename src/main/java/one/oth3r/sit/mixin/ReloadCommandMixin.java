@@ -2,9 +2,9 @@ package one.oth3r.sit.mixin;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.ReloadCommand;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.commands.ReloadCommand;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import one.oth3r.sit.utl.Chat;
 import one.oth3r.sit.utl.Data;
 import one.oth3r.sit.utl.Logic;
@@ -18,17 +18,17 @@ import java.awt.*;
 @Mixin(ReloadCommand.class)
 public class ReloadCommandMixin {
     @Inject(at = @At("TAIL"), method = "register")
-    private static void register(CommandDispatcher<ServerCommandSource> dispatcher, CallbackInfo ci) {
+    private static void register(CommandDispatcher<CommandSourceStack> dispatcher, CallbackInfo ci) {
         Logic.reload();
 
         // make sure the server isn't null
         MinecraftServer server = Data.getServer();
-        if (server == null || server.getPlayerManager() == null) return;
+        if (server == null || server.getPlayerList() == null) return;
 
         // send a reloaded message to all players with permissions
-        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
-             if (player.isCreativeLevelTwoOp()) {
-                 player.sendMessage(Chat.tag().append(Chat.lang("sit!.chat.reloaded").color(Color.GREEN)).b());
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+             if (player.canUseGameMasterBlocks()) {
+                 player.sendSystemMessage(Chat.tag().append(Chat.lang("sit!.chat.reloaded").color(Color.GREEN)).b());
              }
         }
     }

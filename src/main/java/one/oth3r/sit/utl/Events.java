@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -14,13 +14,13 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.resources.Identifier;
 import one.oth3r.sit.SitClient;
 import one.oth3r.sit.command.SitCommand;
 import one.oth3r.sit.file.FileData;
@@ -33,24 +33,24 @@ import java.awt.*;
 public class Events {
 
     private static class Keybindings {
-        private static KeyBinding toggle_key;
-        private static KeyBinding sit_key;
-        private static KeyBinding config__key;
+        private static KeyMapping toggle_key;
+        private static KeyMapping sit_key;
+        private static KeyMapping config__key;
 
         private static void register() {
-            KeyBinding.Category sitCategory = KeyBinding.Category.create(Identifier.of(Data.MOD_ID, "main"));
+            KeyMapping.Category sitCategory = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(Data.MOD_ID, "main"));
 
-            toggle_key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            toggle_key = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                     "key.sit!.toggle",
                     GLFW.GLFW_KEY_UNKNOWN,
                     sitCategory
             ));
-            sit_key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            sit_key = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                     "key.sit!.sit",
                     GLFW.GLFW_KEY_UNKNOWN,
                     sitCategory
             ));
-            config__key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            config__key = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                     "key.sit!.config",
                     GLFW.GLFW_KEY_UNKNOWN,
                     sitCategory
@@ -63,31 +63,31 @@ public class Events {
             });
         }
 
-        private static void loopLogic(MinecraftClient client) {
-            ClientPlayerEntity player = client.player;
+        private static void loopLogic(Minecraft client) {
+            LocalPlayer player = client.player;
 
-            while (config__key.wasPressed()) {
-                client.setScreen(SitClient.getConfigScreen(client.currentScreen));
+            while (config__key.consumeClick()) {
+                client.setScreen(SitClient.getConfigScreen(client.screen));
             }
 
             /// anything below uses the player object, make sure it's not null
             if (player == null) return;
 
-            while (toggle_key.wasPressed()) {
+            while (toggle_key.consumeClick()) {
                 if (Data.isInGame()) {
-                    player.sendMessage(Logic.toggleSiting(), true);
+                    player.sendOverlayMessage(Logic.toggleSiting());
                 }
             }
 
-            while (sit_key.wasPressed()) {
+            while (sit_key.consumeClick()) {
                 // just send the sit command
                 if (Data.isInGame()) {
                     if (Data.isSupportedServer()) {
-                        player.networkHandler.sendChatCommand("sit");
+                        player.connection.sendCommand("sit");
                     } else {
                         // unsupported server message if not in a Sit! server
-                        player.sendMessage(Chat.lang("sit!.chat.unsupported")
-                                .color(Color.RED).b(), true);
+                        player.sendOverlayMessage(Chat.lang("sit!.chat.unsupported")
+                                .color(Color.RED).b());
                     }
                 }
             }
@@ -97,9 +97,9 @@ public class Events {
     private static class Packet {
         private static void common() {
             // register the data
-            PayloadTypeRegistry.playC2S().register(SitPayloads.SettingsPayload.ID, SitPayloads.SettingsPayload.CODEC);
+            PayloadTypeRegistry.serverboundPlay().register(SitPayloads.SettingsPayload.ID, SitPayloads.SettingsPayload.CODEC);
 
-            PayloadTypeRegistry.playS2C().register(SitPayloads.ResponsePayload.ID, SitPayloads.ResponsePayload.CODEC);
+            PayloadTypeRegistry.clientboundPlay().register(SitPayloads.ResponsePayload.ID, SitPayloads.ResponsePayload.CODEC);
 
             // server receiver is common
 
@@ -134,7 +134,7 @@ public class Events {
     private static void clientConnections() {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             Data.setInGame(true);
-            if (client.isInSingleplayer()) Data.setSingleplayer(true);
+            if (client.isLocalServer()) Data.setSingleplayer(true);
             // send a data packet whenever joining a server
             Utl.sendSettingsPackets();
         });
@@ -176,20 +176,20 @@ public class Events {
 
         // right click on block event
         UseBlockCallback.EVENT.register((pl, world, hand, hitResult) -> {
-            if (world.isClient()) return ActionResult.PASS;
+            if (world.isClientSide()) return InteractionResult.PASS;
             // get the server player
-            ServerPlayerEntity player = Data.getServer().getPlayerManager().getPlayer(pl.getUuid());
+            ServerPlayer player = Data.getServer().getPlayerList().getPlayer(pl.getUUID());
 
             // make sure the player isn't null, and make sure they aren't in spectator
-            if (player == null || player.isSpectator()) return ActionResult.PASS;
+            if (player == null || player.isSpectator()) return InteractionResult.PASS;
 
             // consume if sitting, if not pass
-            ActionResult result = Logic.canSit(player,hitResult.getBlockPos(),hitResult) ? ActionResult.CONSUME : ActionResult.PASS;
+            InteractionResult result = Logic.canSit(player,hitResult.getBlockPos(),hitResult) ? InteractionResult.CONSUME : InteractionResult.PASS;
             // todo test
-            if (result.equals(ActionResult.CONSUME)) {
+            if (result.equals(InteractionResult.CONSUME)) {
                 try {
-                    CommandDispatcher<ServerCommandSource> dispatcher = Data.getServer().getCommandSource().getDispatcher();
-                    ParseResults<ServerCommandSource> parse = dispatcher.parse("sit", player.getCommandSource());
+                    CommandDispatcher<CommandSourceStack> dispatcher = Data.getServer().createCommandSourceStack().dispatcher();
+                    ParseResults<CommandSourceStack> parse = dispatcher.parse("sit", player.createCommandSourceStack());
                     dispatcher.execute(parse);
                 } catch (CommandSyntaxException e) {
                     Data.LOGGER.error("Error executing sit command for player %s", player.getName().getString());

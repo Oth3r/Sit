@@ -6,28 +6,33 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.google.gson.stream.MalformedJsonException;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.block.*;
-import net.minecraft.block.enums.BlockHalf;
-import net.minecraft.block.enums.SlabType;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.decoration.DisplayEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.consume.UseAction;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CarpetBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Half;
+import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.*;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
-import one.oth3r.otterlib.chat.CTxT;
+import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import one.oth3r.sit.file.*;
 import one.oth3r.sit.packet.SitPayloads;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +51,7 @@ public class Utl {
      * check if a block is obstructed (no collision)
      * @return true if not obstructed
      */
-    public static boolean isNotObstructed(World world, BlockPos blockPos) {
+    public static boolean isNotObstructed(Level world, BlockPos blockPos) {
         // get the block state at the blockPos
         BlockState state = world.getBlockState(blockPos);
         // if block is allowed to be above seat, return true
@@ -59,7 +64,7 @@ public class Utl {
      * checks the list of sit entities and sees if any of them are occupying the block pos
      */
     public static boolean isNotOccupied(BlockPos pos) {
-        return Data.getSitEntities().values().stream().noneMatch(entity -> entity.getBlockPos().equals(pos));
+        return Data.getSitEntities().values().stream().noneMatch(entity -> entity.blockPosition().equals(pos));
     }
 
     public static final double HALF_BLOCK = 0.5;
@@ -89,18 +94,18 @@ public class Utl {
         // if none of the custom were met, try the default conditions
 
         // get the use actions for the filters
-        ArrayList<UseAction> food = new ArrayList<>();
-        food.add(UseAction.EAT);
-        food.add(UseAction.DRINK);
-        ArrayList<UseAction> notUsable = new ArrayList<>(food);
-        notUsable.add(UseAction.NONE);
+        ArrayList<ItemUseAnimation> food = new ArrayList<>();
+        food.add(ItemUseAnimation.EAT);
+        food.add(ItemUseAnimation.DRINK);
+        ArrayList<ItemUseAnimation> notUsable = new ArrayList<>(food);
+        notUsable.add(ItemUseAnimation.NONE);
 
         HandSetting.Filter.Presets presets = filter.getPresets();
 
         // try the default conditions
         if (presets.isBlock() && itemStack.getItem() instanceof BlockItem) return TRUE;
-        if (presets.isFood() && food.contains(itemStack.getUseAction())) return TRUE;
-        if (presets.isUsable() && !notUsable.contains(itemStack.getUseAction())) return TRUE;
+        if (presets.isFood() && food.contains(itemStack.getUseAnimation())) return TRUE;
+        if (presets.isUsable() && !notUsable.contains(itemStack.getUseAnimation())) return TRUE;
 
         // if nothing else is met, the item is filtered out
         return FALSE;
@@ -111,7 +116,7 @@ public class Utl {
      * @return the block ID (minecraft:air)
      */
     public static String getBlockID(BlockState blockState) {
-        return Registries.BLOCK.getId(blockState.getBlock()).toString();
+        return BuiltInRegistries.BLOCK.getKey(blockState.getBlock()).toString();
     }
 
     /**
@@ -121,8 +126,8 @@ public class Utl {
      * @param hit nullable, for the player interaction check
      * @return null if not a valid block
      */
-    public static Double getSittingHeight(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hit) {
-        ServerWorld serverWorld = player.getEntityWorld();
+    public static Double getSittingHeight(ServerPlayer player, BlockPos blockPos, @Nullable BlockHitResult hit) {
+        ServerLevel serverWorld = player.level();
         ServerConfig config = FileData.getServerConfig();
         BlockState blockState = serverWorld.getBlockState(blockPos);
         Block block = blockState.getBlock();
@@ -144,17 +149,17 @@ public class Utl {
         }
 
         // add the default block types and check for them
-        if (block instanceof StairsBlock
+        if (block instanceof StairBlock
                 && config.getPresetBlocks().isStairs()
-                && blockState.get(StairsBlock.HALF) == BlockHalf.BOTTOM) return HALF_BLOCK;
+                && blockState.getValue(StairBlock.HALF) == Half.BOTTOM) return HALF_BLOCK;
         if (config.getPresetBlocks().isSlabs()
             && block instanceof SlabBlock
-            && blockState.get(SlabBlock.TYPE) == SlabType.BOTTOM) return HALF_BLOCK;
+            && blockState.getValue(SlabBlock.TYPE) == SlabType.BOTTOM) return HALF_BLOCK;
         if (config.getPresetBlocks().isCarpets()
             && block instanceof CarpetBlock) return CARPET;
         if (config.getPresetBlocks().isFullBlocks()
                 // make sure the block is a full cube
-                && blockState.isFullCube(player.getEntityWorld(),blockPos)) return 1.0;
+                && blockState.isCollisionShapeFullBlock(player.level(),blockPos)) return 1.0;
 
         // at the end, return false
         return null;
@@ -177,10 +182,10 @@ public class Utl {
         /**
          * checks if the entity's block is still there, & is valid
          */
-        public static boolean isValid(ServerPlayerEntity player, @NotNull DisplayEntity.TextDisplayEntity entity) {
+        public static boolean isValid(ServerPlayer player, @NotNull Display.TextDisplay entity) {
             BlockPos blockPos = getBlockPos(entity);
             // get the blockstate
-            BlockState blockState = player.getEntityWorld().getBlockState(blockPos);
+            BlockState blockState = player.level().getBlockState(blockPos);
             // check if the block is still there & the block is a valid sit block (by checking if there is a sit height for the block)
             return !blockState.isAir() && getSittingHeight(player,blockPos,null) != null;
         }
@@ -188,7 +193,7 @@ public class Utl {
         /**
          * gets the bound block pos of the sit entity
          */
-        public static BlockPos getBlockPos(DisplayEntity.TextDisplayEntity entity) {
+        public static BlockPos getBlockPos(Display.TextDisplay entity) {
             // the entity Y level, adjusted
             // the adjustment - is the opposite of the offset applied in Entity.create()
             int entityBlockY = (int) (Math.floor(entity.getY() + (Y_ADJUSTMENT*-1)));
@@ -196,7 +201,7 @@ public class Utl {
             BlockPos pos = new BlockPos(entity.getBlockX(),entityBlockY,entity.getBlockZ());
             // if above the block, subtract 1
             if (isAboveBlockHeight(entity)) {
-                pos = pos.add(0,-1,0);
+                pos = pos.offset(0,-1,0);
             }
 
             return pos;
@@ -205,8 +210,8 @@ public class Utl {
         /**
          * using the entity's pitch, figure out if the player is above the block height or not
          */
-        public static boolean isAboveBlockHeight(DisplayEntity.TextDisplayEntity entity) {
-            return entity.getPitch() > 0;
+        public static boolean isAboveBlockHeight(Display.TextDisplay entity) {
+            return entity.getXRot() > 0;
         }
 
         /**
@@ -216,11 +221,11 @@ public class Utl {
          * @param sitHeight the height for the entity to be at
          * @return the entity at the correct height and position
          */
-        public static DisplayEntity.TextDisplayEntity create(World world, BlockPos blockPos, double sitHeight) {
-            DisplayEntity.TextDisplayEntity entity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY,world);
+        public static Display.TextDisplay create(Level world, BlockPos blockPos, double sitHeight) {
+            Display.TextDisplay entity = new Display.TextDisplay(EntityType.TEXT_DISPLAY,world);
 
             // entity flags
-            entity.setCustomName(Text.of(Data.ENTITY_NAME));
+            entity.setCustomName(Component.nullToEmpty(Data.ENTITY_NAME));
             entity.setCustomNameVisible(false);
             entity.setInvulnerable(true);
             entity.setInvisible(true);
@@ -230,14 +235,14 @@ public class Utl {
             entityY += sitHeight;
 
             // set the entities position
-            entity.updatePosition(blockPos.getX()+.5, entityY, blockPos.getZ()+.5);
+            entity.absSnapTo(blockPos.getX()+.5, entityY, blockPos.getZ()+.5);
 
             // change pitch based on if player is sitting below block height or not (full block height only)
-            if (entity.getY() == blockPos.getY() + 1) entity.setPitch(90); // below
-            else entity.setPitch(-90); // above
+            if (entity.getY() == blockPos.getY() + 1) entity.setXRot(90); // below
+            else entity.setXRot(-90); // above
 
             // adjusting the entity height after doing the main calculations, for correct player visuals
-            entity.updatePosition(entity.getX(),entityY+Y_ADJUSTMENT,entity.getZ());
+            entity.absSnapTo(entity.getX(),entityY+Y_ADJUSTMENT,entity.getZ());
 
             return entity;
         }
@@ -245,11 +250,11 @@ public class Utl {
         /**
          * removes the entity from the entity map and world, dismounting any passengers
          */
-        public static void remove(DisplayEntity.TextDisplayEntity entity) {
+        public static void remove(Display.TextDisplay entity) {
             // dismount everyone
-            entity.removeAllPassengers();
+            entity.ejectPassengers();
             // remove the entity
-            entity.setRemoved(net.minecraft.entity.Entity.RemovalReason.DISCARDED);
+            entity.setRemoved(net.minecraft.world.entity.Entity.RemovalReason.DISCARDED);
             // remove the entity from the data set if exists
             Data.removeSitEntity(entity);
         }
@@ -257,33 +262,33 @@ public class Utl {
         /**
          * spawns the entity and make the player sit on it
          */
-        public static void spawnSit(ServerPlayerEntity player, DisplayEntity.TextDisplayEntity entity) {
+        public static void spawnSit(ServerPlayer player, Display.TextDisplay entity) {
             Data.setSpawnList(player, entity);
         }
 
         /**
          * removes all sit entities loaded on the server
          */
-        public static void purge(ServerPlayerEntity player, boolean message) {
+        public static void purge(ServerPlayer player, boolean message) {
             /// FYI it cant purge an entity from a disconnected player or unloaded chunks
 
             // get a list of sit entities
-            List<? extends DisplayEntity.TextDisplayEntity> list = player.getEntityWorld()
-                    .getEntitiesByType(TypeFilter.instanceOf(DisplayEntity.TextDisplayEntity.class),
+            List<? extends Display.TextDisplay> list = player.level()
+                    .getEntities(EntityTypeTest.forClass(Display.TextDisplay.class),
                             entity -> entity.getName().getString().equals(Data.ENTITY_NAME));
 
             // amount of sit entities purged
             int count = 0;
 
             // remove each one & count
-            for (DisplayEntity.TextDisplayEntity entity : list) {
+            for (Display.TextDisplay entity : list) {
                 remove(entity);
                 count++;
             }
 
             // send a message if needed
             if (message) {
-                player.sendMessage(Chat.tag()
+                player.sendSystemMessage(Chat.tag()
                         .append(Chat.lang("sit!.chat.purged",
                                 Chat.lang("sit!.chat.purged.total",count).color(Color.gray).b()
                         ).color(Color.GREEN)).b());
@@ -387,25 +392,25 @@ public class Utl {
         }
     }
 
-    public static BlockPos getBlockPosPlayerIsLookingAt(ServerWorld world, PlayerEntity player, double range) {
+    public static BlockPos getBlockPosPlayerIsLookingAt(ServerLevel world, Player player, double range) {
         // pos, adjusted to player eye level
-        Vec3d rayStart = player.getEntityPos().add(0, player.getEyeHeight(player.getPose()), 0);
+        Vec3 rayStart = player.position().add(0, player.getEyeHeight(player.getPose()), 0);
         // extend ray by the range
-        Vec3d rayEnd = rayStart.add(player.getRotationVector().multiply(range));
+        Vec3 rayEnd = rayStart.add(player.getLookAngle().scale(range));
 
-        BlockHitResult hitResult = world.raycast(new RaycastContext(rayStart, rayEnd, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, ShapeContext.absent()));
+        BlockHitResult hitResult = world.clip(new ClipContext(rayStart, rayEnd, net.minecraft.world.level.ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, CollisionContext.empty()));
 
         if (hitResult.getType() == HitResult.Type.BLOCK) {
             return hitResult.getBlockPos();
         }
 
-        return new BlockPos(player.getBlockPos());
+        return new BlockPos(player.blockPosition());
     }
 
-    public static double getPlayerReach(PlayerEntity player) {
+    public static double getPlayerReach(Player player) {
         // use the BLOCK_INTERACTION_RANGE attribute if available
-        if (player.getAttributeInstance(EntityAttributes.BLOCK_INTERACTION_RANGE) != null) {
-            return player.getAttributeValue(EntityAttributes.BLOCK_INTERACTION_RANGE);
+        if (player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE) != null) {
+            return player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE);
         }
         // fallback to 5
         return 5;

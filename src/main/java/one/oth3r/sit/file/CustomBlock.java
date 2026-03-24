@@ -1,11 +1,10 @@
 package one.oth3r.sit.file;
 
 import com.google.gson.annotations.SerializedName;
-import net.minecraft.block.BlockState;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.state.State;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.resources.Identifier;
 import one.oth3r.sit.utl.Utl;
 
 import java.util.ArrayList;
@@ -66,10 +65,10 @@ public class CustomBlock {
                 // if it is contained in the block, return false
                 // remove the '!'
                 String fixedState = state.substring(1);
-                if (blockState.getEntries().entrySet().stream().map(State.PROPERTY_MAP_PRINTER).anyMatch(s -> s.equals(fixedState))) return false;
+                if (blockState.getValues().anyMatch(value -> value.toString().equals(fixedState))) return false;
             }
             // else check if the blockstate matches, if not return false
-            else if (blockState.getEntries().entrySet().stream().map(State.PROPERTY_MAP_PRINTER).noneMatch(s -> s.equals(state))) return false;
+            else if (blockState.getValues().noneMatch(value -> value.toString().equals(state))) return false;
         }
 
         // if here, all passes have passed
@@ -99,13 +98,13 @@ public class CustomBlock {
             if (tag.startsWith("!")) {
                 // if there is a match for the NOT(!) tag, return false
                 Identifier id = Identifier.tryParse(tag.substring(2));
-                if (id != null && blockState.isIn(TagKey.of(Registries.BLOCK.getKey(), id))) return false;
+                if (id != null && blockState.is(TagKey.create(BuiltInRegistries.BLOCK.key(), id))) return false;
             } else {
                 // flip the hasPositiveTags boolean
                 hasPositiveTags = true;
                 // if there is a match, return true
                 Identifier id = Identifier.tryParse(tag.substring(1));
-                if (id != null && blockState.isIn(TagKey.of(Registries.BLOCK.getKey(), id))) tagCheck = true;
+                if (id != null && blockState.is(TagKey.create(BuiltInRegistries.BLOCK.key(), id))) tagCheck = true;
             }
         }
 
