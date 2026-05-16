@@ -1,26 +1,34 @@
 package one.oth3r.sit.mixin;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.Display;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(Display.TextDisplay.class)
 public abstract class TextDisplayDismountMixin extends Display {
+    @Unique
+    private static final float sit$BODY_ROTATION_MIN_STEP = 0.1F;
+    @Unique
+    private static final float sit$BODY_ROTATION_DEADZONE = 45.0F;
+    @Unique
+    private static final float sit$BODY_ROTATION_MAX_STEP = 18.0F;
+    @Unique
+    private static final float sit$BODY_ROTATION_FULL_SPEED_AT = 120.0F;
+
     public TextDisplayDismountMixin(EntityType<?> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+    public @NonNull Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
         // get the passenger's horizontal rotation, rotated counterclockwise, because the method rotates it clockwise for some reason
         int[][] offset = DismountHelper.offsetsForDirection(passenger.getDirection().getCounterClockWise());
         // new array with another slot
@@ -72,5 +80,45 @@ public abstract class TextDisplayDismountMixin extends Display {
             }
         }
         return null;
+    }
+
+    @Override
+    public void positionRider(@NonNull Entity passenger, @NonNull MoveFunction moveFunction) {
+        super.positionRider(passenger, moveFunction);
+        this.sit$syncPassengerRotation(passenger);
+    }
+
+    @Override
+    public void onPassengerTurned(Entity passenger) {
+        float targetYaw = passenger.getYRot();
+        float yaw = this.getYRot();
+        float yawDifference = Math.abs(Mth.wrapDegrees(targetYaw - yaw));
+
+        if (yawDifference > sit$BODY_ROTATION_DEADZONE) {
+            yaw = Mth.approachDegrees(yaw, targetYaw, sit$getBodyRotationStep(yawDifference));
+        }
+
+        this.setYRot(yaw);
+        this.setYHeadRot(yaw);
+        this.sit$syncPassengerRotation(passenger);
+    }
+
+    @Unique
+    private void sit$syncPassengerRotation(Entity passenger) {
+        float yaw = this.getYRot();
+
+        if (passenger instanceof LivingEntity living) {
+            living.setYBodyRot(yaw);
+        }
+    }
+
+    @Unique
+    private static float sit$getBodyRotationStep(float yawDifference) {
+        float normalizedDifference = Mth.clamp(
+                (yawDifference - sit$BODY_ROTATION_DEADZONE) / (sit$BODY_ROTATION_FULL_SPEED_AT - sit$BODY_ROTATION_DEADZONE),
+                0.0F,
+                1.0F
+        );
+        return Mth.lerp(normalizedDifference, sit$BODY_ROTATION_MIN_STEP, sit$BODY_ROTATION_MAX_STEP);
     }
 }
