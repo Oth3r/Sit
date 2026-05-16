@@ -160,6 +160,7 @@ public class Events {
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             // if keep is off, remove the entity
             if (!FileData.getServerConfig().isKeepActive()) {
+                handler.player.stopRiding();
                 Logic.removeEntity(handler.player);
             }
             FileData.removePlayerSetting(handler.player);
