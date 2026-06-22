@@ -34,7 +34,6 @@
 	"suggests": {
 		"modmenu": "*"
 	},
-	"accessWidener": "sit!.accesswidener",
 	"mixins": [
 		"sit!.mixins.json"
 	]
