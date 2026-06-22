@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.google.gson.stream.MalformedJsonException;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.level.block.SlabBlock;
@@ -13,7 +14,6 @@ import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.SlabType;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.player.Player;
@@ -222,7 +222,7 @@ public class Utl {
          * @return the entity at the correct height and position
          */
         public static Display.TextDisplay create(Level world, BlockPos blockPos, double sitHeight) {
-            Display.TextDisplay entity = new Display.TextDisplay(EntityType.TEXT_DISPLAY,world);
+            Display.TextDisplay entity = new Display.TextDisplay(EntityTypes.TEXT_DISPLAY,world);
 
             // entity flags
             entity.setCustomName(Component.nullToEmpty(Data.ENTITY_NAME));

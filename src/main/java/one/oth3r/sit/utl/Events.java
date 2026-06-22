@@ -67,7 +67,7 @@ public class Events {
             LocalPlayer player = client.player;
 
             while (config__key.consumeClick()) {
-                client.setScreen(SitClient.getConfigScreen(client.screen));
+                client.setScreenAndShow(SitClient.getConfigScreen(client.gui.screen()));
             }
 
             /// anything below uses the player object, make sure it's not null
