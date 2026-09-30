@@ -1,7 +1,7 @@
 plugins {
 	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 	id 'maven-publish'
-	id "me.modmuss50.mod-publish-plugin" version "0.8.4"
+	id "me.modmuss50.mod-publish-plugin" version "2.2.1"
 	id 'co.uzzu.dotenv.gradle' version '4.0.0'
 }
 
@@ -113,6 +113,9 @@ publishMods {
 		projectId = "892424"
 		projectSlug = "sit1"
 		minecraftVersions.addAll(minecraft_versions.split(",").toList())
+
+		client = true
+		server = true
 
 		requires("fabric-api", "otterlib")
 
