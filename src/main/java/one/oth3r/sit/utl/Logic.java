@@ -1,13 +1,13 @@
 package one.oth3r.sit.utl;
 
-import net.minecraft.entity.decoration.DisplayEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.MutableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.Display;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
 import one.oth3r.sit.file.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,9 +22,9 @@ public class Logic {
      * @param hitResult nullable, not null if the player is sitting with their hand
      * @return true if the player can sit with the conditions provided
      */
-    public static boolean canSit(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hitResult) {
+    public static boolean canSit(ServerPlayer player, BlockPos blockPos, @Nullable BlockHitResult hitResult) {
         // cant sit if crouching
-        if (player.isSneaking()) return false;
+        if (player.isShiftKeyDown()) return false;
 
         // if sitting on a sit entity and sit while seated off, false
         if (!FileData.getServerConfig().canSitWhileSeated() && Data.getSitEntity(player) != null) return false;
@@ -37,14 +37,14 @@ public class Logic {
         // check if the block is in the right y level limits from the config
         if (!checkYLimits(player, blockPos)) return false;
 
-        ServerWorld serverWorld = player.getEntityWorld();
+        ServerLevel serverWorld = player.level();
 
         Double sitHeight = Utl.getSittingHeight(player,blockPos,hitResult);
 
         // if the sit height is null, it's not a sittable block
         if (sitHeight == null) return false;
 
-        DisplayEntity.TextDisplayEntity entity = Utl.Entity.create(serverWorld,blockPos,sitHeight);
+        Display.TextDisplay entity = Utl.Entity.create(serverWorld,blockPos,sitHeight);
 
         // checks if the player can sit
         return checkPlayerSitAbility(entity);
@@ -57,10 +57,10 @@ public class Logic {
      * @param hitResult nullable, not null if the player is sitting with their hand
      * @return true if sitting was successful
      */
-    public static boolean sit(ServerPlayerEntity player, BlockPos blockPos, @Nullable BlockHitResult hitResult) {
+    public static boolean sit(ServerPlayer player, BlockPos blockPos, @Nullable BlockHitResult hitResult) {
         if (!canSit(player, blockPos, hitResult)) return false;
         // assets
-        ServerWorld serverWorld = player.getEntityWorld();
+        ServerLevel serverWorld = player.level();
         Double sitHeight = Utl.getSittingHeight(player,blockPos,hitResult);
         // shouldn't be null because we already checked, but do another check to clear IDE errors
         assert sitHeight != null;
@@ -76,15 +76,15 @@ public class Logic {
      * @param player the player who is trying to sit
      * @return true if sitting was successful
      */
-    public static boolean sitLooking(ServerPlayerEntity player) {
-        return sit(player, Utl.getBlockPosPlayerIsLookingAt(player.getEntityWorld(),player,
+    public static boolean sitLooking(ServerPlayer player) {
+        return sit(player, Utl.getBlockPosPlayerIsLookingAt(player.level(),player,
                 Utl.getPlayerReach(player)),null);
     }
 
     /**
      * checks the hands of the player and the items in each hand and sees if the player can sit down
      */
-    public static boolean checkHands(ServerPlayerEntity player) {
+    public static boolean checkHands(ServerPlayer player) {
         SittingConfig sittingConfig = FileData.getPlayerSetting(player);
         // if can't sit with hand, false
         if (!sittingConfig.canSitWithHand()) return false;
@@ -93,14 +93,14 @@ public class Logic {
         boolean canSit = true;
 
         // for each hand
-        for (Hand hand : Hand.values()) {
+        for (InteractionHand hand : InteractionHand.values()) {
             // if they can't sit, no need to run extra code
             if (!canSit) break;
 
             HandSetting handSetting = sittingConfig.getHand(hand);
             switch (handSetting.getSittingRequirement()) {
-                case EMPTY -> canSit = player.getStackInHand(hand).isEmpty();
-                case FILTER -> canSit = Utl.checkItem(handSetting.getFilter(), player.getStackInHand(hand));
+                case EMPTY -> canSit = player.getItemInHand(hand).isEmpty();
+                case FILTER -> canSit = Utl.checkItem(handSetting.getFilter(), player.getItemInHand(hand));
             }
         }
         // return the output of the check
@@ -110,7 +110,7 @@ public class Logic {
     /**
      * check if the Y-level of the block is within the limits of the player, bounds are set in the {@link ServerConfig}
      */
-    public static boolean checkYLimits(ServerPlayerEntity player, BlockPos blockPos) {
+    public static boolean checkYLimits(ServerPlayer player, BlockPos blockPos) {
         double playerY = player.getBlockY();
         double blockY = blockPos.getY();
         // if the block is above the eye height
@@ -130,8 +130,8 @@ public class Logic {
     /**
      * removes the entity bound to the player from the game, using the player
      */
-    public static void removeEntity(ServerPlayerEntity player) {
-        DisplayEntity.TextDisplayEntity entity = Data.getSitEntity(player);
+    public static void removeEntity(ServerPlayer player) {
+        Display.TextDisplay entity = Data.getSitEntity(player);
         // make sure the player has a sit entity bounded to them
         if (entity == null) return;
 
@@ -142,16 +142,16 @@ public class Logic {
     /**
      * spawns a sit entity for the player, they HAVE TO BE in the spawn list
      */
-    public static void spawnEntity(ServerPlayerEntity player) {
+    public static void spawnEntity(ServerPlayer player) {
         // return if not in the list
         if (Data.getSpawnList().get(player) == null) return;
 
         // if the player is already sitting on a sit entity, remove it before spawning a new one
         if (Data.getSitEntity(player) != null) Logic.removeEntity(player);
         // get the new entity
-        DisplayEntity.TextDisplayEntity sitEntity = Data.getSpawnList().get(player);
+        Display.TextDisplay sitEntity = Data.getSpawnList().get(player);
         // spawn and ride the entity
-        player.getEntityWorld().spawnEntity(sitEntity);
+        player.level().addFreshEntity(sitEntity);
         player.startRiding(sitEntity);
         // add the entity to the list
         Data.addSitEntity(player, sitEntity);
@@ -162,8 +162,8 @@ public class Logic {
     /**
      * checks if the player should still be sitting, e.g. the block was destroyed ect.
      */
-    public static void checkSittingValidity(ServerPlayerEntity player) {
-        DisplayEntity.TextDisplayEntity entity = Data.getSitEntity(player);
+    public static void checkSittingValidity(ServerPlayer player) {
+        Display.TextDisplay entity = Data.getSitEntity(player);
         // make sure the player has a sit entity bounded to them
         if (entity == null) return;
 
@@ -178,19 +178,19 @@ public class Logic {
      * @param entity the entity
      * @return true if there is no obstruction
      */
-    public static boolean checkPlayerSitAbility(DisplayEntity.TextDisplayEntity entity) {
+    public static boolean checkPlayerSitAbility(Display.TextDisplay entity) {
         // get the entity's block pos
         BlockPos pos = Utl.Entity.getBlockPos(entity);
         // get the poses to check above the block
-        BlockPos pos1 = new BlockPos(pos).add(0,1,0), pos2 = new BlockPos(pos).add(0,2,0), posBelow = new BlockPos(pos);
+        BlockPos pos1 = new BlockPos(pos).offset(0,1,0), pos2 = new BlockPos(pos).offset(0,2,0), posBelow = new BlockPos(pos);
         // doesn't check 2 blocks above if not sitting above .80 of the block
         if (pos.getY() > (entity.getY()-Utl.Entity.Y_ADJUSTMENT) - .80) {
-            pos2 = pos2.add(0,-1,0);
-            posBelow = posBelow.add(0,-1,0);
+            pos2 = pos2.offset(0,-1,0);
+            posBelow = posBelow.offset(0,-1,0);
         }
 
         // check if both poses are obstructed or not
-        return Utl.isNotObstructed(entity.getEntityWorld(),pos1) && Utl.isNotObstructed(entity.getEntityWorld(),pos2)
+        return Utl.isNotObstructed(entity.level(),pos1) && Utl.isNotObstructed(entity.level(),pos2)
                 // also check if occupied, checking below to make sure you cant sit directly on top of another sit entity
                 && Utl.isNotOccupied(pos) && Utl.isNotOccupied(pos1) && Utl.isNotOccupied(pos2) && Utl.isNotOccupied(posBelow);
     }
@@ -207,7 +207,7 @@ public class Logic {
      * toggles the sit ability config option
      * @return returns a message, that can be sent to the player
      */
-    public static MutableText toggleSiting() {
+    public static MutableComponent toggleSiting() {
         if (Data.isSupportedServer()) {
             // get the sitting config
             SittingConfig config = FileData.getSittingConfig();
@@ -221,7 +221,7 @@ public class Logic {
 
             // get the message settings
             String messageKey = "sit!.chat.toggle_sit."+(config.getEnabled()?"on":"off");
-            Formatting messageColor = config.getEnabled()?Formatting.GREEN:Formatting.RED;
+            ChatFormatting messageColor = config.getEnabled()?ChatFormatting.GREEN:ChatFormatting.RED;
 
             // send the player the actionbar message
             return Chat.lang("sit!.chat.toggle_sit",

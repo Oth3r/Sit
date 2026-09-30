@@ -1,10 +1,10 @@
 package one.oth3r.sit.file;
 
 import com.google.gson.annotations.SerializedName;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -41,7 +41,7 @@ public class CustomItem {
      * @return if the type of block is matching the CustomBlock rules (e.g. if it is wood, ect.)
      */
     public boolean checkItem(ItemStack itemStack) {
-        String itemId = Registries.ITEM.getId(itemStack.getItem()).toString();
+        String itemId = BuiltInRegistries.ITEM.getKey(itemStack.getItem()).toString();
         // check the custom item ids
         for (String id : itemIDs) {
             // if there is a match for the NOT(!) item, its filtered, false
@@ -59,13 +59,13 @@ public class CustomItem {
             if (tag.startsWith("!")) {
                 // if there is a math for the NOT(!) tag, return false
                 Identifier id = Identifier.tryParse(tag.substring(2));
-                if (id != null && itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), id))) return false;
+                if (id != null && itemStack.is(TagKey.create(BuiltInRegistries.ITEM.key(), id))) return false;
             } else {
                 // flip the hasPositiveTags boolean
                 hasPositiveTags = true;
                 // else (normal tag), if there is a match, set tagCheck to true
                 Identifier id = Identifier.tryParse(tag.substring(1));
-                if (id != null && itemStack.isIn(TagKey.of(Registries.ITEM.getKey(), id))) tagCheck = true;
+                if (id != null && itemStack.is(TagKey.create(BuiltInRegistries.ITEM.key(), id))) tagCheck = true;
             }
         }
 

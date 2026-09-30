@@ -2,6 +2,7 @@ package one.oth3r.sit;
 
 import net.fabricmc.api.ModInitializer;
 
+import one.oth3r.otterlib.chat.CTxT;
 import one.oth3r.otterlib.file.LanguageReader;
 import one.oth3r.otterlib.file.ResourceReader;
 import one.oth3r.otterlib.registry.CustomFileReg;
@@ -16,7 +17,7 @@ public class Sit implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-        LanguageReg.registerLang(Data.MOD_ID,  new LanguageReader(
+        LanguageReg.registerLang(Data.MOD_ID,  new LanguageReader<CTxT>(
                 new ResourceReader("assets/sit-oth3r/lang/",Sit.class.getClassLoader()),
                 new ResourceReader(Data.CONFIG_DIR),"en_us","en_us"));
 

@@ -1,8 +1,8 @@
 package one.oth3r.sit.utl;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.decoration.DisplayEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Display;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashMap;
 
@@ -16,9 +16,9 @@ public class LoopManager {
             time = 0;
 
             // check all sit entities to make sure their still valid
-            HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> entities = Data.getSitEntities();
-            for (ServerPlayerEntity player : entities.keySet()) {
-                DisplayEntity.TextDisplayEntity entity = entities.get(player);
+            HashMap<ServerPlayer, Display.TextDisplay> entities = Data.getSitEntities();
+            for (ServerPlayer player : entities.keySet()) {
+                Display.TextDisplay entity = entities.get(player);
 
                 if (player.getVehicle() == null || !player.getVehicle().equals(entity)) {
                     Logic.removeEntity(player);
@@ -28,8 +28,8 @@ public class LoopManager {
             }
 
             // get the player's sit entity when they join
-            HashMap<ServerPlayerEntity, Integer> checkPlayers = Data.getCheckPlayers();
-            for (ServerPlayerEntity player : checkPlayers.keySet()) {
+            HashMap<ServerPlayer, Integer> checkPlayers = Data.getCheckPlayers();
+            for (ServerPlayer player : checkPlayers.keySet()) {
                 Integer time = checkPlayers.get(player);
                 // tick down or remove the player if at the end
                 time -= 1;
@@ -38,7 +38,7 @@ public class LoopManager {
 
                 if (player.getVehicle() != null) {
                     Entity entity = player.getVehicle();
-                    if (entity instanceof DisplayEntity.TextDisplayEntity tde && entity.getName().getString().equals(Data.ENTITY_NAME)) {
+                    if (entity instanceof Display.TextDisplay tde && entity.getName().getString().equals(Data.ENTITY_NAME)) {
                         // bind the entity to the player
                         Data.addSitEntity(player, tde);
                         // check if the player is still allowed to sit
@@ -50,8 +50,8 @@ public class LoopManager {
             }
 
             // spawn entities for everyone in the spawn list
-            HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> spawnList = Data.getSpawnList();
-            for (ServerPlayerEntity player : spawnList.keySet()) {
+            HashMap<ServerPlayer, Display.TextDisplay> spawnList = Data.getSpawnList();
+            for (ServerPlayer player : spawnList.keySet()) {
                 Logic.spawnEntity(player);
             }
         }

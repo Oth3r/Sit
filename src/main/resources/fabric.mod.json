@@ -22,19 +22,18 @@
 			"one.oth3r.sit.SitClient"
 		],
 		"modmenu": [
-			"one.oth3r.sit.screen.ModMenu"
+			"one.oth3r.sit.client.ModMenu"
 		]
 	},
 	"depends": {
 		"fabricloader": ">=0.14.21",
-		"minecraft": ">=${min_minecraft_version} <=${max_minecraft_version}",
-		"fabric": "*",
+		"minecraft": ">=${min_minecraft_version} <${max_minecraft_version}",
+		"fabric-api": "*",
 		"otterlib": ">=${otterlib_version} <${otterlib_max_version}"
 	},
 	"suggests": {
 		"modmenu": "*"
 	},
-	"accessWidener": "sit!.accesswidener",
 	"mixins": [
 		"sit!.mixins.json"
 	]

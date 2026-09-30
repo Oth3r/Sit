@@ -1,9 +1,9 @@
 package one.oth3r.sit.utl;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.decoration.DisplayEntity;
+import net.minecraft.world.entity.Display;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import one.oth3r.otterlib.base.OtterLogger;
 
 import java.util.HashMap;
@@ -69,17 +69,17 @@ public class Data {
      * a list of players who just joined, to check if they are mounted to a Sit! entity
      * (they don't load in on the player join event for some reason)
      */
-    private static final HashMap<ServerPlayerEntity, Integer> checkPlayers = new HashMap<>();
+    private static final HashMap<ServerPlayer, Integer> checkPlayers = new HashMap<>();
 
-    public static void setCheckPlayer(ServerPlayerEntity player, Integer time) {
+    public static void setCheckPlayer(ServerPlayer player, Integer time) {
         checkPlayers.put(player, time);
     }
 
-    public static void removeCheckPlayer(ServerPlayerEntity player) {
+    public static void removeCheckPlayer(ServerPlayer player) {
         checkPlayers.remove(player);
     }
 
-    public static HashMap<ServerPlayerEntity, Integer> getCheckPlayers() {
+    public static HashMap<ServerPlayer, Integer> getCheckPlayers() {
         return new HashMap<>(checkPlayers);
     }
 
@@ -87,38 +87,38 @@ public class Data {
     /**
      * a list of players that need a sit entity spawned for them, on the server loop to stop crashing with other mods (ASYNC)
      */
-    private static final HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> spawnList = new HashMap<>();
+    private static final HashMap<ServerPlayer, Display.TextDisplay> spawnList = new HashMap<>();
 
-    public static void setSpawnList(ServerPlayerEntity player, DisplayEntity.TextDisplayEntity entity) {
+    public static void setSpawnList(ServerPlayer player, Display.TextDisplay entity) {
         spawnList.put(player, entity);
     }
 
-    public static void removeSpawnList(ServerPlayerEntity player) {
+    public static void removeSpawnList(ServerPlayer player) {
         spawnList.remove(player);
     }
 
-    public static HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> getSpawnList() {
+    public static HashMap<ServerPlayer, Display.TextDisplay> getSpawnList() {
         return new HashMap<>(spawnList);
     }
 
     /**
      * a list of every Sit! entity in the server, bound to the player
      */
-    private static final HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> sitEntities = new HashMap<>();
+    private static final HashMap<ServerPlayer, Display.TextDisplay> sitEntities = new HashMap<>();
 
-    public static void addSitEntity(ServerPlayerEntity player, DisplayEntity.TextDisplayEntity entity) {
+    public static void addSitEntity(ServerPlayer player, Display.TextDisplay entity) {
         sitEntities.put(player, entity);
     }
 
-    public static void removeSitEntity(DisplayEntity.TextDisplayEntity entity) {
+    public static void removeSitEntity(Display.TextDisplay entity) {
         sitEntities.values().remove(entity);
     }
 
-    public static DisplayEntity.TextDisplayEntity getSitEntity(ServerPlayerEntity player) {
+    public static Display.TextDisplay getSitEntity(ServerPlayer player) {
         return sitEntities.get(player);
     }
 
-    public static HashMap<ServerPlayerEntity, DisplayEntity.TextDisplayEntity> getSitEntities() {
+    public static HashMap<ServerPlayer, Display.TextDisplay> getSitEntities() {
         return new HashMap<>(sitEntities);
     }
 }

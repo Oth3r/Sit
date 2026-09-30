@@ -2,7 +2,7 @@ package one.oth3r.sit.file;
 
 import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
-import net.minecraft.util.Hand;
+import net.minecraft.world.InteractionHand;
 import one.oth3r.otterlib.file.CustomFile;
 import one.oth3r.otterlib.file.FileSettings;
 import one.oth3r.sit.utl.Data;
@@ -59,8 +59,8 @@ public class SittingConfig implements CustomFile<SittingConfig> {
         this.handSitting = handSitting;
     }
 
-    public HandSetting getHand(Hand handType) {
-        return handType.equals(Hand.MAIN_HAND) ? mainHand : offHand;
+    public HandSetting getHand(InteractionHand handType) {
+        return handType.equals(InteractionHand.MAIN_HAND) ? mainHand : offHand;
     }
 
     public HandSetting getMainHand() {

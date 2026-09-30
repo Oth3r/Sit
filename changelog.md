@@ -1,13 +1,19 @@
-## v1.2.5.2
-* fixed event registration issue that caused crashes on client
+# v1.2.6.3
+#### Fixes:
+* fixed error message printing in the server console when a player with the Sit! mod logs into a Sit! server 
 
-## v1.2.5.1
-* fixed a StackOverFlow crash when converting a legacy config file to the new format
-* updated to the latest localization files from crowdin
+## Past Changes
+### v1.2.6.2
+#### Fixes:
+* fixed player not getting dismounted properly when disconnecting when the `keep-active` config setting is enabled
+* fixed player model rotation when sitting
 
-# v1.2.5.0
-New allowed-above-seat config option!
+### v1.2.6.1
+#### Changes:
+* changed the maximum version to be up to 26.2 to account for the small patches
 
-* added new config option `allowed-above-seat` to allow certain blocks to be above the seat block
-* switched to OtterLib for language file loading
-* switched to OtterLib for config file loading
+### v1.2.6.0
+
+#### Changes:
+* updated to 26.1
+* now supports OtterLib 0.3
