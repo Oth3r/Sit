@@ -85,11 +85,16 @@ public abstract class TextDisplayDismountMixin extends Display {
     @Override
     public void positionRider(@NonNull Entity passenger, @NonNull MoveFunction moveFunction) {
         super.positionRider(passenger, moveFunction);
+        // Mouse-turn callbacks only run for the local player. Update the seat on
+        // the server so its rotation is synchronized to every observing client.
+        if (!this.level().isClientSide()) {
+            this.sit$updateRotation(passenger);
+        }
         this.sit$syncPassengerRotation(passenger);
     }
 
-    @Override
-    public void onPassengerTurned(Entity passenger) {
+    @Unique
+    private void sit$updateRotation(Entity passenger) {
         float targetYaw = passenger.getYRot();
         float yaw = this.getYRot();
         float yawDifference = Math.abs(Mth.wrapDegrees(targetYaw - yaw));
@@ -99,8 +104,6 @@ public abstract class TextDisplayDismountMixin extends Display {
         }
 
         this.setYRot(yaw);
-        this.setYHeadRot(yaw);
-        this.sit$syncPassengerRotation(passenger);
     }
 
     @Unique
