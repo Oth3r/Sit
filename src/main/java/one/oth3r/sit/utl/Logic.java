@@ -182,7 +182,7 @@ public class Logic {
         // get the entity's block pos
         BlockPos pos = Utl.Entity.getBlockPos(entity);
         // get the poses to check above the block
-        BlockPos pos1 = new BlockPos(pos).offset(0,1,0), pos2 = new BlockPos(pos).offset(0,2,0), posBelow = new BlockPos(pos);
+        BlockPos pos1 = pos.above(), pos2 = pos.above(2), posBelow = pos.immutable();
         // doesn't check 2 blocks above if not sitting above .80 of the block
         if (pos.getY() > (entity.getY()-Utl.Entity.Y_ADJUSTMENT) - .80) {
             pos2 = pos2.offset(0,-1,0);

@@ -26,7 +26,7 @@ import one.oth3r.sit.command.SitCommand;
 import one.oth3r.sit.file.FileData;
 import one.oth3r.sit.file.SittingConfig;
 import one.oth3r.sit.packet.SitPayloads;
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 import java.awt.*;
 
@@ -42,17 +42,17 @@ public class Events {
 
             toggle_key = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                     "key.sit!.toggle",
-                    GLFW.GLFW_KEY_UNKNOWN,
+                    InputConstants.UNKNOWN.getValue(),
                     sitCategory
             ));
             sit_key = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                     "key.sit!.sit",
-                    GLFW.GLFW_KEY_UNKNOWN,
+                    InputConstants.UNKNOWN.getValue(),
                     sitCategory
             ));
             config__key = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                     "key.sit!.config",
-                    GLFW.GLFW_KEY_UNKNOWN,
+                    InputConstants.UNKNOWN.getValue(),
                     sitCategory
             ));
 

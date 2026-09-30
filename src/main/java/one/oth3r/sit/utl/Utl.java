@@ -227,7 +227,7 @@ public class Utl {
             // entity flags
             entity.setCustomName(Component.nullToEmpty(Data.ENTITY_NAME));
             entity.setCustomNameVisible(false);
-            entity.setInvulnerable(true);
+            entity.setPermanentlyInvulnerable(true);
             entity.setInvisible(true);
 
             // get the entities y level
@@ -404,7 +404,7 @@ public class Utl {
             return hitResult.getBlockPos();
         }
 
-        return new BlockPos(player.blockPosition());
+        return player.blockPosition().immutable();
     }
 
     public static double getPlayerReach(Player player) {
